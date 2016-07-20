@@ -1,4 +1,4 @@
-package facade;
+package dao;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import javax.persistence.PersistenceContext;
 import exception.AppPersistenceException;
 
 
-public abstract class GenericFacade<T> {
+public abstract class GenericDao<T> {
 
 	private final static String UNIT_NAME = "viagemPU";
 

@@ -1,11 +1,11 @@
-package facade;
+package dao;
 
 import javax.ejb.Stateless;
 
 import modelo.Usuario;
 
 @Stateless
-public class UsuarioFacade extends GenericFacade<Usuario> {
+public class UsuarioDao extends GenericDao<Usuario> {
 
 	public Usuario recuperarPeloLogin(String login) throws Exception {
 		String sql = "SELECT x FROM Usuario x WHERE" +

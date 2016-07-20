@@ -1,11 +1,11 @@
-package facade;
+package dao;
 
 import javax.ejb.Stateless;
 
 import modelo.Dispositivo;
 
 @Stateless
-public class DispositivoFacade extends GenericFacade<Dispositivo> {
+public class DispositivoDao extends GenericDao<Dispositivo> {
 
 	public Dispositivo recuperarPeloLogin(String identificador) throws Exception {
 		String sql = "SELECT x FROM Dispositivo x WHERE" +
