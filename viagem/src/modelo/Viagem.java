@@ -3,6 +3,8 @@ package modelo;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -11,6 +13,8 @@ import enums.StatusViagem;
 @Entity
 public class Viagem {
 
+	@Id
+	@GeneratedValue
 	private Long id;
 	
 	@ManyToOne

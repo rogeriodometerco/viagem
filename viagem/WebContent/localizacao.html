@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+$(document).ready(function(){
+//		var baseURI = "http://ec2-54-207-116-50.sa-east-1.compute.amazonaws.com/vitrine/rest/usuario" 
+			var baseURI = "/viagem/rest/localizacao" 
+			
+		  $("#btSalvar").click(function() {
+			  var obj = JSON.stringify({
+					"dispositivo" : {
+						"id" : $("#dispositivoId").val()
+					},
+					"motorista" : {
+						"id" : $("#motoristaId").val()
+					},
+					"lat": $("#lat").val(),
+					"lng": $("#lng").val(), 
+					"velocidade": $("#velocidade").val(), 
+				});
+
+				var x = $.ajax({
+					type: 'POST',
+					contentType: 'application/json',
+					dataType: "JSON",
+					url: baseURI,
+					data: obj,
+					success: function(data) {
+						console.log(data);
+		               $("#retorno").text(x.responseText);
+					},
+					error: function(data) {
+						console.log(data);
+			              $("#retorno").html(x.responseText);
+					}
+				});
+		   });
+
+	$("#btRecuperar").click(function() {
+	  var x = $.ajax({
+          type: "GET",
+          url: baseURI + "/" + $("#id").val(),
+          //dataType: "JSON",
+          success: function(data){
+              console.log(data);
+              $("#id").val(data.id);
+              $("#dispositivoId").val(data.dispositivo.id);
+              $("#motoristaId").val(data.motorista.id);
+              $("#lat").val(data.lat);
+              $("#lng").val(data.lng);
+              $("#velocidade").val(data.velocidade);
+              $("#retorno").text(x.responseText);
+          },
+          error: function(data){
+              console.log(data);
+              $("#retorno").html(x.responseText);
+          }
+      });
+   });
+
+
+  $("#btExcluir").click(function() {
+		var x= $.ajax({
+			type: 'DELETE',
+            url: baseURI + "/" + $("#id").val(),
+        	success: function(data) {
+				console.log(data);
+               $("#retorno").text(x.responseText);
+			},
+			error: function(data) {
+				console.log(data);
+	               $("#retorno").text(x.responseText);
+			}
+		});
+   });
+
+  $("#btListar").click(function() {
+		var x = $.ajax({
+		          type: "GET",
+		          url: baseURI,
+		          dataType: "JSON",
+		          success: function(data){
+		              console.log("OK");
+					  console.log(data);
+		              $("#retorno").text(x.responseText);
+		          },
+		          error: function(data){
+		              console.log("Erro");
+					  console.log(data);
+		              $("#retorno").html(x.responseText);
+		          }
+		      });
+		   });
+});
+
+
+</script>
+</head>
+<body>
+
+	<a href="/viagem/index.html">Início</a>
+	<p>
+	<input type="button" id="btSalvar" value="Salvar" />
+	<input type="button" id="btRecuperar" value="Recuperar pelo id" />
+	<input type="button" id="btExcluir" value="Excluir pelo id" />
+	<input type="button" id="btListar" value="Listar" />
+	<p/>
+	<p/> 
+	<label for="id">Id (nulo para inclusão)</label>
+	<br />
+	<input type="text" id="id" />
+	<br />
+	<label for="dispositivoId">Id dispositivo</label>
+	<br />
+	<input type="text" id="dispositivoId" />
+	<br />
+	<label for="motoristaId">Id motorista</label>
+	<br />
+	<input type="text" id="motoristaId" />
+	<br />
+	<label for="lat">Latitude</label>
+	<br />
+	<input type="text" id="lat" />
+	<br />
+	<label for="lng">Longitude</label>
+	<br />
+	<input type="text" id="lng" />
+	<br />
+	<label for="velocidade">Velocidade</label>
+	<br />
+	<input type="text" id="velocidade" />
+
+	<p/>
+	<p/> 
+	<label>Retorno</label>
+	<p id="retorno" />
+
+</body>
+</html>
