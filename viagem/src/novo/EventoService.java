@@ -1,14 +1,11 @@
-package servico;
-
-import java.util.List;
+package novo;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
-import dao.EventoDao;
+import novo.EventoDao;
 import exception.AppException;
-import exception.AppPersistenceException;
-import modelo.Evento;
+import novo.Evento;
 
 @Stateless
 public class EventoService {

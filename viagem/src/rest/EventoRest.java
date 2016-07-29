@@ -13,32 +13,32 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import dao.EventoDao;
-import modelo.Evento;
+import dao.EventoDaoGeral;
+import modelo.EventoGeral;
 import modelo.Usuario;
-import servico.EventoService;
+import servico.EventoServiceGeral;
 import util.Ejb;
 
 @Path("/evento")
 public class EventoRest {
 
-	private EventoService eventoService;
-	private EventoDao eventoDao; // para testar funcionalidades que não terão no serviço.
+	private EventoServiceGeral eventoServiceGeral;
+	private EventoDaoGeral eventoDaoGeral; // para testar funcionalidades que não terão no serviço.
 
 	public EventoRest() {
-		eventoService = Ejb.lookup(EventoService.class);
-		eventoDao = Ejb.lookup(EventoDao.class);
+		eventoServiceGeral = Ejb.lookup(EventoServiceGeral.class);
+		eventoDaoGeral = Ejb.lookup(EventoDaoGeral.class);
 	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response registrar(@Context HttpServletRequest httpServletRequest, 
-			Evento evento) throws Exception {
+			EventoGeral eventoGeral) throws Exception {
 		return Response.ok()
 				.entity(
-						eventoService
-						.registrar(evento))
+						eventoServiceGeral
+						.registrar(eventoGeral))
 				.build();
 	}
 
@@ -47,7 +47,7 @@ public class EventoRest {
 	public Response listar()  throws Exception {
 		return Response.ok()
 				.entity(
-						eventoDao.listar())
+						eventoDaoGeral.listar())
 				.build();
 	}
 	
@@ -57,15 +57,15 @@ public class EventoRest {
 	public Response recuperar(@PathParam("id") Long id) throws Exception{
 		return Response.ok()
 				.entity(
-						eventoDao.recuperar(id))
+						eventoDaoGeral.recuperar(id))
 				.build();
 	}
 
 	@DELETE
 	@Path("/{id}")
 	public Response excluir(@PathParam("id") Long id) throws Exception {
-		eventoDao.excluir(
-				eventoDao.recuperar(id));
+		eventoDaoGeral.excluir(
+				eventoDaoGeral.recuperar(id));
 		return Response.ok()
 				.build();
 	}

@@ -1,8 +1,9 @@
-package dao;
+package novo;
 
 import javax.ejb.Stateless;
 
-import modelo.Evento;
+import dao.GenericDao;
+import novo.Evento;
 
 @Stateless
 public class EventoDao extends GenericDao<Evento> {

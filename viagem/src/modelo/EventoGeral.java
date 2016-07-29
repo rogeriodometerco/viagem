@@ -13,7 +13,7 @@ import enums.OrigemEvento;
 import enums.TipoEvento;
 
 @Entity
-public class Evento {
+public class EventoGeral {
 
 	@Id
 	@GeneratedValue

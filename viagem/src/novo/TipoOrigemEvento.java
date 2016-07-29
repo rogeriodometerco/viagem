@@ -1,5 +1,5 @@
 package novo;
 
-public enum OrigemEvento {
+public enum TipoOrigemEvento {
 	DISPOSITIVO, SISTEMA
 }

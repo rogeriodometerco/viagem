@@ -19,13 +19,11 @@ public final class Ejb {
 	    private static final String EJB_CONTEXT;
 
 	    static {
-	        //try {
-	            //EJB_CONTEXT = "java:global/" + new InitialContext().lookup("java:app/AppName") + "/";
-	            //System.out.println("EJB_CONTEXT " + EJB_CONTEXT);
-	        	EJB_CONTEXT = "java:comp/";
-	        //} catch (NamingException e) {
-	            //throw new ExceptionInInitializerError(e);
-	        //}
+	        try {
+	            EJB_CONTEXT = "java:global/" + new InitialContext().lookup("java:app/viagem") + "/";
+	        } catch (NamingException e) {
+	            throw new ExceptionInInitializerError(e);
+	        }
 	    }
 
 	    // Constructors -------------------------------------------------------------------------------
