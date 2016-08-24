@@ -1,16 +1,9 @@
 package teste;
 
-import java.util.Date;
-import java.util.Hashtable;
 import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-
-import novo.Evento;
-import novo.EventoService;
-import novo.PrevisaoEvento;
-import novo.TipoOrigemEvento;
 
 public class Teste {
 
@@ -39,14 +32,6 @@ public class Teste {
 				context.lookup("java:module/EventoService");
 				//Ejb.lookup(servico.LocalizacaoService.class);
 				//EventoService eventoService = Ejb.lookup(EventoService.class);
-				EventoService eventoService = InitialContext.doLookup("java:module/EventoService");
-				PrevisaoEvento previsaoEvento = new PrevisaoEvento();
-				previsaoEvento.setOrigem(TipoOrigemEvento.SISTEMA);
-				previsaoEvento.setDataHora(new Date());
-				previsaoEvento.setDataHoraPrevista(new Date());
-				Evento evento = eventoService.registrar(previsaoEvento);
-				System.out.println("ID gerado: " + evento.getId());
-				System.out.println("Classe: " + evento.getClass());
 
 			} catch (Exception e) {
 				e.printStackTrace();

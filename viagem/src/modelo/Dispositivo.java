@@ -11,7 +11,7 @@ public class Dispositivo {
 	@GeneratedValue
 	private Long id;
 	
-	private String identificador;
+	private String identificacao;
 
 	public Long getId() {
 		return id;
@@ -22,11 +22,11 @@ public class Dispositivo {
 	}
 
 	public String getIdentificacao() {
-		return identificador;
+		return identificacao;
 	}
 
-	public void setIdentificacao(String identificador) {
-		this.identificador = identificador;
+	public void setIdentificacao(String identificacao) {
+		this.identificacao = identificacao;
 	}
 	
 }
