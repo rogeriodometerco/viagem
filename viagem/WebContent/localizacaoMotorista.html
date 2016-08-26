@@ -8,18 +8,14 @@
 
 $(document).ready(function(){
 //		var baseURI = "http://ec2-54-207-116-50.sa-east-1.compute.amazonaws.com/vitrine/rest/usuario" 
-			var baseURI = "/viagem/rest/localizacao" 
+			var baseURI = "/viagem/rest/localizacaoMotorista" 
 			
 		  $("#btSalvar").click(function() {
 			  var obj = JSON.stringify({
 				    "id" : $("#id").val(),
-					"dispositivo" : {
-						"id" : $("#dispositivoId").val()
-					},
 					"motorista" : {
 						"id" : $("#motoristaId").val()
 					},
-					"data": $("#data").val(),
 					"lat": $("#lat").val(),
 					"lng": $("#lng").val(), 
 					"velocidade": $("#velocidade").val(), 
@@ -50,9 +46,7 @@ $(document).ready(function(){
           success: function(data){
               console.log(data);
               $("#id").val(data.id);
-              $("#dispositivoId").val(data.dispositivo.id);
               $("#motoristaId").val(data.motorista.id);
-              $("#data").val(data.data);
               $("#lat").val(data.lat);
               $("#lng").val(data.lng);
               $("#velocidade").val(data.velocidade);
@@ -117,17 +111,9 @@ $(document).ready(function(){
 	<br />
 	<input type="text" id="id" />
 	<br />
-	<label for="dispositivoId">Id dispositivo</label>
-	<br />
-	<input type="text" id="dispositivoId" />
-	<br />
 	<label for="motoristaId">Id motorista</label>
 	<br />
 	<input type="text" id="motoristaId" />
-	<br />
-	<label for="data">Data e hora</label>
-	<br />
-	<input type="text" id="data" />
 	<br />
 	<label for="lat">Latitude</label>
 	<br />

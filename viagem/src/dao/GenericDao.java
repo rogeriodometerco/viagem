@@ -31,6 +31,10 @@ public abstract class GenericDao<T> {
 	protected EntityManager getEntityManager() {
 		return em;
 	}
+	
+	protected Class<T> getClasseEntidade() {
+		return classeEntidade;
+	}
 
 	public T recuperar(Object id) throws Exception {
 		try {

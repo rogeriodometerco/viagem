@@ -10,19 +10,17 @@ import modelo.Motorista;
 @Stateless
 public class LocalizacaoMotoristaDao extends GenericDao<LocalizacaoMotorista> {
 	
-	public LocalizacaoMotorista getLocalizacaoAtual(Motorista motorista) throws Exception {
+	public LocalizacaoMotorista recuperar(Motorista motorista) throws Exception {
 		LocalizacaoMotorista result = null;
-		String sql = "select distinct x from LocalizacaoAtual x"
+		String sql = "select distinct x from " + getClasseEntidade().getSimpleName() + " x"
 				+ " where x.motorista = :motorista";
 		try {
 			result = getEntityManager()
 				.createQuery(sql, LocalizacaoMotorista.class)
 				.setParameter("motorista", motorista)
 				.getSingleResult();
-		} catch (NonUniqueResultException e) {
-			// TODO
 		} catch (NoResultException e) {
-			
+			// Nada a fazer, retornar null.
 		}
 		return result;
 	}
