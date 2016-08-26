@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+	<h2>Motoristas</h2>
+
+	<h:form>
+		<p:dataTable var="localizacao" value="#{localizacaoMotoristaMb.localizacoes}">
+			<p:column headerText="Motorista">
+				<h:outputText value="#{localizacao.motorista.nome}" />
+			</p:column>
+
+			<p:column headerText="Data">
+				<h:outputText value="#{localizacao.data}" />
+			</p:column>
+
+			<p:column headerText="Latitude">
+				<h:outputText value="#{localizacao.lat}" />
+			</p:column>
+
+			<p:column headerText="Longitude">
+				<h:outputText value="#{localizacao.lng}" />
+			</p:column>
+
+			<p:column headerText="Velocidade">
+				<h:outputText value="#{localizacao.velocidade}" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+
+</h:body>
+</html>

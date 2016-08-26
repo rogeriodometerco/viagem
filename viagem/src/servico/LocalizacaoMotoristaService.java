@@ -1,5 +1,7 @@
 package servico;
 
+import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -35,6 +37,14 @@ public class LocalizacaoMotoristaService {
 				
 				localizacaoMotoristaDao.salvar(localizacaoMotorista);
 			}
+		} catch (Exception e) {
+			throw new AppException(e);
+		}
+	}
+	
+	public List<LocalizacaoMotorista> listar() throws AppException {
+		try {
+			return localizacaoMotoristaDao.listar();
 		} catch (Exception e) {
 			throw new AppException(e);
 		}
