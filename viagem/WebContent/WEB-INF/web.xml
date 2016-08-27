@@ -21,5 +21,14 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
+
+	<filter> 
+		<filter-name>cors</filter-name> 
+		<filter-class>filter.CorsFilter</filter-class> 
+	</filter> 
+	<filter-mapping> 
+		<filter-name>cors</filter-name> 
+		<url-pattern>/rest/*</url-pattern> 
+	</filter-mapping>
 	
 	</web-app>

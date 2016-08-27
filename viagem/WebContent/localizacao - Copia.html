@@ -136,7 +136,8 @@ $(document).ready(function(){
 			type: 'POST',
 			contentType: 'application/json',
 			dataType: "JSON",
-			url: "/viagem/rest/mobile/evento",
+			url: "http://54.204.114.136:8080/viagem/rest/mobile/evento",
+			//url: "http://localhost:8080/viagem/rest/mobile/evento",
 			data: obj,
 			success: function(data) {
 				console.log(data);
