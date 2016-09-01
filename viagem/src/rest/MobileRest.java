@@ -22,11 +22,13 @@ import javax.ws.rs.core.Response;
 import dao.DispositivoDao;
 import dao.LocalizacaoDao;
 import dao.MotoristaDao;
+import modelo.Dispositivo;
 import modelo.Localizacao;
+import modelo.Motorista;
 import servico.LocalizacaoService;
 import util.Ejb;
 
-@Path("/mobile")
+@Path("/mobile/evento")
 public class MobileRest {
 
 	private LocalizacaoService localizacaoService;
@@ -42,19 +44,6 @@ public class MobileRest {
 	}
 	
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response testar(@Context HttpServletRequest httpServletRequest, 
-			Localizacao localizacao) throws Exception {
-		return Response.ok()
-				.entity(
-						localizacaoService
-						.registrar(localizacao))
-				.build();
-	}
-	
-	@POST
-	@Path("/evento")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response registrar(@Context HttpServletRequest httpServletRequest, 
@@ -89,7 +78,28 @@ public class MobileRest {
 			localizacao.setLng((Double)localizacaoRequest.get("lng"));
 			localizacao.setVelocidade(Double.valueOf((Integer)evento.get("velocidade")));
 			
-			localizacao.setMotorista(motoristaDao.listar().get(0));
+			// Recupera um dispositivo ou cria se não existir, apenas para salvar o evento.
+			Dispositivo dispositivo = null;
+			List<Dispositivo> dispositivos = dispositivoDao.listar();
+			if (dispositivos != null) {
+				dispositivo = dispositivos.get(0);
+			} else {
+				dispositivo = new Dispositivo();
+				dispositivo.setIdentificacao("9943-5091");
+				dispositivo = dispositivoDao.salvar(dispositivo);
+			}
+			// Recupera um motorista ou cria se não existir, apenas para salvar o evento.
+			Motorista motorista = null;
+			List<Motorista> motoristas = motoristaDao.listar();
+			if (motoristas != null) {
+				motorista = motoristas.get(0);
+			} else {
+				motorista = new Motorista();
+				motorista.setNome("Rogerio");
+				motorista = motoristaDao.salvar(motorista);
+			}
+			
+			localizacao.setMotorista(motorista);
 			localizacao.setDispositivo(dispositivoDao.listar().get(0));
 			
 			localizacaoService.registrar(localizacao);

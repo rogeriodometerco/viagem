@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
+
+import sun.net.www.http.HttpClient;
 
 public class Teste {
 
@@ -17,10 +18,16 @@ public class Teste {
 		 */
 
 		//"https://maps.googleapis.com/maps/api/directions/json?origin=Campo+Mourao,PR&destination=Luisiana,PR");
+		
+		/*
 		URL url = new URL("https://maps.googleapis.com/maps/api/directions/json?"
 				+ "origin=" + URLEncoder.encode("Campo Mourão, PR", "UTF-8")
 				+ "&destination=" + URLEncoder.encode("Luisiana, PR", "UTF-8"));
-
+		*/
+		
+		//54.204.114.136
+		URL url = new URL("http://localhost:8080/viagem/rest/mobile/evento");
+			
 		URLConnection uc = url.openConnection();
 		BufferedReader in = new BufferedReader(
 				new InputStreamReader(
@@ -32,5 +39,11 @@ public class Teste {
 		}
 		System.out.println(response);
 		in.close();
+		
+		
+		
+		
+		
+		
 	}
 }
