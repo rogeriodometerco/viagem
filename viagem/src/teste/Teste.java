@@ -2,10 +2,14 @@ package teste;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-import sun.net.www.http.HttpClient;
+import javax.servlet.http.Cookie;
+
+import org.primefaces.json.JSONObject;
 
 public class Teste {
 
@@ -39,10 +43,6 @@ public class Teste {
 		}
 		System.out.println(response);
 		in.close();
-		
-		
-		
-		
 		
 		
 	}
