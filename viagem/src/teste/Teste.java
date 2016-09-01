@@ -25,8 +25,8 @@ public class Teste {
 				+ "&destination=" + URLEncoder.encode("Luisiana, PR", "UTF-8"));
 		*/
 		
-		//54.204.114.136
-		URL url = new URL("http://localhost:8080/viagem/rest/mobile/evento");
+		URL url = new URL("http://54.204.114.136:8080/viagem/rest/mobile/evento");
+		//URL url = new URL("http://localhost:8080/viagem/rest/mobile/evento");
 			
 		URLConnection uc = url.openConnection();
 		BufferedReader in = new BufferedReader(
