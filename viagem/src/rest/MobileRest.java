@@ -74,8 +74,8 @@ public class MobileRest {
 			Map<String, Object> localizacaoRequest = (Map<String, Object>)evento.get("localizacao");
 			localizacao = new Localizacao();
 			localizacao.setData(format.parse((String)evento.get("dhEvento")));
-			localizacao.setLat((Double)localizacaoRequest.get("lat"));
-			localizacao.setLng((Double)localizacaoRequest.get("lng"));
+			localizacao.setLat(Double.valueOf((String)localizacaoRequest.get("lat")));
+			localizacao.setLng(Double.valueOf((String)localizacaoRequest.get("lng")));
 			localizacao.setVelocidade(Double.valueOf((Integer)evento.get("velocidade")));
 			
 			// Recupera um dispositivo ou cria se não existir, apenas para salvar o evento.

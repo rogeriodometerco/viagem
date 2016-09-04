@@ -16,14 +16,14 @@
 	<h:form>
 		<p:tabView>
 			<p:tab title="Lista">
+				<input type="text" />
 				<p:commandButton value="Listar"
-					actionListener="#{localizacaoMotoristaMb.listar}" update="tabela"
-					onsuccess="alert('#{localizacaoMotoristaMb.localizacoes.get(0).motorista.nome}')">
-					
-					</p:commandButton>
+					actionListener="#{localizacaoMotoristaMb.listar}" update="tabela">
+
+				</p:commandButton>
 				<p:dataTable id="tabela" var="localizacao"
 					value="#{localizacaoMotoristaMb.localizacoes}">
-					<p:column headerText="Motorista" >
+					<p:column headerText="Motorista">
 						<h:outputText value="#{localizacao.motorista.nome}" />
 					</p:column>
 
@@ -42,20 +42,19 @@
 					<p:column headerText="Velocidade">
 						<h:outputText value="#{localizacao.velocidade}" />
 					</p:column>
-					
+
 					<p:column headerText="teste">
-					<p:commandButton onclick="alert('#{localizacaoMotoristaMb.localizacoes.get(0).motorista.nome}')"></p:commandButton>
+						<p:commandButton
+							onclick="alert('#{localizacaoMotoristaMb.localizacoes.get(0).motorista.nome}')"></p:commandButton>
 					</p:column>
 				</p:dataTable>
-				
+
 			</p:tab>
-			
+
 			<p:tab title="Mapa">
-			<!-- 
 				<p:gmap center="-24, -52" zoom="13" type="HYBRID" 
 					style="width:100%;height:400px" 
 					model="#{localizacaoMotoristaMb.mapModel}" />
-			 -->
 			</p:tab>
 		</p:tabView>
 	</h:form>
