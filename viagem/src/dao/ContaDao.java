@@ -21,6 +21,7 @@ public class ContaDao extends GenericDao<Conta> {
 		result = getEntityManager()
 				.createQuery(sql, Conta.class)
 				.setParameter("iniciandoPor", chave.toUpperCase().concat("%"))
+				//.setParameter("iniciandoPor", "%".concat(chave.toUpperCase()).concat("%"))
 				.getResultList();
 		
 		// Recupera registros contendo string pesquisada até completar a quantidade de linhas a retornar.
@@ -36,7 +37,7 @@ public class ContaDao extends GenericDao<Conta> {
 					.setParameter("iniciandoPor", chave.toUpperCase().concat("%"))
 					.getResultList();
 			int i = 0;
-			while (result.size() + i < rows && result2.size() < i) {
+			while (result.size() + i < rows && i < result2.size()) {
 				result.add(result2.get(i));
 				i++;
 			}
