@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Cadastro de usuário</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<h:form id="form1" rendered="#{usuarioMb.estaEmModoListagem()}">
+			<h3>
+				<p:outputLabel value="Cadastro de usuário" />
+			</h3>
+			<p:commandButton value="Novo" action="#{usuarioMb.prepararNovo()}"
+				update="@all" />
+			<p />
+
+			<p:dataTable id="listagem" value="#{usuarioMb.lista}" var="usuario"
+				emptyMessage="Nenhum usuário retornado na consulta">
+				<p:column>
+					<f:facet name="header">Nome</f:facet>
+					#{usuario.nome}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Login</f:facet>
+					#{usuario.login}
+				</p:column>
+			</p:dataTable>
+			<p />
+
+		</h:form>
+
+		<h:form id="form2" rendered="#{usuarioMb.estaEmModoCriacao()}">
+			<h3>
+				<p:outputLabel value="Criar usuário" />
+			</h3>
+
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Nome" />
+				<p:inputText value="#{usuarioMb.usuario.nome}" />
+				<p:outputLabel value="Login" />
+				<p:inputText value="#{usuarioMb.usuario.login}" />
+
+				<p:outputLabel value="Conta" />
+				<p:autoComplete value="#{usuarioMb.conta}"
+					completeMethod="#{contaMb.autocomplete}" var="conta"
+					itemLabel="#{conta.nome}" itemValue="#{conta}"
+					converter="#{contaConverter}" forceSelection="true" />
+
+			</h:panelGrid>
+			<br />
+			<p:commandButton value="Salvar" action="#{usuarioMb.criar()}"
+				update="@all" />
+			<p:commandButton value="Voltar" action="#{usuarioMb.listar()}"
+				update="@all" />
+		</h:form>
+	</ui:define>
+</ui:composition>

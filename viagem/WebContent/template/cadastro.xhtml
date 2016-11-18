@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	template="/template/geral.xhtml">
+
+	<ui:define name="conteudo">
+
+		<h:form id="form" prependId="false">
+
+		<label style="font-size: 16px">
+			<ui:insert name="titulo" />
+		</label>
+		<p:outputLabel style="font-size: 15px" 
+			rendered="#{bean.descricaoOperacao != null}"> - #{bean.descricaoOperacao}</p:outputLabel>
+
+			<p:messages id="mensagens" closable="true" />
+
+			<p:outputPanel id="panelModoListagem" rendered="#{bean.listagemVisivel()}">
+				<p />
+				<p:commandButton value="Novo"
+					actionListener="#{bean.iniciarCriacao()}" update="form"/>
+				<p:spacer width="8px" />
+
+				<!-- Campos de filtro para efetuar a pesquisa -->				
+				<ui:insert name="camposPesquisa" />
+				
+				<p:commandButton value="Pesquisar" actionListener="#{bean.listar()}"
+					update="listagem :mensagens" />
+				<p />
+
+				<p:outputPanel id="listagem">
+					<ui:insert name="areaListagem" />
+				</p:outputPanel>
+				<p />
+				<p:commandButton id="anterior" value="Anterior"
+					disabled="#{!bean.temPaginaAnterior()}"
+					title="Página anterior" 
+					actionListener="#{bean.paginaAnterior()}"
+					update="listagem, anterior, proxima" />
+				<p:commandButton id="proxima" value="Próxima" 
+					disabled="#{!bean.temProximaPagina()}"
+					title="Próxima página"
+					actionListener="#{bean.proximaPagina()}"
+					update="listagem, anterior, proxima" />
+			</p:outputPanel>
+
+			<p:outputPanel id="panelModoEdicao"
+				rendered="#{bean.edicaoVisivel()}">
+
+				<ui:insert name="camposEdicao">
+				</ui:insert>
+				<p />
+				<p:commandButton value="Salvar" actionListener="#{bean.salvar()}"
+					update="form" rendered="#{bean.isCriacao() || bean.isAlteracao()}" />
+				<p:commandButton value="Excluir" actionListener="#{bean.excluir()}"
+					update="form" rendered="#{bean.isExclusao()}" immediate="false" />
+				<p:commandButton value="Cancelar" actionListener="#{bean.cancelar()}"
+					update="form" immediate="false" />
+			</p:outputPanel>
+
+		</h:form>
+	</ui:define>
+ </ui:composition>

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-  <display-name>viagem</display-name>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-  </welcome-file-list>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>viagem</display-name>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
 
-  <servlet-mapping>
-    <servlet-name>javax.ws.rs.core.Application</servlet-name>
-    <url-pattern>/rest/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>javax.ws.rs.core.Application</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
 
 
 	<!-- JSF mapping -->
@@ -22,13 +25,18 @@
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
 
-	<filter> 
-		<filter-name>cors</filter-name> 
-		<filter-class>filter.CorsFilter</filter-class> 
-	</filter> 
-	<filter-mapping> 
-		<filter-name>cors</filter-name> 
-		<url-pattern>/rest/*</url-pattern> 
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>bootstrap</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>cors</filter-name>
+		<filter-class>filter.CorsFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>cors</filter-name>
+		<url-pattern>/rest/*</url-pattern>
 	</filter-mapping>
-	
-	</web-app>
+
+</web-app>
