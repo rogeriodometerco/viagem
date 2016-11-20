@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import dao.ContaDao;
 import exception.AppException;
 import modelo.Conta;
+import modelo.UF;
 
 @Stateless
 public class ContaService {
@@ -19,6 +20,10 @@ public class ContaService {
 	public Conta salvar(Conta conta) throws AppException {
 		Conta result = null;
 		try {
+			List<String> erros = validarConta(conta);
+			if (erros.size() > 0) {
+				throw new AppException(erros.toString());
+			}
 			result = contaDao.salvar(conta);
 		} catch (Exception e) {
 			throw new AppException(e);
@@ -45,5 +50,27 @@ public class ContaService {
 		}
 		return result;
 	}
+
+	public Conta recuperar(Long id) throws AppException {
+		Conta result = null;
+		try {
+			result = contaDao.recuperar(id);
+		} catch(Exception e) {
+			throw new AppException("Erro ao recuperar conta: " + e.getMessage(), e);
+		}
+		return result;
+	}
+	
+	private List<String> validarConta(Conta conta) {
+		List<String> erros = new ArrayList<String>();
+		if (conta.getNome() == null || conta.getNome().trim().length() < 5) {
+			erros.add("Nome da conta deve ter no mínimo 5 caracteres");
+		}
+		if (conta.getPerfis() == null || conta.getPerfis().isEmpty()) {
+			erros.add("Conta deve ter no mínimo um perfil");
+		}
+		return erros;
+	}
+
 
 }

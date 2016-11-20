@@ -1,5 +1,6 @@
 package converter;
 
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -23,7 +24,7 @@ public class ContaConverter implements Converter {
 				result = contaDao.recuperar(Long.parseLong(value));
 			} catch(NumberFormatException e) {
 				JsfUtil.addMsgErro("Erro ao converter identificador de conta: " + e.getMessage());
-				throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao converter identificador", "O literal passado como parâmetro não é um valor numérico inválido"));
+				//throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao converter identificador", "O literal passado como parâmetro é um valor numérico inválido"));
 			} catch (Exception e) {
 				JsfUtil.addMsgErro("Erro ao recuperar conta: " + e.getMessage());
 			}

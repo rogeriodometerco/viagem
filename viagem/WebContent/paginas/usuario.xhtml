@@ -48,18 +48,19 @@
 				<p:outputLabel value="Login" />
 				<p:inputText value="#{usuarioMb.usuario.login}" />
 
-				<p:outputLabel value="Conta" />
+				<p:outputLabel value="Conta" rendered="#{sessaoMb.isAdministrador()}"/>
 				<p:autoComplete value="#{usuarioMb.conta}"
 					completeMethod="#{contaMb.autocomplete}" var="conta"
 					itemLabel="#{conta.nome}" itemValue="#{conta}"
-					converter="contaConverter" forceSelection="true" />
+					converter="contaConverter" forceSelection="true" 
+					rendered="#{sessaoMb.isAdministrador()}" />
 
 			</h:panelGrid>
 			<br />
 			<p:commandButton value="Salvar" action="#{usuarioMb.criar()}"
 				update="@all" />
 			<p:commandButton value="Voltar" action="#{usuarioMb.listar()}"
-				update="@all" />
+				update="@all" immediate="true" />
 		</h:form>
 	</ui:define>
 </ui:composition>

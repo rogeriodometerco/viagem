@@ -10,7 +10,7 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
 	template="/template/geral.xhtml">
 
-	<ui:define name="titulo">Cadastro de conta de conta</ui:define>
+	<ui:define name="titulo">Cadastro de conta</ui:define>
 	<ui:define name="conteudo">
 		<p:messages id="mensagens" closable="true" />
 
@@ -18,36 +18,54 @@
 			<h3>
 				<p:outputLabel value="Cadastro de conta" />
 			</h3>
-			<p:commandButton value="Novo" action="#{contaMb.prepararNovo()}"
-				ajax="false" update="@all" />
+			<p:outputPanel id="panel">
+				<p:commandButton value="Novo" action="#{contaMb.prepararNovo()}"
+					update="@all" />
+				<p:commandButton value="Editar" action="#{contaMb.prepararEdicao()}"
+					update="@all" disabled="#{contaMb.contaSelecionada == null}" />
+			</p:outputPanel>
 			<p />
 
 			<p:dataTable id="listagem" value="#{contaMb.lista}" var="conta"
+				selectionMode="single" selection="#{contaMb.contaSelecionada}"
+				rowKey="#{conta.id}"
 				emptyMessage="Nenhum registro retornado na consulta">
 				<p:column>
 					<f:facet name="header">Nome</f:facet>
 					#{conta.nome}
 				</p:column>
+				<p:ajax event="rowSelect" update=":form1:panel" />
+				<p:ajax event="rowUnselect" update=":form1:panel" />
 			</p:dataTable>
 			<p />
-
 		</h:form>
 
 		<h:form id="form2"
-			rendered="#{contaMb.estaEmModoCriacao()}">
+			rendered="#{contaMb.estaEmModoCriacao() || contaMb.estaEmModoEdicao()}">
 			<h3>
-				<p:outputLabel value="Criar conta" />
+				<p:outputLabel value="Nova conta" rendered="#{contaMb.estaEmModoCriacao()}"/>
+				<p:outputLabel value="Editar conta" rendered="#{contaMb.estaEmModoEdicao()}"/>
 			</h3>
 
 			<h:panelGrid columns="1">
 				<p:outputLabel value="Nome" />
-				<p:inputText value="#{contaMb.conta.nome}" />
+				<p:inputText value="#{contaMb.contaEdicao.nome}" />
+				<p:outputLabel value="Perfis" />
+				<p:autoComplete multiple="true"
+					completeMethod="#{perfilMb.autocomplete}" var="perfil"
+					itemValue="#{perfil}" itemLabel="#{perfil.descricao}"
+					value="#{contaMb.perfisEdicao}" converter="perfilConverter"></p:autoComplete>
+				<p:outputLabel value="Administradores" />
+				<p:autoComplete multiple="true"
+					completeMethod="#{usuarioMb.autocomplete}" var="usuario"
+					itemValue="#{usuario}" itemLabel="#{usuario.nome.concat(' - ').concat(usuario.login)}"
+					value="#{contaMb.administradoresEdicao}" converter="usuarioConverter"></p:autoComplete>
 			</h:panelGrid>
 			<br />
-			<p:commandButton value="Salvar"
-				action="#{contaMb.salvar()}" update="@all" />
-			<p:commandButton value="Voltar"
-				action="#{contaMb.listar()}" update="@all" />
+			<p:commandButton value="Salvar" action="#{contaMb.salvar()}"
+				update="@all" />
+			<p:commandButton value="Voltar" action="#{contaMb.listar()}"
+				update="@all" />
 		</h:form>
 	</ui:define>
 </ui:composition>

@@ -1,6 +1,7 @@
 package managedbean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -8,7 +9,8 @@ import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import enums.Crud;
+import enums.EstadoView;
+import exception.AppException;
 import modelo.Conta;
 import modelo.Usuario;
 import servico.UsuarioService;
@@ -29,7 +31,7 @@ public class UsuarioMb implements Serializable {
 	private String confirmacaoSenha;
 	
 	
-	private Crud estadoView;
+	private EstadoView estadoView;
 	
 	@PostConstruct
 	private void inicializar() {
@@ -40,8 +42,8 @@ public class UsuarioMb implements Serializable {
 	 */
 	public void prepararNovo() {
 		usuario = new Usuario();
-		conta = new Conta();
-		estadoView = Crud.INCLUSAO;
+		//conta = new Conta();
+		estadoView = EstadoView.INCLUSAO;
 	}
 
 	/**
@@ -52,7 +54,10 @@ public class UsuarioMb implements Serializable {
 			// Por padrão, cria-se usuário com senha igual ao login.
 			usuario.setSenha(usuario.getLogin());
 			confirmacaoSenha = usuario.getSenha();
-			usuarioService.criar(usuario, confirmacaoSenha);
+			if (conta == null) {
+				throw new AppException("Informe a conta do usuário");
+			}
+			usuarioService.criar(usuario, confirmacaoSenha, conta);
 			JsfUtil.addMsgSucesso("Usuário criado com sucesso");
 			prepararNovo();
 		} catch (Exception e) {
@@ -63,18 +68,18 @@ public class UsuarioMb implements Serializable {
 	public void listar() {
 		try {
 			this.lista = usuarioService.listar();
-			this.estadoView = Crud.CONSULTA;
+			this.estadoView = EstadoView.LISTAGEM;
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
 	}
 
 	public boolean estaEmModoCriacao() {
-		return estadoView.equals(Crud.INCLUSAO);
+		return estadoView.equals(EstadoView.INCLUSAO);
 	}
 	
 	public boolean estaEmModoListagem() {
-		return estadoView.equals(Crud.CONSULTA);
+		return estadoView.equals(EstadoView.LISTAGEM);
 	}
 	
 	public List<Usuario> getLista() {
@@ -103,6 +108,16 @@ public class UsuarioMb implements Serializable {
 	
 	public void setConta(Conta conta) {
 		this.conta = conta;
+	}
+
+	public List<Usuario> autocomplete(String query) {
+		List<Usuario> result = new ArrayList<Usuario>();
+		try {
+			result = usuarioService.listarPorNome(query, 10);
+		} catch (Exception e) {
+			JsfUtil.addMsgErro(e.getMessage());
+		}
+		return result;
 	}
 	
 }
