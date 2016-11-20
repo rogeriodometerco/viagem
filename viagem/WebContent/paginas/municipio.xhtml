@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Cadastro de município</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<h:form id="form1" rendered="#{municipioMb.estaEmModoListagem()}">
+			<h3>
+				<p:outputLabel value="Cadastro de município" />
+			</h3>
+			<p:outputPanel id="panel">
+				<p:commandButton value="Novo" action="#{municipioMb.prepararNovo()}"
+					update="@all" />
+				<p:commandButton value="Editar"
+					action="#{municipioMb.prepararEdicao()}" update="@all"
+					disabled="#{municipioMb.municipioSelecionado == null}" />
+			</p:outputPanel>
+			<p />
+
+			<p:dataTable id="listagem" value="#{municipioMb.lista}"
+				var="municipio" selectionMode="single"
+				selection="#{municipioMb.municipioSelecionado}"
+				rowKey="#{municipio.id}"
+				emptyMessage="Nenhum registro retornado na consulta">
+				<p:column>
+					<f:facet name="header">Nome</f:facet>
+					#{municipio.nome}
+				</p:column>
+				<p:column>
+					<f:facet name="header">UF</f:facet>
+					#{municipio.uf.nome.concat(' - ').concat(municipio.uf.abreviatura)}
+				</p:column>
+				<p:ajax event="rowSelect" update=":form1:panel" />
+				<p:ajax event="rowUnselect" update=":form1:panel" />
+			</p:dataTable>
+			<p />
+		</h:form>
+
+		<h:form id="form2"
+			rendered="#{municipioMb.estaEmModoCriacao() || municipioMb.estaEmModoEdicao()}">
+			<h3>
+				<p:outputLabel value="Novo"
+					rendered="#{municipioMb.estaEmModoCriacao()}" />
+				<p:outputLabel value="Editar"
+					rendered="#{municipioMb.estaEmModoEdicao()}" />
+			</h3>
+
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Nome" />
+				<p:inputText value="#{municipioMb.municipioEdicao.nome}" />
+				<p:outputLabel value="UF" />
+				<p:autoComplete value="#{municipioMb.municipioEdicao.uf}"
+					completeMethod="#{ufMb.autocomplete}" var="uf"
+					itemLabel="#{uf.nome.concat(' - ').concat(uf.abreviatura)}"
+					itemValue="#{uf}" converter="ufConverter"
+					forceSelection="true" />
+			</h:panelGrid>
+			<br />
+			<p:commandButton value="Salvar" action="#{municipioMb.salvar()}"
+				update="@all" />
+			<p:commandButton value="Voltar" action="#{municipioMb.listar()}"
+				update="@all" />
+		</h:form>
+	</ui:define>
+</ui:composition>

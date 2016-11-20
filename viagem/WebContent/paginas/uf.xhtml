@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Cadastro de UF</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<h:form id="form1" rendered="#{ufMb.estaEmModoListagem()}">
+			<h3>
+				<p:outputLabel value="Cadastro de UF" />
+			</h3>
+			<p:outputPanel id="panel">
+				<p:commandButton value="Novo" action="#{ufMb.prepararNovo()}"
+					update="@all" />
+				<p:commandButton value="Editar" action="#{ufMb.prepararEdicao()}"
+					update="@all" disabled="#{ufMb.ufSelecionada == null}" />
+			</p:outputPanel>
+			<p />
+
+			<p:dataTable id="listagem" value="#{ufMb.lista}" var="uf"
+				selectionMode="single" selection="#{ufMb.ufSelecionada}"
+				rowKey="#{uf.id}"
+				emptyMessage="Nenhum registro retornado na consulta">
+				<p:column>
+					<f:facet name="header">Abreviatura</f:facet>
+					#{uf.abreviatura}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Nome</f:facet>
+					#{uf.nome}
+				</p:column>
+				<p:ajax event="rowSelect" update=":form1:panel" />
+				<p:ajax event="rowUnselect" update=":form1:panel" />
+			</p:dataTable>
+			<p />
+		</h:form>
+
+		<h:form id="form2"
+			rendered="#{ufMb.estaEmModoCriacao() || ufMb.estaEmModoEdicao()}">
+			<h3>
+				<p:outputLabel value="Nova uf" rendered="#{ufMb.estaEmModoCriacao()}"/>
+				<p:outputLabel value="Editar uf" rendered="#{ufMb.estaEmModoEdicao()}"/>
+			</h3>
+
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Abreviatura" />
+				<p:inputText value="#{ufMb.ufEdicao.abreviatura}" />
+				<p:outputLabel value="Nome" />
+				<p:inputText value="#{ufMb.ufEdicao.nome}" />
+			</h:panelGrid>
+			<br />
+			<p:commandButton value="Salvar" action="#{ufMb.salvar()}"
+				update="@all" />
+			<p:commandButton value="Voltar" action="#{ufMb.listar()}"
+				update="@all" />
+		</h:form>
+	</ui:define>
+</ui:composition>
