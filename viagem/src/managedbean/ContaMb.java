@@ -24,7 +24,7 @@ import util.JsfUtil;
 public class ContaMb implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@EJB
 	private ContaService contaService;
 	private List<Conta> lista;
@@ -34,7 +34,7 @@ public class ContaMb implements Serializable {
 	private List<Perfil> perfisEdicao;
 	private List<Usuario> administradoresEdicao;
 	private EstadoView estadoView;
-	
+
 	@PostConstruct
 	private void inicializar() {
 		listar();
@@ -81,7 +81,7 @@ public class ContaMb implements Serializable {
 	 */
 	public void salvar() {
 		try {
-			sincronizarPerfisParaSalvar();
+			sincronizarDadosEdicaoParaSalvar();
 			contaService.salvar(contaEdicao);
 			JsfUtil.addMsgSucesso("Conta salva com sucesso");
 			if (estadoView.equals(EstadoView.INCLUSAO)) {
@@ -93,15 +93,15 @@ public class ContaMb implements Serializable {
 			JsfUtil.addMsgErro("Erro ao salvar informações: " + e.getMessage());
 		}
 	}
-	
-	private void sincronizarPerfisParaSalvar() {
+
+	private void sincronizarDadosEdicaoParaSalvar() {
 		if (perfisEdicao == null) {
 			perfisEdicao = new ArrayList<Perfil>();
 		}
 		if (administradoresEdicao == null) {
 			administradoresEdicao = new ArrayList<Usuario>();
 		}
-		
+
 		// Remove perfis que não estão mais na lista.
 		List<PerfilConta> perfisARemover = new ArrayList<PerfilConta>();
 		for (PerfilConta perfilConta: contaEdicao.getPerfis()) {
@@ -128,7 +128,7 @@ public class ContaMb implements Serializable {
 			}
 		}
 
-	
+
 		// Remove administradores que não estão mais na lista.
 		List<AdminConta> adminsARemover = new ArrayList<AdminConta>();
 		for (AdminConta adminConta: contaEdicao.getAdministradores()) {
@@ -153,8 +153,8 @@ public class ContaMb implements Serializable {
 				contaEdicao.getAdministradores().add(adminConta);
 			}
 		}
-}
-	
+	}
+
 	public void listar() {
 		try {
 			this.lista = contaService.listar();
@@ -168,15 +168,15 @@ public class ContaMb implements Serializable {
 	public boolean estaEmModoCriacao() {
 		return estadoView.equals(EstadoView.INCLUSAO);
 	}
-	
+
 	public boolean estaEmModoEdicao() {
 		return estadoView.equals(EstadoView.ALTERACAO);
 	}
-	
+
 	public boolean estaEmModoListagem() {
 		return estadoView.equals(EstadoView.LISTAGEM);
 	}
-	
+
 	public List<Conta> getLista() {
 		return lista;
 	}
@@ -188,15 +188,15 @@ public class ContaMb implements Serializable {
 	public void setContaEdicao(Conta conta) {
 		this.contaEdicao = conta;
 	}
-	
+
 	public void setContaSelecionada(Conta conta) {
 		this.contaSelecionada = conta;
 	}
-	
+
 	public Conta getContaSelecionada() {
 		return contaSelecionada;
 	}
-	
+
 	public List<Conta> autocomplete(String query) {
 		List<Conta> result = new ArrayList<Conta>();
 		try {
@@ -206,22 +206,22 @@ public class ContaMb implements Serializable {
 		}
 		return result;
 	}
-	
+
 	public List<Perfil> getPerfisEdicao() {
 		return perfisEdicao;
 	}
-	
+
 	public void setPerfisEdicao(List<Perfil> perfisEdicao) {
 		this.perfisEdicao = perfisEdicao;
 	}
-	
+
 	public List<Usuario> getAdministradoresEdicao() {
 		return administradoresEdicao;
 	}
-	
+
 	public void setAdministradoresEdicao(List<Usuario> administradores) {
 		this.administradoresEdicao = administradores;
 	}
 
-	
+
 }

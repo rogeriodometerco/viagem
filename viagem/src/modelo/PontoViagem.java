@@ -17,14 +17,10 @@ public class PontoViagem {
 	@ManyToOne
 	private Viagem viagem;
 	
-	private Double lat;
+	@ManyToOne
+	private Estabelecimento estabelecimento;
 	
-	private Double lng;
-	
-	private String descricao;
-
 	private StatusPontoViagem status;
-	
 
 	public Long getId() {
 		return id;
@@ -42,28 +38,12 @@ public class PontoViagem {
 		this.viagem = viagem;
 	}
 
-	public Double getLat() {
-		return lat;
+	public Estabelecimento getEstabelecimento() {
+		return estabelecimento;
 	}
 
-	public void setLat(Double lat) {
-		this.lat = lat;
-	}
-
-	public Double getLng() {
-		return lng;
-	}
-
-	public void setLng(Double lng) {
-		this.lng = lng;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setEstabelecimento(Estabelecimento estabelecimento) {
+		this.estabelecimento = estabelecimento;
 	}
 
 	public StatusPontoViagem getStatus() {
@@ -73,6 +53,4 @@ public class PontoViagem {
 	public void setStatus(StatusPontoViagem status) {
 		this.status = status;
 	}
-	
-	
 }

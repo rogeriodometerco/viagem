@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Demanda de transporte</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<h:form id="form1" rendered="#{demandaTransporteMb.estaEmModoListagem()}">
+			<h3>
+				<p:outputLabel value="Demanda de transporte" />
+			</h3>
+			<p:outputPanel id="panel">
+				<p:commandButton value="Novo" action="#{demandaTransporteMb.prepararNovo()}"
+					update="@all" />
+				<p:commandButton value="Editar"
+					action="#{demandaTransporteMb.prepararEdicao()}" update="@all"
+					disabled="#{demandaTransporteMb.demandaTransporteSelecionado == null}" />
+			</p:outputPanel>
+			<p />
+
+			<p:dataTable id="listagem" value="#{demandaTransporteMb.lista}"
+				var="demandaTransporte" selectionMode="single"
+				selection="#{demandaTransporteMb.demandaTransporteSelecionado}"
+				rowKey="#{demandaTransporte.id}"
+				emptyMessage="Nenhum registro retornado na consulta">
+				<p:column>
+					<f:facet name="header">Id</f:facet>
+					#{demandaTransporte.id}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Tomador</f:facet>
+					#{demandaTransporte.tomador.nome}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Origem</f:facet>
+					#{demandaTransporte.origem.nome}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Município</f:facet>
+					#{demandaTransporte.origem.municipio.nome.concat(' - ').concat(demandaTransporte.origem.municipio.uf.abreviatura)}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Destino</f:facet>
+					#{demandaTransporte.destino.nome}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Município</f:facet>
+					#{demandaTransporte.destino.municipio.nome.concat(' - ').concat(demandaTransporte.destino.municipio.uf.abreviatura)}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Produto</f:facet>
+					#{demandaTransporte.produto}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Qtde</f:facet>
+					#{demandaTransporte.quantidade}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Unidade</f:facet>
+					#{demandaTransporte.unidadeQuantidade}
+				</p:column>
+				<p:ajax event="rowSelect" update=":form1:panel" />
+				<p:ajax event="rowUnselect" update=":form1:panel" />
+			</p:dataTable>
+			<p />
+		</h:form>
+
+		<h:form id="form2"
+			rendered="#{demandaTransporteMb.estaEmModoCriacao() || demandaTransporteMb.estaEmModoEdicao()}">
+			<h3>
+				<p:outputLabel value="Novo"
+					rendered="#{demandaTransporteMb.estaEmModoCriacao()}" />
+				<p:outputLabel value="Editar"
+					rendered="#{demandaTransporteMb.estaEmModoEdicao()}" />
+			</h3>
+
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Tomador" />
+				<p:autoComplete
+					completeMethod="#{contaMb.autocomplete}" var="tomador"
+					itemValue="#{tomador}" itemLabel="#{tomador.nome}"
+					value="#{demandaTransporteMb.demandaTransporteEdicao.tomador}" 
+					converter="contaConverter"></p:autoComplete>
+				<p:outputLabel value="Origem" />
+				<p:autoComplete value="#{demandaTransporteMb.demandaTransporteEdicao.origem}"
+					completeMethod="#{estabelecimentoMb.autocomplete}" var="estabelecimento"
+					itemLabel="#{estabelecimento.nome.concat(' - ').concat(estabelecimento.municipio.nome)}"
+					itemValue="#{estabelecimento}" converter="estabelecimentoConverter"
+					forceSelection="true" />
+				<p:outputLabel value="Destino" />
+				<p:autoComplete value="#{demandaTransporteMb.demandaTransporteEdicao.destino}"
+					completeMethod="#{estabelecimentoMb.autocomplete}" var="estabelecimento"
+					itemLabel="#{estabelecimento.nome.concat(' - ').concat(estabelecimento.municipio.nome)}"
+					itemValue="#{estabelecimento}" converter="estabelecimentoConverter"
+					forceSelection="true" />
+				<p:outputLabel value="Produto" />
+				<p:inputText value="#{demandaTransporteMb.demandaTransporteEdicao.produto}" />					
+				<p:outputLabel value="Quantidade" />
+				<p:inputText value="#{demandaTransporteMb.demandaTransporteEdicao.quantidade}" />					
+				<p:outputLabel value="Unidade" />
+				<p:inputText value="#{demandaTransporteMb.demandaTransporteEdicao.unidadeQuantidade}" />					
+				<p:outputLabel value="Transportadores autorizados" />
+				<p:autoComplete multiple="true"
+					completeMethod="#{transportadorMb.autocomplete}" var="transportador"
+					itemValue="#{transportador}" itemLabel="#{transportador.nome}"
+					value="#{demandaTransporteMb.transportadoresEdicao}" 
+					converter="contaConverter"></p:autoComplete>
+			</h:panelGrid>
+			<br />
+			<p:commandButton value="Salvar" action="#{demandaTransporteMb.salvar()}"
+				update="@all" />
+			<p:commandButton value="Voltar" action="#{demandaTransporteMb.listar()}"
+				update="@all" />
+		</h:form>
+	</ui:define>
+</ui:composition>

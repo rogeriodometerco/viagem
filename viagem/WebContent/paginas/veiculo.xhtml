@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Cadastro de veículo</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<h:form id="form1" rendered="#{veiculoMb.estaEmModoListagem()}">
+			<h3>
+				<p:outputLabel value="Cadastro de veículo" />
+			</h3>
+			<p:outputPanel id="panel">
+				<p:commandButton value="Novo" action="#{veiculoMb.prepararNovo()}"
+					update="@all" />
+				<p:commandButton value="Editar" action="#{veiculoMb.prepararEdicao()}"
+					update="@all" disabled="#{veiculoMb.veiculoSelecionado == null}" />
+			</p:outputPanel>
+			<p />
+
+			<p:dataTable id="listagem" value="#{veiculoMb.lista}" var="veiculo"
+				selectionMode="single" selection="#{veiculoMb.veiculoSelecionado}"
+				rowKey="#{veiculo.id}"
+				emptyMessage="Nenhum registro retornado na consulta">
+				<p:column>
+					<f:facet name="header">Identificação</f:facet>
+					#{veiculo.identificacao}
+				</p:column>
+				<p:ajax event="rowSelect" update=":form1:panel" />
+				<p:ajax event="rowUnselect" update=":form1:panel" />
+			</p:dataTable>
+			<p />
+		</h:form>
+
+		<h:form id="form2"
+			rendered="#{veiculoMb.estaEmModoCriacao() || veiculoMb.estaEmModoEdicao()}">
+			<h3>
+				<p:outputLabel value="Nova veiculo" rendered="#{veiculoMb.estaEmModoCriacao()}"/>
+				<p:outputLabel value="Editar veiculo" rendered="#{veiculoMb.estaEmModoEdicao()}"/>
+			</h3>
+
+			<h:panelGrid columns="1">
+				<p:outputLabel value="Identificação" />
+				<p:inputText value="#{veiculoMb.veiculoEdicao.identificacao}" />
+			</h:panelGrid>
+			<br />
+			<p:commandButton value="Salvar" action="#{veiculoMb.salvar()}"
+				update="@all" />
+			<p:commandButton value="Voltar" action="#{veiculoMb.listar()}"
+				update="@all" />
+		</h:form>
+	</ui:define>
+</ui:composition>

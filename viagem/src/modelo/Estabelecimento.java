@@ -3,6 +3,7 @@ package modelo;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Estabelecimento {
@@ -11,24 +12,18 @@ public class Estabelecimento {
 	@GeneratedValue
 	private Long id;
 	
-	private String abreviatura;
-	
 	private String nome;
+	
+	@ManyToOne
+	private Municipio municipio;
 
+	
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getAbreviatura() {
-		return abreviatura;
-	}
-
-	public void setAbreviatura(String abreviatura) {
-		this.abreviatura = abreviatura;
 	}
 
 	public String getNome() {
@@ -38,6 +33,13 @@ public class Estabelecimento {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
-	
+
+	public Municipio getMunicipio() {
+		return municipio;
+	}
+
+	public void setMunicipio(Municipio municipio) {
+		this.municipio = municipio;
+	}
+
 }

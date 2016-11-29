@@ -16,8 +16,6 @@ public class Motorista {
 	
 	private String cidade;
 	
-	@ManyToOne
-	private Usuario usuario;
 
 	public Long getId() {
 		return id;
@@ -43,13 +41,4 @@ public class Motorista {
 		this.cidade = cidade;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
-	
-	
 }
