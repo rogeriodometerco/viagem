@@ -1,5 +1,6 @@
 package modelo;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,7 +13,7 @@ public class EtapaEntrega {
 	@GeneratedValue
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	private Entrega entrega;
 	
 	@ManyToOne
@@ -20,6 +21,9 @@ public class EtapaEntrega {
 	
 	@ManyToOne
 	private Estabelecimento destino;
+	
+	@ManyToOne
+	private Viagem viagem;
 	
 	public Long getId() {
 		return id;
@@ -43,6 +47,22 @@ public class EtapaEntrega {
 
 	public void setDestino(Estabelecimento destino) {
 		this.destino = destino;
+	}
+
+	public Entrega getEntrega() {
+		return entrega;
+	}
+
+	public void setEntrega(Entrega entrega) {
+		this.entrega = entrega;
+	}
+
+	public Viagem getViagem() {
+		return viagem;
+	}
+
+	public void setViagem(Viagem viagem) {
+		this.viagem = viagem;
 	}
 
 }

@@ -1,9 +1,13 @@
 package modelo;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Entrega {
@@ -20,6 +24,9 @@ public class Entrega {
 	
 	@ManyToOne
 	private Estabelecimento destino;
+	
+	@OneToMany(mappedBy="entrega", fetch=FetchType.EAGER)
+	private Set<EtapaEntrega> etapas;
 	
 	private String produto;
 	
@@ -73,6 +80,22 @@ public class Entrega {
 
 	public void setUnidadeQuantidade(String unidadeQuantidade) {
 		this.unidadeQuantidade = unidadeQuantidade;
+	}
+
+	public DemandaTransporte getDemanda() {
+		return demanda;
+	}
+
+	public void setDemanda(DemandaTransporte demanda) {
+		this.demanda = demanda;
+	}
+
+	public Set<EtapaEntrega> getEtapas() {
+		return etapas;
+	}
+
+	public void setEtapas(Set<EtapaEntrega> etapas) {
+		this.etapas = etapas;
 	}
 
 }

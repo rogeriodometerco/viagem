@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Programação de veículo</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<script type="text/javascript">
+			function handleDrop(event, ui) {
+				var dropped = ui.draggable;
+				dropped.fadeOut('fast');
+			}
+		</script>
+
+		<h:form id="form1" rendered="#{programacaoVeiculoMb.estaEmModoSelecao()}">
+			<h3>
+				<p:outputLabel value="Seleção da(s) demanda(s) para atender" />
+			</h3>
+
+			<p />
+
+			<p:fieldset id="demandasSelecionadasArea" legend="Demanda(s) selecionada(s)">
+				<p:outputPanel id="dropArea">
+					<h:outputText value="Solte aqui!" rendered="#{empty programacaoVeiculoMb.viagemEdicao.etapas}"/>
+					<p:dataTable id="demandasSelecionadas" 
+						var="etapa" value="#{programacaoVeiculoMb.viagemEdicao.etapas}" 
+						rendered="#{not empty programacaoVeiculoMb.viagemEdicao.etapas}">
+
+						<p:column style="width: 20px">
+							<p:commandButton icon="ui-icon-close" 
+								actionListener="#{programacaoVeiculoMb.demandaDescartada(demanda)}"/>
+						</p:column>
+						<p:column>
+							<h:outputText value="#{etapa.entrega.demanda.id}" />
+						</p:column>
+						<p:column>
+								<h:outputText value="#{etapa.entrega.demanda.origem.nome}" />
+						</p:column>
+						<p:column>
+								<h:outputText value="#{etapa.entrega.demanda.destino.nome}" />
+						</p:column>
+						<p:column>
+								<h:outputText value="#{etapa.entrega.demanda.produto}" />
+						</p:column>
+					</p:dataTable>
+				</p:outputPanel>
+			</p:fieldset>
+			<p:droppable for="demandasSelecionadasArea" tolerance="touch" 
+				activeStyleClass="ui-state-highlight" datasource="demandasDisponiveis" onDrop="handleDrop">
+				<p:ajax listener="#{programacaoVeiculoMb.demandaSelecionada}" update="demandasSelecionadasArea demandasDisponiveis" />
+			</p:droppable>
+
+			<p:commandButton value="Prosseguir" 
+				actionListener="{#programacaoVeiculoMb.iniciarConclusao}" update="@all" />
+			
+			<p:dataTable id="demandasDisponiveis" value="#{programacaoVeiculoMb.demandasDisponiveis}"
+				var="demandaTransporte" 
+				emptyMessage="Nenhum registro retornado na consulta">
+				<p:column style="width:20px">
+					<h:outputText id="dragIcon" styleClass="ui-icon ui-icon-arrow-4" />
+					<p:draggable for="dragIcon" revert="true" helper="clone"/>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Id</f:facet>
+					#{demandaTransporte.id}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Tomador</f:facet>
+					#{demandaTransporte.tomador.nome}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Origem</f:facet>
+					#{demandaTransporte.origem.nome}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Município</f:facet>
+					#{demandaTransporte.origem.municipio.nome.concat(' - ').concat(demandaTransporte.origem.municipio.uf.abreviatura)}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Destino</f:facet>
+					#{demandaTransporte.destino.nome}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Município</f:facet>
+					#{demandaTransporte.destino.municipio.nome.concat(' - ').concat(demandaTransporte.destino.municipio.uf.abreviatura)}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Produto</f:facet>
+					#{demandaTransporte.produto}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Qtde</f:facet>
+					#{demandaTransporte.quantidade}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Unidade</f:facet>
+					#{demandaTransporte.unidadeQuantidade}
+				</p:column>
+			</p:dataTable>			
+
+		</h:form>
+
+		<h:form id="form2"
+			rendered="#{programacaoVeiculoMb.estaEmModoConclusao()}">
+			<h3>
+				<p:outputLabel value="Concluir programação"/>
+			</h3>
+
+
+			<p:orderList id="pontosViagem" value="#{programacaoVeiculoMb.viagemEdicao.pontos}"
+				var="pontoViagem">
+				<p:column style="width:20px">
+					<h:outputText styleClass="ui-icon ui-icon-arrow-4" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Ponto</f:facet>
+					#{pontoViagem.estabelecimento.nome}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Dt chegada acordada</f:facet>
+					<p:inputText value="#{pontoViagem.dataChegadaAcordada}" />
+				</p:column>
+			</p:orderList>
+
+			<br />
+
+			<p:commandButton value="Voltar" actionListener="{#programacaoVeiculoMb.iniciarSelecao}" update="@all" />
+			<p:commandButton value="Salvar" action="#{programacaoVeiculoMb.salvar()}" update="@all" />
+				
+		</h:form>
+	</ui:define>
+</ui:composition>

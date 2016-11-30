@@ -2,6 +2,7 @@ package managedbean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,12 +14,16 @@ import org.primefaces.event.DragDropEvent;
 
 import enums.EstadoView;
 import exception.AppException;
-import modelo.Conta;
 import modelo.DemandaTransporte;
-import modelo.TransportadorDemandaAutorizado;
+import modelo.Entrega;
+import modelo.Estabelecimento;
+import modelo.EtapaEntrega;
+import modelo.PontoViagem;
 import modelo.Veiculo;
+import modelo.Viagem;
 import servico.DemandaTransporteService;
 import servico.VeiculoService;
+import servico.ViagemService;
 import util.JsfUtil;
 
 @ManagedBean
@@ -31,84 +36,183 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	private DemandaTransporteService demandaTransporteService;
 	@EJB
 	private VeiculoService veiculoService;
+	@EJB
+	private ViagemService viagemService;
 	private List<DemandaTransporte> demandasDisponiveis;
 	private List<DemandaTransporte> demandasSelecionadas;
-	private Veiculo veiculoAProgramar;
-
-	private EstadoView estadoView;
+	private Viagem viagemEdicao;
+	private static String MODO_SELECAO = "MODO_SELECAO";
+	private static String MODO_CONCLUSAO = "MODO_CONCLUSAO";
+	private String modoView;
 
 	@PostConstruct
 	private void inicializar() {
-		//listar();
+		prepararNovo();
 	}
 
-	public void recuperarVeiculo(String identificacao) {
+	private void prepararNovo() {
+		this.viagemEdicao = new Viagem();
+		this.viagemEdicao.setEtapas(new HashSet<EtapaEntrega>());
+		this.viagemEdicao.setPontos(new HashSet<PontoViagem>());
+		this.demandasSelecionadas = new ArrayList<DemandaTransporte>();
+		listar();
+		iniciarSelecao();
+	}
+	
+	public void iniciarSelecao() {
+		this.modoView = MODO_SELECAO;
+	}
+	
+	public void iniciarConclusao() {
+		this.modoView = MODO_CONCLUSAO;
+	}
+	
+	/**
+	* Trata o evento de quando o usuário informa a identificação do veículo.
+	*/
+	public void veiculoInformado(String identificacao) {
 		try {
-			veiculoAProgramar = null;
+			Veiculo veiculo = null;
 			if (identificacao != null) {
-				veiculoAProgramar = veiculoService.recuperarPelaIdentificacao(identificacao); 
-			} 
+				veiculo = veiculoService.recuperarPelaIdentificacao(identificacao); 
+			}
+			viagemEdicao.setVeiculo(veiculo);
 		} catch (AppException e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
 	}
 	
+	/**
+	* Trata o evento de quando o usuário arrasta a demanda para o veículo atender.
+	*/
 	public void demandaSelecionada(DragDropEvent ddEvent) {
         DemandaTransporte demanda = ((DemandaTransporte)ddEvent.getData());
         demandasSelecionadas.add(demanda);
         demandasDisponiveis.remove(demanda);
+		adicionarEntrega(demanda);
     }
 
-	public void demandaExcluida(DemandaTransporte demanda) {
+	/**
+	* Trata o evento de quando o usuário retira a demanda que o veículo iria atender.
+	*/
+	public void demandaDescartada(DemandaTransporte demanda) {
 		demandasSelecionadas.remove(demanda);
+		removerEntrega(demanda);
 	}
-	/*
+	
+	private void adicionarEntrega(DemandaTransporte demanda) {
+		// Cria entrega
+		Entrega entrega = new Entrega();
+		entrega.setDemanda(demanda);
+		entrega.setOrigem(demanda.getOrigem());
+		entrega.setDestino(demanda.getDestino());
+		entrega.setProduto(demanda.getProduto());
+		// não inicializa quantidade, o usuário que informa.
+		entrega.setUnidadeQuantidade(demanda.getUnidadeQuantidade());
+
+		// Cria etapa.
+		EtapaEntrega etapa = new EtapaEntrega();
+		etapa.setEntrega(entrega);
+		etapa.setViagem(viagemEdicao);
+		etapa.setOrigem(entrega.getOrigem());
+		etapa.setDestino(entrega.getDestino());
+		etapa.setViagem(viagemEdicao);
+
+		// Adiciona etapa na entrega;
+		entrega.setEtapas(new HashSet<EtapaEntrega>());
+		entrega.getEtapas().add(etapa);
+		
+		// Adiciona na lista de entregas que serão realizadas pelo veículo.
+		//entregas.add(entrega);
+		
+		viagemEdicao.getEtapas().add(etapa);
+
+		garantirPassagemPor(etapa);		
+	}
+	
+	/**
+	* Faz com que a viagem passe pelos pontos de origem e de destino da etapa.
+	*/
+	private void garantirPassagemPor(EtapaEntrega etapa) {
+		boolean origem = false, destino = false;
+		for (PontoViagem pontoViagem: viagemEdicao.getPontos()) {
+			if (pontoViagem.getEstabelecimento().equals(etapa.getOrigem())) {
+				origem = true;
+			} 
+			if (pontoViagem.getEstabelecimento().equals(etapa.getDestino())) {
+				destino = true;
+			}
+			if (origem && destino) {
+				break;
+			}
+		}
+		if (!origem) {
+			PontoViagem pontoViagem = new PontoViagem();
+			pontoViagem.setViagem(viagemEdicao);
+			pontoViagem.setEstabelecimento(etapa.getOrigem());
+			viagemEdicao.getPontos().add(pontoViagem);
+		}
+		if (!destino) {
+			PontoViagem pontoViagem = new PontoViagem();
+			pontoViagem.setViagem(viagemEdicao);
+			pontoViagem.setEstabelecimento(etapa.getDestino());
+			viagemEdicao.getPontos().add(pontoViagem);
+		}
+	}
+	
+	private void removerEntrega(DemandaTransporte demanda) {
+		EtapaEntrega etapaRemovida = null;
+		for (EtapaEntrega etapa: viagemEdicao.getEtapas()) {
+			if (etapa.getEntrega().getDemanda().equals(demanda)) {
+				viagemEdicao.getEtapas().remove(etapa);
+				etapaRemovida = etapa;
+				break;
+			}
+		}
+		if (etapaRemovida != null) {
+			if (!possuiEtapaEm(etapaRemovida.getOrigem())) {
+				removerPontoViagem(etapaRemovida.getOrigem());
+			}
+			if (!possuiEtapaEm(etapaRemovida.getDestino())) {
+				removerPontoViagem(etapaRemovida.getDestino());
+			}
+		}
+	}
+	
+	private void removerPontoViagem(Estabelecimento estabelecimento) {
+		List<PontoViagem> objetosARemover = new ArrayList<PontoViagem>();
+		
+		for (PontoViagem pontoViagem: viagemEdicao.getPontos()) {
+			if (pontoViagem.getEstabelecimento().equals(estabelecimento)) {
+				objetosARemover.add(pontoViagem);
+			} 
+		}
+		for (PontoViagem objetoARemover: objetosARemover) {
+			viagemEdicao.getPontos().remove(objetoARemover);
+		}
+	}
+
+	/**
+	* Verifica se a viagem possui alguma etapa que passa por um determinado ponto.
+	*/
+	private boolean possuiEtapaEm(Estabelecimento estabelecimento) {
+		for (EtapaEntrega etapa: viagemEdicao.getEtapas()) {
+			if (etapa.getOrigem().equals(estabelecimento) || etapa.getDestino().equals(estabelecimento)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void salvar() {
 		try {
-			sincronizarDadosEdicaoParaSalvar();
-			demandaTransporteService.salvar(demandaTransporteEdicao);
+			viagemService.criar(viagemEdicao);
 			JsfUtil.addMsgSucesso("Informações salvas com sucesso");
-			if (estaEmModoCriacao()) {
-				prepararNovo();
-			} else {
-				listar();
-			}
+			prepararNovo();
 		} catch (Exception e) {
 			JsfUtil.addMsgErro("Erro ao salvar informações: " + e.getMessage());
 		}
 	}
-
-	private void sincronizarDadosEdicaoParaSalvar() {
-		if (transportadoresEdicao == null) {
-			transportadoresEdicao = new ArrayList<Conta>();
-		}
-
-		// Remove transportadores que não estão mais na lista.
-		List<TransportadorDemandaAutorizado> transportadoresARemover = new ArrayList<TransportadorDemandaAutorizado>();
-		for (TransportadorDemandaAutorizado transportador: demandaTransporteEdicao.getTransportadores()) {
-			if (!transportadoresEdicao.contains(transportador.getTransportador())) {
-				transportadoresARemover.add(transportador);
-			}
-		}
-		demandaTransporteEdicao.getTransportadores().removeAll(transportadoresARemover);
-
-		// Adiciona os novos transportadores.
-		for (Conta transportador: transportadoresEdicao) {
-			boolean contem = false;
-			for (TransportadorDemandaAutorizado tda: demandaTransporteEdicao.getTransportadores()) {
-				if (transportador.equals(tda.getTransportador())) {
-					contem = true;
-					break;
-				}
-			}
-			if (!contem) {
-				TransportadorDemandaAutorizado tda = new TransportadorDemandaAutorizado();
-				tda.setDemanda(demandaTransporteEdicao);
-				tda.setTransportador(transportador);
-				demandaTransporteEdicao.getTransportadores().add(tda);
-			}
-		}
-	}	
 
 	public void listar() {
 		try {
@@ -118,44 +222,22 @@ public class ProgramacaoVeiculoMb implements Serializable {
 		}
 	}
 
-	public boolean estaEmModoCriacao() {
-		return estadoView.equals(EstadoView.INCLUSAO);
-	}
-
-	public boolean estaEmModoEdicao() {
-		return estadoView.equals(EstadoView.ALTERACAO);
-	}
-
-	public boolean estaEmModoListagem() {
-		return estadoView.equals(EstadoView.LISTAGEM);
-	}
-
-	public List<DemandaTransporte> getLista() {
+	public List<DemandaTransporte> getDemandasDisponiveis() {
 		return demandasDisponiveis;
 	}
 
-	public DemandaTransporte getDemandaTransporteEdicao() {
-		return demandaTransporteEdicao;
+	public Viagem getViagemEdicao() {
+		return viagemEdicao;
 	}
 
-	public void setDemandaTransporteEdicao(DemandaTransporte demandaTransporte) {
-		this.demandaTransporteEdicao = demandaTransporte;
+	public void setViagemEdicao(Viagem viagem) {
+		this.viagemEdicao = viagem;
 	}
 
-	public DemandaTransporte getDemandaTransporteSelecionado() {
-		return demandaTransporteSelecionado;
+	public Boolean estaEmModoSelecao() {
+		return modoView.equals(MODO_SELECAO);
 	}
-
-	public void setDemandaTransporteSelecionado(DemandaTransporte demandaTransporteSelecionado) {
-		this.demandaTransporteSelecionado = demandaTransporteSelecionado;
+	public Boolean estaEmModoConclusao() {
+		return modoView.equals(MODO_CONCLUSAO);
 	}
-
-	public List<Conta> getTransportadoresEdicao() {
-		return transportadoresEdicao;
-	}
-
-	public void setTransportadoresEdicao(List<Conta> transportadoresEdicao) {
-		this.transportadoresEdicao = transportadoresEdicao;
-	}
-*/
 }
