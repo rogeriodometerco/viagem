@@ -2,12 +2,15 @@ package modelo;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import enums.StatusViagem;
 
 @Entity
 public class Viagem {
@@ -25,12 +28,14 @@ public class Viagem {
 	@ManyToOne
 	private Veiculo veiculo;
 	
-	@OneToMany(mappedBy="viagem", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="viagem", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private Set<EtapaEntrega> etapas;
 	
-	@OneToMany(mappedBy="viagem", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="viagem", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private Set<PontoViagem> pontos;
 
+	private StatusViagem stauts;
+	
 	public Long getId() {
 		return id;
 	}
@@ -77,6 +82,14 @@ public class Viagem {
 
 	public void setPontos(Set<PontoViagem> pontos) {
 		this.pontos = pontos;
+	}
+
+	public StatusViagem getStauts() {
+		return stauts;
+	}
+
+	public void setStauts(StatusViagem stauts) {
+		this.stauts = stauts;
 	}
 	
 	

@@ -7,7 +7,14 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import dao.ViagemDao;
+import enums.Crud;
+import enums.StatusEntrega;
+import enums.StatusEtapaEntrega;
+import enums.StatusPontoViagem;
+import enums.StatusViagem;
 import exception.AppException;
+import modelo.EtapaEntrega;
+import modelo.PontoViagem;
 import modelo.Viagem;
 
 @Stateless
@@ -23,6 +30,7 @@ public class ViagemService {
 			if (erros.size() > 0) {
 				throw new AppException(erros.toString());
 			}
+			completarInformacoes(viagem, Crud.INCLUSAO);
 			result = viagemDao.salvar(viagem);
 		} catch (Exception e) {
 			throw new AppException(e);
@@ -30,22 +38,48 @@ public class ViagemService {
 		return result;
 	}
 
-	private List<String> validarViagem(Viagem viagem) throws Exception {
+	private void completarInformacoes(Viagem viagem, Crud crud) {
+		if (crud.equals(Crud.INCLUSAO)) {
+			viagem.setStauts(StatusViagem.PENDENTE);
+			for (EtapaEntrega etapa: viagem.getEtapas()) {
+				etapa.setStatus(StatusEtapaEntrega.PENDENTE);
+				etapa.getEntrega().setStatus(StatusEntrega.PENDENTE);
+			}
+			for (PontoViagem ponto: viagem.getPontos()) {
+				ponto.setStatus(StatusPontoViagem.PENDENTE);
+			}
+		}
+	}
+	
+	private List<String> validarViagem(Viagem viagem) {
 		List<String> erros = new ArrayList<String>();
 		
 		// TODO
 		
-		/*
-		if (viagem.getIdentificacao() == null || viagem.getIdentificacao().trim().length() == 0) {
-			erros.add("Identificação do veículo é obrigatório");
+		if (viagem.getVeiculo() == null) {
+			erros.add("Veículo da viagem é obrigatório");
 		}
-		if (viagem.getId() != null) {
-			Viagem outro = viagemDao.recuperarPelaIdentificacao(viagem.getIdentificacao());
-			if (!viagem.getId().equals(outro.getId())) {
-				erros.add("Já existe um veículo cadastrado com esta identificação");
+		if (viagem.getMotorista() == null) {
+			erros.add("Motorista da viagem é obrigatório");
+		}
+		if (viagem.getEtapas() == null || viagem.getEtapas().isEmpty()) {
+			erros.add("Deve ser acrescentada ao menos uma demanda para a viagem");
+		} else {
+			for (EtapaEntrega etapa: viagem.getEtapas()) {
+				if (etapa.getEntrega().getQuantidade() == null || etapa.getEntrega().getQuantidade() <= 0) {
+					// TODO Retirar comentário abaixo para ativar validação.
+					//erros.add("Quantidade de produto deve ser informada");
+					break;
+				}
 			}
 		}
-		*/
+		for (PontoViagem ponto: viagem.getPontos()) {
+			if (ponto.getDataChegadaAcordada() == null) {
+				// TODO Retirar comentário abaixo para ativar validação.
+				erros.add("Data prevista de chegada em " + ponto.getEstabelecimento().getNome() + " deve ser informada");
+			}
+		}
+		
 		return erros;
 	}
 

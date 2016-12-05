@@ -12,8 +12,8 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.DragDropEvent;
 
-import enums.EstadoView;
 import exception.AppException;
+import modelo.Conta;
 import modelo.DemandaTransporte;
 import modelo.Entrega;
 import modelo.Estabelecimento;
@@ -41,6 +41,9 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	private List<DemandaTransporte> demandasDisponiveis;
 	private List<DemandaTransporte> demandasSelecionadas;
 	private Viagem viagemEdicao;
+	private String identificacaoVeiculo;
+	private List<EtapaEntrega> etapas;
+	private List<PontoViagem> pontos;
 	private static String MODO_SELECAO = "MODO_SELECAO";
 	private static String MODO_CONCLUSAO = "MODO_CONCLUSAO";
 	private String modoView;
@@ -55,11 +58,17 @@ public class ProgramacaoVeiculoMb implements Serializable {
 		this.viagemEdicao.setEtapas(new HashSet<EtapaEntrega>());
 		this.viagemEdicao.setPontos(new HashSet<PontoViagem>());
 		this.demandasSelecionadas = new ArrayList<DemandaTransporte>();
-		listar();
+		this.etapas = new ArrayList<EtapaEntrega>();
+		this.pontos = new ArrayList<PontoViagem>();
 		iniciarSelecao();
 	}
 	
+	public void irParaSelecao() {
+		this.modoView = MODO_SELECAO;
+	}
+	
 	public void iniciarSelecao() {
+		listar();
 		this.modoView = MODO_SELECAO;
 	}
 	
@@ -90,6 +99,7 @@ public class ProgramacaoVeiculoMb implements Serializable {
         demandasSelecionadas.add(demanda);
         demandasDisponiveis.remove(demanda);
 		adicionarEntrega(demanda);
+
     }
 
 	/**
@@ -98,6 +108,16 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	public void demandaDescartada(DemandaTransporte demanda) {
 		demandasSelecionadas.remove(demanda);
 		removerEntrega(demanda);
+		if (viagemEdicao.getEtapas().size() == 0) {
+			iniciarSelecao();
+		}
+		
+	}
+	
+	public void selecionarDemanda(DemandaTransporte demanda) {
+		demandasSelecionadas.add(demanda);
+        demandasDisponiveis.remove(demanda);
+		adicionarEntrega(demanda);
 	}
 	
 	private void adicionarEntrega(DemandaTransporte demanda) {
@@ -126,6 +146,7 @@ public class ProgramacaoVeiculoMb implements Serializable {
 		//entregas.add(entrega);
 		
 		viagemEdicao.getEtapas().add(etapa);
+		etapas.add(etapa);
 
 		garantirPassagemPor(etapa);		
 	}
@@ -151,12 +172,14 @@ public class ProgramacaoVeiculoMb implements Serializable {
 			pontoViagem.setViagem(viagemEdicao);
 			pontoViagem.setEstabelecimento(etapa.getOrigem());
 			viagemEdicao.getPontos().add(pontoViagem);
+			pontos.add(pontoViagem);
 		}
 		if (!destino) {
 			PontoViagem pontoViagem = new PontoViagem();
 			pontoViagem.setViagem(viagemEdicao);
 			pontoViagem.setEstabelecimento(etapa.getDestino());
 			viagemEdicao.getPontos().add(pontoViagem);
+			pontos.add(pontoViagem);
 		}
 	}
 	
@@ -165,6 +188,7 @@ public class ProgramacaoVeiculoMb implements Serializable {
 		for (EtapaEntrega etapa: viagemEdicao.getEtapas()) {
 			if (etapa.getEntrega().getDemanda().equals(demanda)) {
 				viagemEdicao.getEtapas().remove(etapa);
+				etapas.remove(etapa);
 				etapaRemovida = etapa;
 				break;
 			}
@@ -187,9 +211,13 @@ public class ProgramacaoVeiculoMb implements Serializable {
 				objetosARemover.add(pontoViagem);
 			} 
 		}
+		/*
 		for (PontoViagem objetoARemover: objetosARemover) {
 			viagemEdicao.getPontos().remove(objetoARemover);
 		}
+		*/
+		viagemEdicao.getPontos().removeAll(objetosARemover);
+		pontos.removeAll(objetosARemover);
 	}
 
 	/**
@@ -197,7 +225,8 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	*/
 	private boolean possuiEtapaEm(Estabelecimento estabelecimento) {
 		for (EtapaEntrega etapa: viagemEdicao.getEtapas()) {
-			if (etapa.getOrigem().equals(estabelecimento) || etapa.getDestino().equals(estabelecimento)) {
+			if (etapa.getOrigem().equals(estabelecimento) 
+					|| etapa.getDestino().equals(estabelecimento)) {
 				return true;
 			}
 		}
@@ -206,6 +235,17 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	
 	public void salvar() {
 		try {
+			viagemEdicao.getPontos().clear();
+			System.out.println("salvar() ");
+			int i = 1;
+			for (PontoViagem ponto : pontos) {
+				ponto.setOrdem(i);
+				i++;
+				viagemEdicao.getPontos().add(ponto);
+			}
+			for (PontoViagem ponto : viagemEdicao.getPontos()) {
+				System.out.println(ponto.getOrdem() + " - " + ponto.getEstabelecimento().getNome() + " - " + ponto.getDataChegadaAcordada());
+			}
 			viagemService.criar(viagemEdicao);
 			JsfUtil.addMsgSucesso("Informações salvas com sucesso");
 			prepararNovo();
@@ -216,6 +256,7 @@ public class ProgramacaoVeiculoMb implements Serializable {
 
 	public void listar() {
 		try {
+			System.out.println("Listar()");
 			this.demandasDisponiveis = demandaTransporteService.listar();
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
@@ -240,4 +281,38 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	public Boolean estaEmModoConclusao() {
 		return modoView.equals(MODO_CONCLUSAO);
 	}
+	
+	/*
+	public List<PontoViagem> getPontos() {
+		return new ArrayList<PontoViagem>(viagemEdicao.getPontos());
+	}
+	*/
+	public List<EtapaEntrega> getEtapas() {
+		return etapas;
+	}
+	
+	public List<PontoViagem> getPontos() {
+		return pontos;
+	}
+
+	public String getIdentificacaoVeiculo() {
+		return identificacaoVeiculo;
+	}
+
+	public void setIdentificacaoVeiculo(String identificacaoVeiculo) {
+		this.identificacaoVeiculo = identificacaoVeiculo;
+	}
+
+	public void identificacaoVeiculoInformada() {
+		
+	}
+	/*
+	public void setPontos(List<PontoViagem> pontos) {
+		System.out.println("setPontos: ");
+		for (PontoViagem ponto : pontos) {
+			System.out.println(ponto.getEstabelecimento().getNome());
+		}
+		this.pontos = pontos;
+	}
+	*/
 }

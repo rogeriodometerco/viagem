@@ -10,7 +10,7 @@
 		<jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
 
 		<properties>
-			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.format_sql" value="false" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 		</properties>
@@ -22,7 +22,7 @@
 		<jta-data-source>java:/viagemDS</jta-data-source>
 
 		<properties>
-			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.dialect"

@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Cadastro de município</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<script type="text/javascript">
+			function handleDrop(event, ui) {
+				var dropped = ui.draggable;
+				dropped.fadeOut('fast');
+			}
+		</script>
+		<h:form id="form1">
+			<h3>
+				<p:outputLabel value="Programação de veículo" />
+			</h3>
+
+
+			<div class="ui-grid ui-grid-responsive">
+
+
+				<div class="ui-grid-col-4">
+					<div class="ui-grid-col-12">
+						<p:outputLabel value="Demandas selecionadas" />
+							<h:outputText value="Arraste para cá"
+								rendered="#{empty programacaoVeiculoMb.etapas}" />
+
+							<p:dataGrid id="demandasSelecionadas" var="etapa" 
+								value="#{programacaoVeiculoMb.etapas}" layout="grid"
+								styleClass="ui-panelgrid-blank"
+								rendered="#{not empty programacaoVeiculoMb.viagemEdicao.etapas}"
+								columns="1">
+
+								<h:panelGrid columns="2">
+								<p:commandButton icon="ui-icon-trash"
+									actionListener="#{programacaoVeiculoMb.demandaDescartada(etapa.entrega.demanda)}"
+									update="form1" />
+								<h:panelGrid columns="2"
+									columnClasses="ui-grid-col-2 ui-grid-col-10">
+									<h:outputText value="Origem" />
+									<h:outputText value="#{etapa.entrega.demanda.origem.nome}" />
+									<h:outputText value="Destino" />
+									<h:outputText value="#{etapa.entrega.demanda.destino.nome}" />
+									<h:outputText value="Produto" />
+									<h:outputText value="#{etapa.entrega.demanda.produto}" />
+									<h:outputText value="Quantidade" />
+									<h:panelGroup>
+										<p:inputText value="#{etapa.entrega.quantidade}" /> / #{etapa.entrega.demanda.quantidade} #{etapa.entrega.demanda.unidadeQuantidade}
+								</h:panelGroup>
+								
+								</h:panelGrid>
+								</h:panelGrid>
+
+							</p:dataGrid>
+					</div>
+					<p />
+					<div class="ui-grid-col-12">
+
+						<p:outputPanel rendered="#{not empty programacaoVeiculoMb.pontos}">
+						
+							<p:outputLabel value="Previsão da viagem" />
+
+							<p:dataTable id="pontosViagem"
+								value="#{programacaoVeiculoMb.pontos}" var="pontoViagem"
+								draggableRows="true">
+								<p:column>
+									<f:facet name="header">Ponto</f:facet>
+									<h:outputText value="#{pontoViagem.estabelecimento.nome}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">Dt chegada acordada</f:facet>
+									<p:calendar value="#{pontoViagem.dataChegadaAcordada}"
+										pattern="dd/MM/yyyy" />
+								</p:column>
+							</p:dataTable>
+						</p:outputPanel>
+					</div>
+				</div>
+
+				<div class="ui-grid-col-8">
+					<p:dataTable id="demandasDisponiveis"
+						value="#{programacaoVeiculoMb.demandasDisponiveis}"
+						var="demandaTransporte"
+						emptyMessage="Nenhum registro retornado na consulta">
+
+						<p:column style="width:30px">
+							<p:commandButton icon="ui-icon-plus"
+								actionListener="#{programacaoVeiculoMb.selecionarDemanda(demandaTransporte)}"
+								update="form1" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{demandaTransporte.id}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Tomador</f:facet>
+							<h:outputText value="#{demandaTransporte.tomador.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Origem</f:facet>
+							<h:outputText value="#{demandaTransporte.origem.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Município</f:facet>
+							<h:outputText
+								value="#{demandaTransporte.origem.municipio.nome.concat(' - ').concat(demandaTransporte.origem.municipio.uf.abreviatura)}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Destino</f:facet>
+							<h:outputText value="#{demandaTransporte.destino.nome}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Município</f:facet>
+							<h:outputText
+								value="#{demandaTransporte.destino.municipio.nome.concat(' - ').concat(demandaTransporte.destino.municipio.uf.abreviatura)}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Produto</f:facet>
+							<h:outputText value="#{demandaTransporte.produto}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Qtde</f:facet>
+							<h:outputText value="#{demandaTransporte.quantidade}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">Unidade</f:facet>
+							<h:outputText value="#{demandaTransporte.unidadeQuantidade}" />
+						</p:column>
+					</p:dataTable>
+
+				</div>
+
+
+			</div>
+
+				<br />
+
+				<p:commandButton value="Salvar"
+					action="#{programacaoVeiculoMb.salvar()}" update="form1 mensagens" />
+				<p:commandButton value="Voltar"
+					actionListener="#{programacaoVeiculoMb.iniciarSelecao()}"
+					update="form1" />
+		</h:form>
+	</ui:define>
+</ui:composition>

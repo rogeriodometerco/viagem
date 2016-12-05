@@ -78,5 +78,15 @@ public class VeiculoService {
 		}
 		return result;
 	}
+
+	public List<Veiculo> listarPelaIdentificacao(String query, int rows) throws AppException {
+		List<Veiculo> result = null;
+		try {
+			result = veiculoDao.listarPelaIdentificacao(query, rows);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar veículos: " + e.getMessage(), e);
+		}
+		return result;
+	}
 	
 }

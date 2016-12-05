@@ -1,5 +1,7 @@
 package modelo;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,6 +21,10 @@ public class PontoViagem {
 	
 	@ManyToOne
 	private Estabelecimento estabelecimento;
+	
+	private Date dataChegadaAcordada;
+	
+	private Integer ordem;
 	
 	private StatusPontoViagem status;
 
@@ -53,4 +59,21 @@ public class PontoViagem {
 	public void setStatus(StatusPontoViagem status) {
 		this.status = status;
 	}
+
+	public Date getDataChegadaAcordada() {
+		return dataChegadaAcordada;
+	}
+
+	public void setDataChegadaAcordada(Date dataChegadaAcordada) {
+		this.dataChegadaAcordada = dataChegadaAcordada;
+	}
+
+	public Integer getOrdem() {
+		return ordem;
+	}
+
+	public void setOrdem(Integer ordem) {
+		this.ordem = ordem;
+	}
+
 }

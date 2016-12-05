@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import enums.StatusEtapaEntrega;
+
 @Entity
 public class EtapaEntrega {
 	
@@ -24,6 +26,8 @@ public class EtapaEntrega {
 	
 	@ManyToOne
 	private Viagem viagem;
+	
+	private StatusEtapaEntrega status;
 	
 	public Long getId() {
 		return id;
@@ -63,6 +67,14 @@ public class EtapaEntrega {
 
 	public void setViagem(Viagem viagem) {
 		this.viagem = viagem;
+	}
+
+	public StatusEtapaEntrega getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusEtapaEntrega status) {
+		this.status = status;
 	}
 
 }

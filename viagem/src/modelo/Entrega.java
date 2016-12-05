@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import enums.StatusEntrega;
+
 @Entity
 public class Entrega {
 	
@@ -33,6 +35,9 @@ public class Entrega {
 	private Integer quantidade;
 	
 	private String unidadeQuantidade;
+	
+	private StatusEntrega status;
+	
 
 	public Long getId() {
 		return id;
@@ -96,6 +101,14 @@ public class Entrega {
 
 	public void setEtapas(Set<EtapaEntrega> etapas) {
 		this.etapas = etapas;
+	}
+
+	public StatusEntrega getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusEntrega status) {
+		this.status = status;
 	}
 
 }

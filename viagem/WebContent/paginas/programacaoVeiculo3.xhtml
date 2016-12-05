@@ -40,72 +40,61 @@
 
 				<h:panelGrid columns="4">
 					<p:outputLabel value="Veículo" />
-				<p:autoComplete
-					completeMethod="#{veiculoMb.autocomplete}" var="veiculo"
-					itemValue="#{veiculo}" itemLabel="#{veiculo.identificacao}"
-					value="#{programacaoVeiculoMb.viagemEdicao.veiculo}" 
-					converter="veiculoConverter"></p:autoComplete>
-				<p:outputLabel value="Motorista" />
-				<p:autoComplete
-					completeMethod="#{motoristaMb.autocomplete}" var="motorista"
-					itemValue="#{motorista}" itemLabel="#{motorista.nome}"
-					value="#{programacaoVeiculoMb.viagemEdicao.motorista}" 
-					converter="contaConverter"></p:autoComplete>
+					<p:inputText />
+					<p:outputLabel value="Motorista" />
+					<p:inputText />
 				</h:panelGrid>
 				<p />
-				<p:dataTable id="demandasSelecionadas" var="etapa"
-					value="#{programacaoVeiculoMb.etapas}"
-					rendered="#{not empty programacaoVeiculoMb.etapas}">
+				<p:dataGrid id="demandasSelecionadas" var="etapa"
+					value="#{programacaoVeiculoMb.etapas}" layout="grid"
+					styleClass="ui-panelgrid-blank"
+					rendered="#{not empty programacaoVeiculoMb.viagemEdicao.etapas}"
+					columns="1">
 
-					<f:facet name="header">Quantidade prevista para carregar</f:facet>
-						<p:column style="width: 35px">
-							<p:commandButton icon="ui-icon-close"
-								actionListener="#{programacaoVeiculoMb.demandaDescartada(etapa.entrega.demanda)}"
-								update="form1" />
-						</p:column>
-						<p:column>
-						
-							<h:panelGrid columns="1" style="border-color: white">
-								<h:outputText value="#{etapa.entrega.demanda.origem.nome}" />
-								<h:outputText value="#{etapa.entrega.demanda.destino.nome}" />
-								<h:outputText value="#{etapa.entrega.demanda.produto}" />
-							</h:panelGrid>
-						</p:column>
-						<p:column>
-					<h:panelGroup>
-						<p:inputText value="#{etapa.entrega.quantidade}" /> / #{etapa.entrega.demanda.quantidade} #{etapa.entrega.demanda.unidadeQuantidade}
-					</h:panelGroup>
-						</p:column>
+				<f:facet name="header">Quantidade prevista para carregar</f:facet>
+					<h:panelGrid columns="2">
+						<p:commandButton icon="ui-icon-close"
+							actionListener="#{programacaoVeiculoMb.demandaDescartada(etapa.entrega.demanda)}"
+							update="form1" />
+						<h:panelGrid columns="2"
+							>
+							<h:outputText value="Origem" />
+							<h:outputText value="#{etapa.entrega.demanda.origem.nome}" />
+							<h:outputText value="Destino" />
+							<h:outputText value="#{etapa.entrega.demanda.destino.nome}" />
+							<h:outputText value="Produto" />
+							<h:outputText value="#{etapa.entrega.demanda.produto}" />
+							<h:outputText value="Quantidade" />
+							<h:panelGroup>
+								<p:inputText value="#{etapa.entrega.quantidade}" /> / #{etapa.entrega.demanda.quantidade} #{etapa.entrega.demanda.unidadeQuantidade}
+								</h:panelGroup>
 
-				</p:dataTable>
+						</h:panelGrid>
+					</h:panelGrid>
+
+				</p:dataGrid>
 				<p />
 
 				<p:outputPanel rendered="#{not empty programacaoVeiculoMb.pontos}">
 
 					<p:dataTable id="pontosViagem"
-						value="#{programacaoVeiculoMb.pontos}" var="pontoViagem"
-						draggableRows="true" >
-
+						value="#{programacaoVeiculoMb.pontos}" var="pontoViagem" draggableRows="true">
+						
 						<f:facet name="header">Data prevista de chegada do veículo no local</f:facet>
-<!-- 					<p:column style="width: 35px"> 
- 							<h:outputText styleClass="ui-icon ui-icon-arrow-2-n-s" /> 
-	 					</p:column> -->
 						<p:column>
-							<h:outputText value="#{pontoViagem.estabelecimento.nome}" />
+						<h:outputText value="#{pontoViagem.estabelecimento.nome}" />
 						</p:column>
 						<p:column>
 							<p:calendar value="#{pontoViagem.dataChegadaAcordada}"
-								pattern="dd/MM/yyyy">
-							</p:calendar>
+								pattern="dd/MM/yyyy" />
 						</p:column>
 					</p:dataTable>
 
-					<p />
-					<p:commandButton value="Salvar"
-						action="#{programacaoVeiculoMb.salvar()}" update="form1 mensagens" partialSubmit="false" />
-					<p:commandButton value="Voltar"
-						actionListener="#{programacaoVeiculoMb.irParaSelecao()}"
-						update="form1" />
+			<p />
+			<p:commandButton value="Salvar"
+				action="#{programacaoVeiculoMb.salvar()}" update="form1 mensagens"/>
+			<p:commandButton value="Voltar"
+				actionListener="#{programacaoVeiculoMb.iniciarSelecao()}" update="form1"/>
 
 				</p:outputPanel>
 			</p:outputPanel>
@@ -117,7 +106,6 @@
 				rendered="#{programacaoVeiculoMb.estaEmModoSelecao()}">
 
 				<p:column style="width:30px">
-					<f:facet name="header">Adic.</f:facet>
 					<p:commandButton icon="ui-icon-plus"
 						actionListener="#{programacaoVeiculoMb.selecionarDemanda(demandaTransporte)}"
 						update="form1" />

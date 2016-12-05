@@ -1,6 +1,7 @@
 package managedbean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -9,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import enums.EstadoView;
+import modelo.Conta;
 import modelo.Veiculo;
 import servico.VeiculoService;
 import util.JsfUtil;
@@ -99,5 +101,15 @@ public class VeiculoMb implements Serializable {
 	public void setVeiculoSelecionado(Veiculo veiculoSelecionado) {
 		this.veiculoSelecionado = veiculoSelecionado;
 	}
-	
+
+	public List<Veiculo> autocomplete(String query) {
+		List<Veiculo> result = new ArrayList<Veiculo>();
+		try {
+			result = veiculoService.listarPelaIdentificacao(query, 10);
+		} catch (Exception e) {
+			JsfUtil.addMsgErro(e.getMessage());
+		}
+		return result;
+	}
+
 }

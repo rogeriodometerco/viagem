@@ -4,3 +4,9 @@ body {font-family: Univers, "Univers 55", "Lucida Grande CE", lucida, Helvetica,
 	color:#666;
 	line-height:1.225
 }
+th {font-weight: normal;
+	//background-image:none !important
+}
+.ui-widget-header {
+	//font-weight: normal;
+}

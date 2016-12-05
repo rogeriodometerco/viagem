@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 
@@ -23,4 +25,18 @@ public class VeiculoDao extends GenericDao<Veiculo> {
 		return result;
 	}
 
+	public List<Veiculo> listarPelaIdentificacao(String chave, int rows) throws Exception {
+		
+		List<Veiculo> result = null;
+		String sql = "SELECT x FROM Veiculo x WHERE" +
+				" upper(x.identificacao) like :iniciandoPor" +
+				" order by x.identificacao";
+		result = getEntityManager()
+				.createQuery(sql, Veiculo.class)
+				.setParameter("iniciandoPor", chave.toUpperCase().concat("%"))
+				.setMaxResults(rows)
+				.getResultList();
+		return result;
+	}
+	
 }
