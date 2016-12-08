@@ -1,5 +1,6 @@
 package modelo;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -35,6 +36,8 @@ public class Viagem {
 	private Set<PontoViagem> pontos;
 
 	private StatusViagem stauts;
+	
+	private Date dataHoraStatus;
 	
 	public Long getId() {
 		return id;
@@ -90,6 +93,14 @@ public class Viagem {
 
 	public void setStauts(StatusViagem stauts) {
 		this.stauts = stauts;
+	}
+
+	public Date getDataHoraStatus() {
+		return dataHoraStatus;
+	}
+
+	public void setDataHoraStatus(Date dataHoraStatus) {
+		this.dataHoraStatus = dataHoraStatus;
 	}
 	
 	

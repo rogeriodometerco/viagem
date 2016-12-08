@@ -28,6 +28,12 @@ public class PontoViagem {
 	
 	private StatusPontoViagem status;
 
+	private Date dataHoraPrevistaChegada;
+	
+	private Date dataHoraChegada;
+	
+	private Date dataHoraSaida;
+	
 	public Long getId() {
 		return id;
 	}
@@ -74,6 +80,30 @@ public class PontoViagem {
 
 	public void setOrdem(Integer ordem) {
 		this.ordem = ordem;
+	}
+
+	public Date getDataHoraPrevistaChegada() {
+		return dataHoraPrevistaChegada;
+	}
+
+	public void setDataHoraPrevistaChegada(Date dataHoraPrevistaChegada) {
+		this.dataHoraPrevistaChegada = dataHoraPrevistaChegada;
+	}
+
+	public Date getDataHoraChegada() {
+		return dataHoraChegada;
+	}
+
+	public void setDataHoraChegada(Date dataHoraChegada) {
+		this.dataHoraChegada = dataHoraChegada;
+	}
+
+	public Date getDataHoraSaida() {
+		return dataHoraSaida;
+	}
+
+	public void setDataHoraSaida(Date dataHoraSaida) {
+		this.dataHoraSaida = dataHoraSaida;
 	}
 
 }
