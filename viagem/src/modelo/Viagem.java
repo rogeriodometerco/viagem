@@ -35,7 +35,7 @@ public class Viagem {
 	@OneToMany(mappedBy="viagem", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private Set<PontoViagem> pontos;
 
-	private StatusViagem stauts;
+	private StatusViagem status;
 	
 	private Date dataHoraStatus;
 	
@@ -87,12 +87,12 @@ public class Viagem {
 		this.pontos = pontos;
 	}
 
-	public StatusViagem getStauts() {
-		return stauts;
+	public StatusViagem getStatus() {
+		return status;
 	}
 
-	public void setStauts(StatusViagem stauts) {
-		this.stauts = stauts;
+	public void setStatus(StatusViagem stauts) {
+		this.status = stauts;
 	}
 
 	public Date getDataHoraStatus() {

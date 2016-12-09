@@ -10,8 +10,11 @@ import javax.ejb.Stateless;
 import dao.EventoDao;
 import exception.AppException;
 import modelo.Evento;
+import modelo.EventoChegada;
 import modelo.EventoInicioViagem;
 import modelo.EventoPrevisaoChegada;
+import modelo.EventoSaida;
+import modelo.EventoTerminoOperacao;
 
 @Stateless
 public class EventoService {
@@ -26,6 +29,10 @@ public class EventoService {
 		processadores = new HashMap<Object, ProcessadorEvento>();
 		processadores.put(EventoInicioViagem.class, new ProcessadorEventoInicioViagem());
 		processadores.put(EventoPrevisaoChegada.class, new ProcessadorEventoPrevisaoChegada());
+		processadores.put(EventoChegada.class, new ProcessadorEventoChegada());
+		processadores.put(EventoSaida.class, new ProcessadorEventoSaida());
+		processadores.put(EventoTerminoOperacao.class, new ProcessadorEventoTerminoOperacao());
+
 	}
 	
 	public void registrarEvento(Evento evento) throws AppException {

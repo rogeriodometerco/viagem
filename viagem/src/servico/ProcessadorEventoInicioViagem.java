@@ -17,7 +17,7 @@ public class ProcessadorEventoInicioViagem extends ProcessadorEvento {
 		EventoInicioViagem eventoInicioViagem = (EventoInicioViagem)evento;
 		ViagemDao viagemDao = Ejb.lookup(ViagemDao.class);
 		Viagem viagem = eventoInicioViagem.getViagem();
-		viagem.setStauts(StatusViagem.INICIADA);
+		viagem.setStatus(StatusViagem.INICIADA);
 		viagem.setDataHoraStatus(eventoInicioViagem.getDataHoraInicio());
 		viagemDao.salvar(viagem);
 	}

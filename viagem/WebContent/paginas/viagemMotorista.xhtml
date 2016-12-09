@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Viagem do motorista</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<h:form id="form1">
+			<h3>
+				<p:outputLabel value="Viagem do motorista" />
+			</h3>
+
+			<p:dataTable value="#{viagemMotoristaMb.viagem.etapas}" var="etapa"
+				rendered="#{viagemMotoristaMb.viagem != null}">
+				<p:column>
+					<h:outputText value="#{etapa.origem.nome}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{etapa.destino.nome}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{etapa.entrega.produto}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{etapa.entrega.quantidade}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{etapa.entrega.unidadeQuantidade}" />
+				</p:column>
+			</p:dataTable>
+
+		<p />
+			<c:forEach items="#{viagemMotoristaMb.viagem.etapas}" var="etapa"
+				rendered="#{viagemMotoristaMb.viagem != null}">
+				<p:panel header="Sua viagem">
+				<h:panelGrid columns="5">
+					<h:outputText value="#{etapa.origem.nome}" />
+					<h:outputText value="#{etapa.destino.nome}" />
+					<h:outputText value="#{etapa.entrega.produto}" />
+					<h:outputText value="#{etapa.entrega.quantidade}" />
+					<h:outputText value="#{etapa.entrega.unidadeQuantidade}" />
+				</h:panelGrid>
+				</p:panel>
+			</c:forEach>
+		</h:form>
+	</ui:define>
+</ui:composition>

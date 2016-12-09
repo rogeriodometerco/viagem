@@ -1,6 +1,7 @@
 package servico;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -14,6 +15,8 @@ import enums.StatusPontoViagem;
 import enums.StatusViagem;
 import exception.AppException;
 import modelo.EtapaEntrega;
+import modelo.EventoInicioViagem;
+import modelo.EventoPrevisaoChegada;
 import modelo.PontoViagem;
 import modelo.Viagem;
 
@@ -22,6 +25,9 @@ public class ViagemService {
 
 	@EJB
 	private ViagemDao viagemDao;
+	
+	@EJB
+	private EventoService eventoService;
 	
 	public Viagem criar(Viagem viagem) throws AppException {
 		Viagem result = null;
@@ -40,7 +46,7 @@ public class ViagemService {
 
 	private void completarInformacoes(Viagem viagem, Crud crud) {
 		if (crud.equals(Crud.INCLUSAO)) {
-			viagem.setStauts(StatusViagem.PENDENTE);
+			viagem.setStatus(StatusViagem.PENDENTE);
 			for (EtapaEntrega etapa: viagem.getEtapas()) {
 				etapa.setStatus(StatusEtapaEntrega.PENDENTE);
 				etapa.getEntrega().setStatus(StatusEntrega.PENDENTE);
@@ -103,4 +109,39 @@ public class ViagemService {
 		return result;
 	}
 	
+	public Viagem obterViagemEmFocoDoMotoristaLogado() throws AppException {
+		// TODO Recuperar motorista logado e passar como parâmetro.
+		Viagem viagemEmFoco = null;
+		try {
+			viagemEmFoco = viagemDao.recuperarViagensNaoEncerradas(null)
+				.get(0);
+		} catch (Exception e) {
+			throw new AppException("Erro ao recuperar viagem para o motorista: " + e.getMessage());
+		}
+		return viagemEmFoco;
+	}
+	
+	public void iniciarViagem(Viagem viagem) throws AppException {
+		try {
+			EventoInicioViagem evento = new EventoInicioViagem();
+			evento.setViagem(viagem);
+			evento.setDataHoraInicio(new Date());
+			evento.setDataHoraRegistro(new Date());
+			eventoService.registrarEvento(evento);
+		} catch (Exception e) {
+			throw new AppException("Erro ao iniciar viagem: " + e.getMessage());
+		}
+	}
+
+	public void registrarPrevisaoChegada(PontoViagem pontoViagem) throws AppException {
+		try {
+			EventoPrevisaoChegada evento = new EventoPrevisaoChegada();
+			evento.setPontoViagem(pontoViagem);
+			evento.setDataHoraPrevista(pontoViagem.getDataHoraPrevistaChegada());
+			evento.setDataHoraRegistro(new Date());
+			eventoService.registrarEvento(evento);
+		} catch (Exception e) {
+			throw new AppException("Erro ao registrar previsão de chegada: " + e.getMessage());
+		}
+	}
 }
