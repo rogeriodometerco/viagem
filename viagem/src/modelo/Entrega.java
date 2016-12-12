@@ -1,5 +1,6 @@
 package modelo;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -38,7 +39,8 @@ public class Entrega {
 	
 	private StatusEntrega status;
 	
-
+	private Date dataHoraStatus;
+	
 	public Long getId() {
 		return id;
 	}
@@ -109,6 +111,14 @@ public class Entrega {
 
 	public void setStatus(StatusEntrega status) {
 		this.status = status;
+	}
+
+	public Date getDataHoraStatus() {
+		return dataHoraStatus;
+	}
+
+	public void setDataHoraStatus(Date dataHoraStatus) {
+		this.dataHoraStatus = dataHoraStatus;
 	}
 
 }

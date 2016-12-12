@@ -1,5 +1,7 @@
 package modelo;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +30,8 @@ public class EtapaEntrega {
 	private Viagem viagem;
 	
 	private StatusEtapaEntrega status;
+	
+	private Date dataHoraStatus;
 	
 	public Long getId() {
 		return id;
@@ -75,6 +79,14 @@ public class EtapaEntrega {
 
 	public void setStatus(StatusEtapaEntrega status) {
 		this.status = status;
+	}
+
+	public Date getDataHoraStatus() {
+		return dataHoraStatus;
+	}
+
+	public void setDataHoraStatus(Date dataHoraStatus) {
+		this.dataHoraStatus = dataHoraStatus;
 	}
 
 }

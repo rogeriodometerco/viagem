@@ -7,10 +7,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import enums.StatusOperacaoEtapa;
+import enums.StatusOperacaoViagem;
+import enums.TipoOperacaoViagem;
 
 @Entity
-public class OperacaoEtapa {
+public class OperacaoViagem {
 
 	@Id
 	@GeneratedValue
@@ -22,7 +23,9 @@ public class OperacaoEtapa {
 	@ManyToOne
 	private EtapaEntrega etapaEntrega;
 	
-	private StatusOperacaoEtapa status;
+	private TipoOperacaoViagem tipo;
+	
+	private StatusOperacaoViagem status;
 
 	private Date dataHoraStatus;
 
@@ -50,11 +53,11 @@ public class OperacaoEtapa {
 		this.etapaEntrega = etapaEntrega;
 	}
 	
-	public StatusOperacaoEtapa getStatus() {
+	public StatusOperacaoViagem getStatus() {
 		return status;
 	}
 
-	public void setStatus(StatusOperacaoEtapa status) {
+	public void setStatus(StatusOperacaoViagem status) {
 		this.status = status;
 	}
 
@@ -64,5 +67,13 @@ public class OperacaoEtapa {
 
 	public void setDataHoraStatus(Date dataHoraStatus) {
 		this.dataHoraStatus = dataHoraStatus;
+	}
+
+	public TipoOperacaoViagem getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(TipoOperacaoViagem tipo) {
+		this.tipo = tipo;
 	}
 }

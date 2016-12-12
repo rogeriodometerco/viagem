@@ -13,17 +13,17 @@ import enums.TipoTerminoOperacao;
 public class EventoTerminoOperacao extends Evento {
 
 	@ManyToOne
-	private OperacaoEtapa operacao;
+	private OperacaoViagem operacao;
 	
 	private Date dataHoraTermino;
 	
 	private TipoTerminoOperacao tipoTermino;
 
-	public OperacaoEtapa getOperacaoEtapa() {
+	public OperacaoViagem getOperacaoEtapa() {
 		return operacao;
 	}
 
-	public void setOperacaoEtapa(OperacaoEtapa operacao) {
+	public void setOperacaoViagem(OperacaoViagem operacao) {
 		this.operacao = operacao;
 	}
 

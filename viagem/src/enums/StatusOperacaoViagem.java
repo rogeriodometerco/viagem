@@ -1,5 +1,5 @@
 package enums;
 
-public enum StatusOperacaoEtapa {
+public enum StatusOperacaoViagem {
 	PENDENTE, REALIZADA, ABORTADA
 }

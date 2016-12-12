@@ -1,11 +1,15 @@
 package modelo;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import enums.StatusPontoViagem;
 
@@ -28,11 +32,16 @@ public class PontoViagem {
 	
 	private StatusPontoViagem status;
 
+	private Date dataHoraStatus;
+	
 	private Date dataHoraPrevistaChegada;
 	
 	private Date dataHoraChegada;
 	
 	private Date dataHoraSaida;
+	
+	@OneToMany(mappedBy="pontoViagem", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+	private Set<OperacaoViagem> operacoes;
 	
 	public Long getId() {
 		return id;
@@ -104,6 +113,22 @@ public class PontoViagem {
 
 	public void setDataHoraSaida(Date dataHoraSaida) {
 		this.dataHoraSaida = dataHoraSaida;
+	}
+
+	public Set<OperacaoViagem> getOperacoes() {
+		return operacoes;
+	}
+
+	public void setOperacoes(Set<OperacaoViagem> operacoes) {
+		this.operacoes = operacoes;
+	}
+
+	public Date getDataHoraStatus() {
+		return dataHoraStatus;
+	}
+
+	public void setDataHoraStatus(Date dataHoraStatus) {
+		this.dataHoraStatus = dataHoraStatus;
 	}
 
 }

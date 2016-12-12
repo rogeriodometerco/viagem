@@ -12,12 +12,13 @@ import javax.faces.bean.ViewScoped;
 
 import org.primefaces.event.DragDropEvent;
 
+import enums.TipoOperacaoViagem;
 import exception.AppException;
-import modelo.Conta;
 import modelo.DemandaTransporte;
 import modelo.Entrega;
 import modelo.Estabelecimento;
 import modelo.EtapaEntrega;
+import modelo.OperacaoViagem;
 import modelo.PontoViagem;
 import modelo.Veiculo;
 import modelo.Viagem;
@@ -155,32 +156,45 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	* Faz com que a viagem passe pelos pontos de origem e de destino da etapa.
 	*/
 	private void garantirPassagemPor(EtapaEntrega etapa) {
-		boolean origem = false, destino = false;
+		PontoViagem pontoViagemColeta = null;
+		PontoViagem pontoViagemEntrega = null;
 		for (PontoViagem pontoViagem: viagemEdicao.getPontos()) {
 			if (pontoViagem.getEstabelecimento().equals(etapa.getOrigem())) {
-				origem = true;
+				pontoViagemColeta = pontoViagem;
 			} 
 			if (pontoViagem.getEstabelecimento().equals(etapa.getDestino())) {
-				destino = true;
+				pontoViagemEntrega = pontoViagem;
 			}
-			if (origem && destino) {
+			if (pontoViagemColeta != null && pontoViagemEntrega != null) {
 				break;
 			}
 		}
-		if (!origem) {
-			PontoViagem pontoViagem = new PontoViagem();
-			pontoViagem.setViagem(viagemEdicao);
-			pontoViagem.setEstabelecimento(etapa.getOrigem());
-			viagemEdicao.getPontos().add(pontoViagem);
-			pontos.add(pontoViagem);
+		if (pontoViagemColeta == null) {
+			pontoViagemColeta = new PontoViagem();
+			pontoViagemColeta.setViagem(viagemEdicao);
+			pontoViagemColeta.setEstabelecimento(etapa.getOrigem());
+			viagemEdicao.getPontos().add(pontoViagemColeta);
+			pontos.add(pontoViagemColeta);
+			pontoViagemColeta.setOperacoes(new HashSet<OperacaoViagem>());
 		}
-		if (!destino) {
-			PontoViagem pontoViagem = new PontoViagem();
-			pontoViagem.setViagem(viagemEdicao);
-			pontoViagem.setEstabelecimento(etapa.getDestino());
-			viagemEdicao.getPontos().add(pontoViagem);
-			pontos.add(pontoViagem);
+		OperacaoViagem operacaoColeta = new OperacaoViagem();
+		operacaoColeta.setPontoViagem(pontoViagemColeta);
+		operacaoColeta.setEtapaEntrega(etapa);
+		operacaoColeta.setTipo(TipoOperacaoViagem.COLETA);
+		pontoViagemColeta.getOperacoes().add(operacaoColeta);
+		if (pontoViagemEntrega == null) {
+			pontoViagemEntrega = new PontoViagem();
+			pontoViagemEntrega.setViagem(viagemEdicao);
+			pontoViagemEntrega.setEstabelecimento(etapa.getDestino());
+			viagemEdicao.getPontos().add(pontoViagemEntrega);
+			pontos.add(pontoViagemEntrega);
+			pontoViagemEntrega.setOperacoes(new HashSet<OperacaoViagem>());
 		}
+		OperacaoViagem operacaoEntrega = new OperacaoViagem();
+		operacaoEntrega.setPontoViagem(pontoViagemEntrega);
+		operacaoEntrega.setEtapaEntrega(etapa);
+		operacaoEntrega.setTipo(TipoOperacaoViagem.ENTREGA);
+		pontoViagemEntrega.getOperacoes().add(operacaoEntrega);
 	}
 	
 	private void removerEntrega(DemandaTransporte demanda) {
@@ -194,12 +208,44 @@ public class ProgramacaoVeiculoMb implements Serializable {
 			}
 		}
 		if (etapaRemovida != null) {
+			PontoViagem pontoViagem = buscarPontoViagem(etapaRemovida.getOrigem());
+			if (pontoViagem != null) {
+				for (OperacaoViagem operacao: pontoViagem.getOperacoes()) {
+					if (operacao.getEtapaEntrega().equals(etapaRemovida)) {
+						pontoViagem.getOperacoes().remove(operacao);
+						operacao.setPontoViagem(null);
+						operacao.setEtapaEntrega(null);
+						break;
+					}
+				}
+				if (pontoViagem.getOperacoes().isEmpty()) {
+					viagemEdicao.getPontos().remove(pontoViagem);
+					pontos.remove(pontoViagem);
+				}
+			}
+			pontoViagem = buscarPontoViagem(etapaRemovida.getDestino());
+			if (pontoViagem != null) {
+				for (OperacaoViagem operacao: pontoViagem.getOperacoes()) {
+					if (operacao.getEtapaEntrega().equals(etapaRemovida)) {
+						pontoViagem.getOperacoes().remove(operacao);
+						operacao.setPontoViagem(null);
+						operacao.setEtapaEntrega(null);
+						break;
+					}
+				}
+				if (pontoViagem.getOperacoes().isEmpty()) {
+					viagemEdicao.getPontos().remove(pontoViagem);
+					pontos.remove(pontoViagem);
+				}
+			}
+			/*
 			if (!possuiEtapaEm(etapaRemovida.getOrigem())) {
 				removerPontoViagem(etapaRemovida.getOrigem());
 			}
 			if (!possuiEtapaEm(etapaRemovida.getDestino())) {
 				removerPontoViagem(etapaRemovida.getDestino());
 			}
+			*/
 		}
 	}
 	
@@ -211,13 +257,17 @@ public class ProgramacaoVeiculoMb implements Serializable {
 				objetosARemover.add(pontoViagem);
 			} 
 		}
-		/*
-		for (PontoViagem objetoARemover: objetosARemover) {
-			viagemEdicao.getPontos().remove(objetoARemover);
-		}
-		*/
 		viagemEdicao.getPontos().removeAll(objetosARemover);
 		pontos.removeAll(objetosARemover);
+	}
+
+	private PontoViagem buscarPontoViagem(Estabelecimento estabelecimento) {
+		for (PontoViagem pontoViagem: viagemEdicao.getPontos()) {
+			if (pontoViagem.getEstabelecimento().equals(estabelecimento)) {
+				return pontoViagem;
+			} 
+		}
+		return null;
 	}
 
 	/**
@@ -236,15 +286,11 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	public void salvar() {
 		try {
 			viagemEdicao.getPontos().clear();
-			System.out.println("salvar() ");
 			int i = 1;
 			for (PontoViagem ponto : pontos) {
 				ponto.setOrdem(i);
 				i++;
 				viagemEdicao.getPontos().add(ponto);
-			}
-			for (PontoViagem ponto : viagemEdicao.getPontos()) {
-				System.out.println(ponto.getOrdem() + " - " + ponto.getEstabelecimento().getNome() + " - " + ponto.getDataChegadaAcordada());
 			}
 			viagemService.criar(viagemEdicao);
 			JsfUtil.addMsgSucesso("Informações salvas com sucesso");
