@@ -16,6 +16,7 @@ import enums.StatusPontoViagem;
 import enums.StatusViagem;
 import enums.TipoTerminoOperacao;
 import exception.AppException;
+import modelo.Conta;
 import modelo.EtapaEntrega;
 import modelo.EventoChegada;
 import modelo.EventoCriacaoViagem;
@@ -23,6 +24,7 @@ import modelo.EventoInicioViagem;
 import modelo.EventoPrevisaoChegada;
 import modelo.EventoSaida;
 import modelo.EventoTerminoOperacao;
+import modelo.EventoTerminoViagem;
 import modelo.OperacaoViagem;
 import modelo.PontoViagem;
 import modelo.Viagem;
@@ -125,8 +127,30 @@ public class ViagemService {
 		// TODO Recuperar motorista logado e passar como parâmetro.
 		Viagem viagemEmFoco = null;
 		try {
-			viagemEmFoco = viagemDao.recuperarViagensNaoEncerradas(null)
+			viagemEmFoco = viagemDao.recuperarViagensNaoEncerradas()
 					.get(0);
+		} catch (Exception e) {
+			throw new AppException("Erro ao recuperar viagem para o motorista: " + e.getMessage());
+		}
+		return viagemEmFoco;
+	}
+
+	public Viagem obterViagemEmFocoDoMotorista(Conta motorista) throws AppException {
+		// TODO Recuperar motorista logado e passar como parâmetro.
+		Viagem viagemEmFoco = null;
+		try {
+			List<Viagem> viagens = viagemDao.recuperarViagensNaoEncerradas(motorista);
+
+			// Da lista retornada, escolhe a viagem mais antiga.
+			for (Viagem viagem: viagens) {
+				if (viagemEmFoco == null) {
+					viagemEmFoco = viagem;
+				} else {
+					if (viagemEmFoco.getId() > viagem.getId()) {
+						viagemEmFoco = viagem;
+					}
+				}
+			}
 		} catch (Exception e) {
 			throw new AppException("Erro ao recuperar viagem para o motorista: " + e.getMessage());
 		}
@@ -207,5 +231,18 @@ public class ViagemService {
 			throw new AppException("Erro ao registrar término das operações: " + e.getMessage());
 		}
 	}
+	
+	public void finalizarViagem(Viagem viagem) throws AppException {
+		try {
+			EventoTerminoViagem evento = new EventoTerminoViagem();
+			evento.setViagem(viagem);
+			evento.setDataHoraTermino(new Date());
+			evento.setDataHoraRegistro(new Date());
+			eventoService.registrarEvento(evento);
+		} catch (Exception e) {
+			throw new AppException("Erro ao terminar viagem: " + e.getMessage());
+		}
+	}
+
 }
 

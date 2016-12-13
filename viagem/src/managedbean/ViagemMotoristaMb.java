@@ -9,7 +9,7 @@ import javax.faces.bean.ViewScoped;
 
 import enums.StatusOperacaoViagem;
 import enums.StatusViagem;
-import modelo.OperacaoViagem;
+import modelo.Conta;
 import modelo.PontoViagem;
 import modelo.Viagem;
 import servico.PontoViagemService;
@@ -24,35 +24,46 @@ public class ViagemMotoristaMb {
 	private ViagemService viagemService;
 	@EJB
 	private PontoViagemService pontoViagemService;
-	
+
+	private Conta motorista;
 	private Viagem viagem;
 	private PontoViagem pontoViagem;
-	
+
 	@PostConstruct
 	private void inicializar() {
 		carregarViagem();
 	}
-	
+
+	public void motoristaSelecionado() {
+		carregarViagem();
+	}
+
 	private void carregarViagem() {
+		this.viagem = null;
+		this.pontoViagem = null;
 		try {
-			this.viagem = viagemService.obterViagemEmFocoDoMotoristaLogado();
-			if (!viagem.getStatus().equals(StatusViagem.PENDENTE)) {
-				carregarPontoViagem();
+			if (motorista != null) {
+				this.viagem = viagemService.obterViagemEmFocoDoMotorista(motorista);
+				if (viagem != null) {
+					if (!viagem.getStatus().equals(StatusViagem.PENDENTE)) {
+						carregarPontoViagem();
+					}
+				}
 			}
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
 	}
-	
+
 	private void carregarPontoViagem() {
 		//this.pontoViagem = viagem.getPontos().iterator().next();
 	}
-	
+
 	public void selecionarPonto(PontoViagem pontoViagem) {
 		System.out.println("Selecionou ponto viagem: " + pontoViagem.getId());
 		this.pontoViagem = pontoViagem;
 	}
-	
+
 	public void iniciarViagem() {
 		try {
 			viagemService.iniciarViagem(viagem);
@@ -63,7 +74,7 @@ public class ViagemMotoristaMb {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
 	}
-	
+
 	public void registrarPrevisaoChegada() {
 		try {
 			// TODO
@@ -75,7 +86,7 @@ public class ViagemMotoristaMb {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
 	}
-	
+
 	public void registrarChegada() {
 		try {
 			// TODO
@@ -86,9 +97,9 @@ public class ViagemMotoristaMb {
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
-		
+
 	}
-	
+
 	public void registrarSaida() {
 		try {
 			// TODO
@@ -100,11 +111,22 @@ public class ViagemMotoristaMb {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
 	}
-	
+
 	public void registrarTerminoOperacoes() {
 		try {
 			// TODO
 			viagemService.registrarTerminoOperacoes(pontoViagem);
+		} catch (Exception e) {
+			JsfUtil.addMsgErro(e.getMessage());
+		}
+	}
+
+	public void finalizarViagem() {
+		try {
+			// TODO
+			viagemService.finalizarViagem(viagem);
+			carregarViagem();
+			//carregarViagem();
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
@@ -126,12 +148,20 @@ public class ViagemMotoristaMb {
 	public StatusViagem getStatusViagemPendente() {
 		return StatusViagem.PENDENTE;
 	}
-	
+
 	public StatusOperacaoViagem getStatusOperacaoViagemRealizada() {
 		return StatusOperacaoViagem.REALIZADA;
 	}
-	
+
 	public StatusOperacaoViagem getStatusOperacaoViagemAbortada() {
 		return StatusOperacaoViagem.ABORTADA;
+	}
+
+	public Conta getMotorista() {
+		return motorista;
+	}
+
+	public void setMotorista(Conta motorista) {
+		this.motorista = motorista;
 	}
 }

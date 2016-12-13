@@ -19,7 +19,15 @@
 				<p:outputLabel value="Viagem do motorista" />
 			</h3>
 
+			<p:autoComplete completeMethod="#{motoristaMb.autocomplete}"
+				var="motorista" itemValue="#{motorista}"
+				itemLabel="#{motorista.nome}" value="#{viagemMotoristaMb.motorista}"
+				converter="contaConverter">
+				<p:ajax event="itemSelect" process="@this"
+					listener="#{viagemMotoristaMb.motoristaSelecionado}" update="@all" />
+			</p:autoComplete>
 
+			<p />
 			<p:outputPanel id="viagem"
 				rendered="#{viagemMotoristaMb.viagem != null}">
 				<p:outputPanel id="novaViagem">
@@ -34,10 +42,10 @@
 								<h:outputText value="#{etapa.entrega.quantidade}" />
 								<h:outputText value="#{etapa.entrega.unidadeQuantidade}" />
 							</h:panelGrid>
-							<p:commandButton value="Iniciar viagem"
-								actionListener="#{viagemMotoristaMb.iniciarViagem}"
-								process="@this" update="viagem" />
 						</c:forEach>
+						<p:commandButton value="Iniciar viagem"
+							actionListener="#{viagemMotoristaMb.iniciarViagem}"
+							process="@this" update="viagem" />
 					</p:panel>
 				</p:outputPanel>
 
@@ -51,8 +59,7 @@
 						<c:forEach items="#{viagemMotoristaMb.viagem.pontos}" var="ponto"
 							rendered="#{viagemMotoristaMb.viagem != null}">
 							<p:panel>
-								<h:outputText value="#{ponto.estabelecimento.nome}" />
-								<p:commandButton value="Escolher"
+								<p:commandButton value="#{ponto.estabelecimento.nome}"
 									actionListener="#{viagemMotoristaMb.selecionarPonto(ponto)}"
 									process="@this" update="viagem" />
 							</p:panel>
@@ -108,17 +115,21 @@
 								<h:panelGrid columns="5">
 									<h:outputText value="#{operacao.tipo.descricao}" />
 									<h:outputText value="#{operacao.etapaEntrega.entrega.produto}" />
-									<h:outputText value="#{operacao.etapaEntrega.entrega.quantidade}" />
-									<h:outputText value="#{operacao.etapaEntrega.entrega.unidadeQuantidade}" />
+									<h:outputText
+										value="#{operacao.etapaEntrega.entrega.quantidade}" />
+									<h:outputText
+										value="#{operacao.etapaEntrega.entrega.unidadeQuantidade}" />
 								</h:panelGrid>
-									<p/>
-									<p:selectOneRadio columns="1" value="#{operacao.status}">
-										<f:selectItem itemLabel="Realizada" itemValue="#{viagemMotoristaMb.statusOperacaoViagemRealizada}" />
-										<f:selectItem itemLabel="Abortada" itemValue="#{viagemMotoristaMb.statusOperacaoViagemAbortada}" />
-									</p:selectOneRadio>
+								<p />
+								<p:selectOneRadio columns="1" value="#{operacao.status}">
+									<f:selectItem itemLabel="Realizada"
+										itemValue="#{viagemMotoristaMb.statusOperacaoViagemRealizada}" />
+									<f:selectItem itemLabel="Abortada"
+										itemValue="#{viagemMotoristaMb.statusOperacaoViagemAbortada}" />
+								</p:selectOneRadio>
 							</p:dataGrid>
-									<p/>
-							<p:commandButton value="Finalizar operações" 
+							<p />
+							<p:commandButton value="Finalizar operações"
 								actionListener="#{viagemMotoristaMb.registrarTerminoOperacoes}"
 								update="eventos" />
 						</p:panel>
@@ -127,6 +138,13 @@
 
 						<p:commandButton value="Registrar saída"
 							actionListener="#{viagemMotoristaMb.registrarSaida}"
+							update="eventos" />
+
+						<hr />
+						<p />
+
+						<p:commandButton value="Finalizar viagem"
+							actionListener="#{viagemMotoristaMb.finalizarViagem}"
 							update="eventos" />
 
 						<hr />

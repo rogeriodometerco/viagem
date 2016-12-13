@@ -10,6 +10,7 @@ import javax.ejb.Stateless;
 import dao.EventoDao;
 import exception.AppException;
 import modelo.Evento;
+import modelo.EventoAceiteViagem;
 import modelo.EventoChegada;
 import modelo.EventoCriacaoViagem;
 import modelo.EventoInicioViagem;
@@ -26,6 +27,8 @@ public class EventoService {
 	
 	@EJB
 	private ProcessadorEventoCriacaoViagem processadorEventoCriacaoViagem;
+	@EJB
+	private ProcessadorEventoAceiteViagem processadorEventoAceiteViagem;
 	@EJB
 	private ProcessadorEventoInicioViagem processadorEventoInicioViagem;
 	@EJB
@@ -46,6 +49,7 @@ public class EventoService {
 		
 		processadores = new HashMap<Object, ProcessadorEvento>();
 		processadores.put(EventoCriacaoViagem.class, processadorEventoCriacaoViagem);
+		processadores.put(EventoAceiteViagem.class, processadorEventoAceiteViagem);
 		processadores.put(EventoInicioViagem.class, processadorEventoInicioViagem);
 		processadores.put(EventoPrevisaoChegada.class, processadorEventoPrevisaoChegada);
 		processadores.put(EventoChegada.class, processadorEventoChegada);
