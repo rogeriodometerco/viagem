@@ -1,13 +1,11 @@
 package teste;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
-import dao.ViagemDao;
-import modelo.EventoInicioViagem;
-import modelo.Viagem;
-import servico.EventoService;
-import servico.ProcessadorEventoInicioViagem;
-import util.Ejb;
+import util.DataUtil;
 
 public class TesteEvento {
 
@@ -17,17 +15,17 @@ public class TesteEvento {
 	}
 
 	public void testar() {
-		try {
-			EventoService servico = Ejb.lookup(EventoService.class);
-			ViagemDao viagemDao = Ejb.lookup(ViagemDao.class);
-			Viagem viagem = viagemDao.listar().get(0);
-			EventoInicioViagem evento = new EventoInicioViagem();
-			evento.setViagem(viagem);
-			evento.setDataHoraInicio(new Date());
-			evento.setDataHoraRegistro(new Date());
-			servico.registrarEvento(evento);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Calendar calendar = Calendar.getInstance();
+		DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
+		System.out.println("1: " + format.format(calendar.getTime()));
+		calendar.setTime(DataUtil.extrairDataSemHora(calendar.getTime()));
+		
+		System.out.println("2: " + format.format(calendar.getTime()));
+		Date dataInicial = calendar.getTime();
+		calendar.add(Calendar.DAY_OF_MONTH, 1);
+		System.out.println("3: " + format.format(calendar.getTime()));
+		//Date dataFinal = calendar.getTime();
+		Date dataFinal = DataUtil.somarDias(calendar.getTime(), -3);
+		System.out.println("1: " + format.format(dataFinal));
 	}
 }

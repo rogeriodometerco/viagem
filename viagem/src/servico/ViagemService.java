@@ -217,7 +217,7 @@ public class ViagemService {
 		try {
 			for (OperacaoViagem operacao: pontoViagem.getOperacoes()) {
 				EventoTerminoOperacao evento = new EventoTerminoOperacao();
-				evento.setOperacaoViagem(operacao);
+				evento.setOperacao(operacao);
 				evento.setDataHoraTermino(new Date());
 				if (operacao.getStatus().equals(StatusOperacaoViagem.ABORTADA)) {
 					evento.setTipoTermino(TipoTerminoOperacao.ABORTADA);

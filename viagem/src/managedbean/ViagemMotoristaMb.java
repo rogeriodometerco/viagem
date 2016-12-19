@@ -13,6 +13,7 @@ import modelo.Conta;
 import modelo.PontoViagem;
 import modelo.Viagem;
 import servico.PontoViagemService;
+import servico.SessaoService;
 import servico.ViagemService;
 import util.JsfUtil;
 
@@ -24,13 +25,16 @@ public class ViagemMotoristaMb {
 	private ViagemService viagemService;
 	@EJB
 	private PontoViagemService pontoViagemService;
+	@EJB
+	private SessaoService sessaoService;
 
 	private Conta motorista;
 	private Viagem viagem;
 	private PontoViagem pontoViagem;
 
 	@PostConstruct
-	private void inicializar() {
+	private void inicializar() throws Exception {
+		this.motorista = sessaoService.getConta();
 		carregarViagem();
 	}
 

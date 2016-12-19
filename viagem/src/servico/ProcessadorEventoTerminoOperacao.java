@@ -29,7 +29,7 @@ public class ProcessadorEventoTerminoOperacao extends ProcessadorEvento {
 			throw new Exception("Classe de evento não prevista");
 		}
 		EventoTerminoOperacao eventoTerminoOperacao = (EventoTerminoOperacao)evento;
-		OperacaoViagem operacao = eventoTerminoOperacao.getOperacaoEtapa();
+		OperacaoViagem operacao = eventoTerminoOperacao.getOperacao();
 		switch (eventoTerminoOperacao.getTipoTermino()) {
 			case ABORTADA:
 				operacao.setStatus(StatusOperacaoViagem.ABORTADA);

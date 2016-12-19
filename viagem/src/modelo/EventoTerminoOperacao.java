@@ -19,11 +19,11 @@ public class EventoTerminoOperacao extends Evento {
 	
 	private TipoTerminoOperacao tipoTermino;
 
-	public OperacaoViagem getOperacaoEtapa() {
+	public OperacaoViagem getOperacao() {
 		return operacao;
 	}
 
-	public void setOperacaoViagem(OperacaoViagem operacao) {
+	public void setOperacao(OperacaoViagem operacao) {
 		this.operacao = operacao;
 	}
 

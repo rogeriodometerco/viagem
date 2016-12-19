@@ -18,12 +18,16 @@ public class SessaoMb implements Serializable {
 
 	@EJB
 	private SessaoService sessaoService;
-
+	
 	public Boolean isAdministrador() {
 		// TODO
 		return true;
 	}
 
+	public void setConta(Conta conta) {
+		sessaoService.setConta(conta);
+	}
+	
 	public Conta getConta() {
 		try {
 			return sessaoService.getConta();
@@ -32,4 +36,5 @@ public class SessaoMb implements Serializable {
 		}
 		return null;
 	}
+	
 }

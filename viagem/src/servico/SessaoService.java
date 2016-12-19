@@ -43,4 +43,8 @@ public class SessaoService {
 		}
 		return usuario;
 	}
+	
+	public void setConta(Conta conta) {
+		this.conta = conta;
+	}
 }

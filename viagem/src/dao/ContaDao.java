@@ -18,7 +18,6 @@ public class ContaDao extends GenericDao<Conta> {
 		String sql = "SELECT x FROM Conta x WHERE" +
 				" upper(x.nome) like :iniciandoPor" +
 				" order by x.nome";
-		System.out.println(sql);
 		result = getEntityManager()
 				.createQuery(sql, Conta.class)
 				.setParameter("iniciandoPor", chave.toUpperCase().concat("%"))
@@ -53,7 +52,6 @@ public class ContaDao extends GenericDao<Conta> {
 				" upper(c.nome) like :iniciandoPor" +
 				" and p.perfil= :perfil" +
 				" order by c.nome";
-		System.out.println(sql);
 		result = getEntityManager()
 				.createQuery(sql, Conta.class)
 				.setParameter("iniciandoPor", chave.toUpperCase().concat("%"))
