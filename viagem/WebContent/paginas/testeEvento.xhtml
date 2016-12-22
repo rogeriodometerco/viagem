@@ -17,6 +17,28 @@
 		<h:form id="form1" rendered="#{veiculoMb.estaEmModoListagem()}">
 			<p:commandButton value="Testar" action="#{testeEventoMb.testar()}"
 				update="@all" />
+			<p:commandButton value="Término operações" action="#{testeEventoMb.listarTerminoOperacoes()}"
+				update="@all" />
+				
+			<p:dataTable value="#{testeEventoMb.filtro.estabelecimentosOpcoes}" var="estabelecimento"
+				selection="#{testeEventoMb.filtro.estabelecimentosFiltro}" selectionMode="multiple"
+				rowKey="#{estabelecimento}">
+				<p:column>
+					<h:outputText value="#{estabelecimento.nome}" />
+				</p:column>
+				<p:ajax event="rowSelect" update="form1" />
+				<p:ajax event="rowUnselect" update="form1" />
+			</p:dataTable>
+
+			<p:dataTable value="#{testeEventoMb.filtro.lista}" var="operacao">
+				<p:column>
+					<h:outputText value="#{operacao.pontoViagem.estabelecimento.nome}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{operacao.tipo.descricao}" />
+				</p:column>
+
+			</p:dataTable>
 		</h:form>
 	</ui:define>
 </ui:composition>

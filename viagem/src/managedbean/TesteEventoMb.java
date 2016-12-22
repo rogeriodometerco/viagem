@@ -1,6 +1,7 @@
 package managedbean;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import dao.EventoDao;
+import estatistica.FiltroOperacaoViagem;
 import modelo.OperacaoViagem;
 import servico.EventoService;
 import util.JsfUtil;
@@ -22,6 +24,7 @@ public class TesteEventoMb implements Serializable {
 	private EventoService eventoService;
 	@EJB
 	private EventoDao eventoDao;
+	private FiltroOperacaoViagem filtro = new FiltroOperacaoViagem();
 
 	public void testar() {
 		try {
@@ -35,4 +38,20 @@ public class TesteEventoMb implements Serializable {
 		}
 	}
 
+	public void listarTerminoOperacoes() {
+		try {
+			List<OperacaoViagem> operacoes = eventoDao.listarTerminoOperacoes(new Date());
+			filtro = new FiltroOperacaoViagem(operacoes);
+			System.out.println("recuperados: " + operacoes.size());
+			for (OperacaoViagem operacao: operacoes) {
+				System.out.println(operacao.getId() + " " + operacao.getDataHoraStatus());
+			}
+		} catch (Exception e) {
+			JsfUtil.addMsgErro(e.getMessage());
+		}
+	}
+	
+	public FiltroOperacaoViagem getFiltro() {
+		return filtro;
+	}
 }
