@@ -8,7 +8,7 @@ import modelo.Conta;
 import modelo.Estabelecimento;
 import modelo.OperacaoViagem;
 
-public class FiltroOperacaoViagem {
+public class Bkp_FiltroOperacaoViagem {
 
 	private List<Estabelecimento> estabelecimentosOpcoes = new ArrayList<Estabelecimento>();
 	private List<Estabelecimento> estabelecimentosFiltro = new ArrayList<Estabelecimento>();
@@ -25,14 +25,14 @@ public class FiltroOperacaoViagem {
 	private List<OperacaoViagem> lista = new ArrayList<OperacaoViagem>();
 
 	
-	public FiltroOperacaoViagem(List<OperacaoViagem> lista) {
+	public Bkp_FiltroOperacaoViagem(List<OperacaoViagem> lista) {
 		this.lista = lista;
 		for (OperacaoViagem operacao: lista) {
 			garantirOpcoesDeFiltro(operacao);
 		}
 	}
 	
-	public FiltroOperacaoViagem() {
+	public Bkp_FiltroOperacaoViagem() {
 	}
 
 	public List<OperacaoViagem> getLista() {
