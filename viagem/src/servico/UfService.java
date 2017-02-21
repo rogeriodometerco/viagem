@@ -70,6 +70,15 @@ public class UfService {
 		}
 		return result;
 	}
+	
+	public void excluir(Long id) throws AppException {
+		try {
+			ufDao.excluir(
+					ufDao.recuperar(id));
+		} catch(Exception e) {
+			throw new AppException("Erro ao excluir UF: " + e.getMessage(), e);
+		}
+	}
 
 	public UF recuperarPelaAbreviaturaSeExistir(String abreviatura) throws AppException {
 		UF result = null;
@@ -81,4 +90,8 @@ public class UfService {
 		return result;
 	}
 	
+	public List<UF> listarOrdenadoPorAbreviatura(int pagina, int tamanhoPagina) throws Exception {
+		return ufDao.listarOrdenadoPorAbreviatura(pagina, tamanhoPagina);
+	}
 }
+ 

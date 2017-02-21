@@ -10,3 +10,9 @@ th {font-weight: normal;
 .ui-widget-header {
 	//font-weight: normal;
 }
+
+.ui-column-filter {
+	display: block;
+	margin: auto;
+	width: 95% !important;
+}

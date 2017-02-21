@@ -14,7 +14,8 @@
 	<h:form>
 		<h:outputStylesheet name="geral.css" library="css" />
 
-		<h:panelGrid columns="4">
+		<div style="background-color: #eeeeee; padding: 10px">
+		<h:panelGrid columns="5">
 			<p:commandButton id="menuButton" title="Menu" type="button"
 				icon="ui-icon-home" />
 			<p:slideMenu overlay="true" trigger="menuButton" my="left top"
@@ -35,15 +36,16 @@
 			</p:slideMenu>
 
 			<label style="font-size: 20px">Gestão de transporte de cargas</label>
+
 			<p:autoComplete value="#{sessaoMb.conta}"
 				completeMethod="#{contaMb.autocomplete}" var="conta"
 				itemLabel="#{conta.nome}" itemValue="#{conta}"
 				converter="contaConverter" forceSelection="true">
 				<p:ajax event="itemSelect" />
 			</p:autoComplete>
-
 		</h:panelGrid>
-		<hr />
+
+		</div>
 	</h:form>
 
 

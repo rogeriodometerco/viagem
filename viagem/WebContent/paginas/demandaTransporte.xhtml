@@ -6,22 +6,23 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:rich="http://richfaces.org/rich"
-	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 	template="/template/geral.xhtml">
 
 	<ui:define name="titulo">Demanda de transporte</ui:define>
 	<ui:define name="conteudo">
 		<p:messages id="mensagens" closable="true" />
 
-		<h:form id="form1" rendered="#{demandaTransporteMb.estaEmModoListagem()}">
+		<h:form id="form1"
+			rendered="#{demandaTransporteMb.estaEmModoListagem()}">
 			<h3>
 				<p:outputLabel value="Demanda de transporte" />
 			</h3>
 			<p:outputPanel id="panel">
-				<p:commandButton value="Novo" action="#{demandaTransporteMb.prepararNovo()}"
-					update="@all" />
-				<p:commandButton value="Editar"
+				<p:commandButton value="Nova demanda"
+					action="#{demandaTransporteMb.prepararNovo()}" update="@all" />
+				<p:commandButton value="Detalhes"
 					action="#{demandaTransporteMb.prepararEdicao()}" update="@all"
 					disabled="#{demandaTransporteMb.demandaTransporteSelecionado == null}" />
 			</p:outputPanel>
@@ -31,42 +32,65 @@
 				var="demandaTransporte" selectionMode="single"
 				selection="#{demandaTransporteMb.demandaTransporteSelecionado}"
 				rowKey="#{demandaTransporte.id}"
-				emptyMessage="Nenhum registro retornado na consulta">
-				<p:column>
+				emptyMessage="Nenhum registro retornado na consulta" reflow="true">
+				<p:column filterBy="#{demandaTransporte.id}"
+					filterMatchMode="startsWith">
 					<f:facet name="header">Id</f:facet>
 					#{demandaTransporte.id}
 				</p:column>
-				<p:column>
+				<p:column filterBy="#{demandaTransporte.tomador.nome}"
+					filterMatchMode="contains">
 					<f:facet name="header">Tomador</f:facet>
 					#{demandaTransporte.tomador.nome}
 				</p:column>
-				<p:column>
+				<p:column filterBy="#{demandaTransporte.origem.nome}"
+					filterMatchMode="contains">
 					<f:facet name="header">Origem</f:facet>
 					#{demandaTransporte.origem.nome}
 				</p:column>
-				<p:column>
+				<p:column
+					filterBy="#{demandaTransporte.origem.municipio.nome.concat(' - ').concat(demandaTransporte.origem.municipio.uf.abreviatura)}"
+					filterMatchMode="contains">
 					<f:facet name="header">Município</f:facet>
 					#{demandaTransporte.origem.municipio.nome.concat(' - ').concat(demandaTransporte.origem.municipio.uf.abreviatura)}
 				</p:column>
-				<p:column>
+				<p:column filterBy="#{demandaTransporte.destino.nome}"
+					filterMatchMode="contains">
 					<f:facet name="header">Destino</f:facet>
 					#{demandaTransporte.destino.nome}
 				</p:column>
-				<p:column>
+				<p:column
+					filterBy="#{demandaTransporte.destino.municipio.nome.concat(' - ').concat(demandaTransporte.destino.municipio.uf.abreviatura)}"
+					filterMatchMode="contains">
 					<f:facet name="header">Município</f:facet>
 					#{demandaTransporte.destino.municipio.nome.concat(' - ').concat(demandaTransporte.destino.municipio.uf.abreviatura)}
 				</p:column>
-				<p:column>
+				<p:column filterBy="#{demandaTransporte.produto}"
+					filterMatchMode="contains">
 					<f:facet name="header">Produto</f:facet>
 					#{demandaTransporte.produto}
 				</p:column>
-				<p:column>
+				<p:column
+					filterBy="#{demandaTransporte.quantidade} #{demandaTransporte.unidadeQuantidade}"
+					filterMatchMode="contains">
 					<f:facet name="header">Qtde</f:facet>
-					#{demandaTransporte.quantidade}
+					#{demandaTransporte.quantidade} #{demandaTransporte.unidadeQuantidade}
+				</p:column>
+				<p:column filterBy="184" filterMatchMode="equals">
+					<f:facet name="header">Saldo</f:facet>
+					184 #{demandaTransporte.unidadeQuantidade}
 				</p:column>
 				<p:column>
-					<f:facet name="header">Unidade</f:facet>
-					#{demandaTransporte.unidadeQuantidade}
+					<f:facet name="header">Ontem</f:facet>
+					19 veículos
+				</p:column>
+				<p:column>
+					<f:facet name="header">Hoje</f:facet>
+					4 veículos
+				</p:column>
+				<p:column>
+					<f:facet name="header">Pendente</f:facet>
+					7 veículos
 				</p:column>
 				<p:ajax event="rowSelect" update=":form1:panel" />
 				<p:ajax event="rowUnselect" update=":form1:panel" />
@@ -75,51 +99,113 @@
 		</h:form>
 
 		<h:form id="form2"
-			rendered="#{demandaTransporteMb.estaEmModoCriacao() || demandaTransporteMb.estaEmModoEdicao()}">
+			rendered="#{demandaTransporteMb.estaEmModoCriacao()}">
 			<h3>
-				<p:outputLabel value="Novo"
-					rendered="#{demandaTransporteMb.estaEmModoCriacao()}" />
-				<p:outputLabel value="Editar"
-					rendered="#{demandaTransporteMb.estaEmModoEdicao()}" />
+				<p:outputLabel value="Nova demanda de transporte" />
 			</h3>
 
-			<h:panelGrid columns="1">
+			<h:panelGrid columns="2">
 				<p:outputLabel value="Tomador" />
-				<p:autoComplete
-					completeMethod="#{contaMb.autocomplete}" var="tomador"
-					itemValue="#{tomador}" itemLabel="#{tomador.nome}"
-					value="#{demandaTransporteMb.demandaTransporteEdicao.tomador}" 
+				<p:autoComplete completeMethod="#{contaMb.autocomplete}"
+					var="tomador" itemValue="#{tomador}" itemLabel="#{tomador.nome}"
+					value="#{demandaTransporteMb.demandaTransporteEdicao.tomador}"
 					converter="contaConverter"></p:autoComplete>
 				<p:outputLabel value="Origem" />
-				<p:autoComplete value="#{demandaTransporteMb.demandaTransporteEdicao.origem}"
-					completeMethod="#{estabelecimentoMb.autocomplete}" var="estabelecimento"
+				<p:autoComplete
+					value="#{demandaTransporteMb.demandaTransporteEdicao.origem}"
+					completeMethod="#{estabelecimentoMb.autocomplete}"
+					var="estabelecimento"
 					itemLabel="#{estabelecimento.nome.concat(' - ').concat(estabelecimento.municipio.nome)}"
 					itemValue="#{estabelecimento}" converter="estabelecimentoConverter"
 					forceSelection="true" />
 				<p:outputLabel value="Destino" />
-				<p:autoComplete value="#{demandaTransporteMb.demandaTransporteEdicao.destino}"
-					completeMethod="#{estabelecimentoMb.autocomplete}" var="estabelecimento"
+				<p:autoComplete
+					value="#{demandaTransporteMb.demandaTransporteEdicao.destino}"
+					completeMethod="#{estabelecimentoMb.autocomplete}"
+					var="estabelecimento"
 					itemLabel="#{estabelecimento.nome.concat(' - ').concat(estabelecimento.municipio.nome)}"
 					itemValue="#{estabelecimento}" converter="estabelecimentoConverter"
 					forceSelection="true" />
 				<p:outputLabel value="Produto" />
-				<p:inputText value="#{demandaTransporteMb.demandaTransporteEdicao.produto}" />					
+				<p:inputText
+					value="#{demandaTransporteMb.demandaTransporteEdicao.produto}" />
 				<p:outputLabel value="Quantidade" />
-				<p:inputText value="#{demandaTransporteMb.demandaTransporteEdicao.quantidade}" />					
+				<p:inputText
+					value="#{demandaTransporteMb.demandaTransporteEdicao.quantidade}" />
 				<p:outputLabel value="Unidade" />
-				<p:inputText value="#{demandaTransporteMb.demandaTransporteEdicao.unidadeQuantidade}" />					
+				<p:inputText
+					value="#{demandaTransporteMb.demandaTransporteEdicao.unidadeQuantidade}" />
 				<p:outputLabel value="Transportadores autorizados" />
 				<p:autoComplete multiple="true"
-					completeMethod="#{transportadorMb.autocomplete}" var="transportador"
-					itemValue="#{transportador}" itemLabel="#{transportador.nome}"
-					value="#{demandaTransporteMb.transportadoresEdicao}" 
+					completeMethod="#{transportadorMb.autocomplete}"
+					var="transportador" itemValue="#{transportador}"
+					itemLabel="#{transportador.nome}"
+					value="#{demandaTransporteMb.transportadoresEdicao}"
 					converter="contaConverter"></p:autoComplete>
 			</h:panelGrid>
 			<br />
-			<p:commandButton value="Salvar" action="#{demandaTransporteMb.salvar()}"
-				update="@all" />
-			<p:commandButton value="Voltar" action="#{demandaTransporteMb.listar()}"
-				update="@all" />
+			<p:commandButton value="Salvar"
+				action="#{demandaTransporteMb.salvar()}" update="@all" />
+			<p:commandButton value="Voltar"
+				action="#{demandaTransporteMb.listar()}" update="@all" />
 		</h:form>
+
+		<h:form id="form3"
+			rendered="#{demandaTransporteMb.estaEmModoEdicao()}">
+			<h3>
+				<p:outputLabel value="Detalhes da demanda de transporte"
+					rendered="#{demandaTransporteMb.estaEmModoEdicao()}" />
+			</h3>
+
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Tomador" />
+				<h:outputText
+					value="#{demandaTransporteMb.demandaTransporteEdicao.tomador.nome}" />
+
+				<p:outputLabel value="Origem" />
+				<h:outputText
+					value="#{demandaTransporteMb.demandaTransporteEdicao.origem.nome}" />
+				<p:outputLabel value="Destino" />
+				<h:outputText
+					value="#{demandaTransporteMb.demandaTransporteEdicao.destino.nome}" />
+				<p:outputLabel value="Produto" />
+				<h:outputText
+					value="#{demandaTransporteMb.demandaTransporteEdicao.produto}" />
+				<h:outputLabel value="Quantidade" />
+				<h:panelGroup>
+					<h:outputText
+						value="#{demandaTransporteMb.demandaTransporteEdicao.quantidade}" />
+					<p:spacer width="5px"></p:spacer>
+					<p:inplace label="Alterar" editor="true">
+						<p:inputText
+							value="#{demandaTransporteMb.demandaTransporteEdicao.quantidade}" />
+					</p:inplace>
+				</h:panelGroup>
+				<p:outputLabel value="Unidade" />
+				<h:outputText
+					value="#{demandaTransporteMb.demandaTransporteEdicao.unidadeQuantidade}" />
+				<p:outputLabel value="Transportadores autorizados" />
+				<h:panelGroup>
+					<c:forEach
+						items="#{demandaTransporteMb.demandaTransporteEdicao.transportadores}"
+						var="transportadorDemanda">
+						<h:outputText value="#{transportadorDemanda.transportador.nome}, " />
+					</c:forEach>
+					<p/>
+					<p:inplace editor="true" label="Alterar">
+						<p:dataTable value="#{demandaTransporteMb.transportadoresEdicao}"
+							var="transportador">
+							<p:column>
+								<p:inputText value="#{transportador.nome}" />
+							</p:column>
+						</p:dataTable>
+					</p:inplace>
+				</h:panelGroup>
+			</p:panelGrid>
+			<br />
+			<p:commandButton value="Voltar"
+				action="#{demandaTransporteMb.listar()}" update="@all" />
+		</h:form>
+
 	</ui:define>
 </ui:composition>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		var baseURI = "/viagem/rest/uf"
+//		var baseURI = "http://localhost:8080/viagem/rest/uf"
+		$("#btSalvar").click(function() {
+			var obj = JSON.stringify({
+				"id" : $("#id").val(),
+				"abreviatura" : $("#abreviatura").val(),
+				"nome" : $("#nome").val()
+			});
+			var x = $.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				dataType : "JSON",
+				url : baseURI,
+				data : obj,
+				success : function(data) {
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+		$("#btRecuperar").click(function() {
+			var x = $.ajax({
+				type : "GET",
+				url : baseURI + "/" + $("#id").val(),
+				//dataType: "JSON",
+				success : function(data) {
+					console.log(data);
+					$("#id").val(data.id);
+					$("#abreviatura").val(data.abreviatura);
+					$("#nome").val(data.nome);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+		$("#btExcluir").click(function() {
+			var x = $.ajax({
+				type : 'DELETE',
+				url : baseURI + "/" + $("#id").val(),
+				success : function(data) {
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				}
+			});
+		});
+		$("#btListar").click(function() {
+			var x = $.ajax({
+				type : "GET",
+				url : baseURI,
+				dataType : "JSON",
+				success : function(data) {
+					console.log("OK");
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log("Erro");
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<p>
+		<input type="button" id="btSalvar" value="Salvar" /> 
+		<input type="button" id="btRecuperar" value="Recuperar pelo id" /> 
+		<input type="button" id="btExcluir" value="Excluir pelo id" /> 
+		<input type="button" id="btListar" value="Listar" /> 
+	</p>
+	<label for="id">Id (nulo para inclusão)</label>
+	<br />
+	<input type="text" id="id" />
+	<br />
+	<label for="abreviatura">Abreviatura</label>
+	<br />
+	<input type="text" id="abreviatura" />
+	<br />
+	<label for="nome">Nome</label>
+	<br />
+	<input type="text" id="nome" />
+	<br />
+
+	<p>Retorno:</p>
+	<p id="retorno" />
+</body>
+</html>
