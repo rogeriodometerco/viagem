@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import dao.MunicipioDao;
 import exception.AppException;
 import modelo.Municipio;
+import modelo.UF;
 
 @Stateless
 public class MunicipioService {
@@ -51,6 +52,15 @@ public class MunicipioService {
 		return result;
 	}
 
+	public void excluir(Long id) throws AppException {
+		try {
+			municipioDao.excluir(
+					municipioDao.recuperar(id));
+		} catch(Exception e) {
+			throw new AppException("Erro ao excluir município: " + e.getMessage(), e);
+		}
+	}
+
 	public List<Municipio> listarPorNome(String chave, int rows) throws AppException {
 		List<Municipio> result = new ArrayList<Municipio>();
 		try {
@@ -67,6 +77,27 @@ public class MunicipioService {
 			result = municipioDao.recuperar(id);
 		} catch(Exception e) {
 			throw new AppException("Erro ao recuperar município: " + e.getMessage(), e);
+		}
+		return result;
+	}
+
+	public List<Municipio> listarPorNomeOrdenadoPorNome(String chave, int pagina, int tamanhoPagina) 
+			throws AppException {
+		
+		List<Municipio> result = new ArrayList<Municipio>();
+		if (chave == null || chave.trim() == "") {
+			throw new AppException("Parâmetro para pesquisa é obrigatório");
+		}
+		if (pagina == 0) {
+			pagina = 1;
+		}
+		if (tamanhoPagina == 0) {
+			tamanhoPagina = 10;
+		}
+		try {
+			result = municipioDao.listarPorNome(chave, tamanhoPagina);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar municípios por nome: " + e.getMessage(), e);
 		}
 		return result;
 	}

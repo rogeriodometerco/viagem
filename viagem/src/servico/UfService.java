@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import dao.UfDao;
 import exception.AppException;
 import modelo.UF;
+import util.Listagem;
 
 @Stateless
 public class UfService {
@@ -90,8 +91,11 @@ public class UfService {
 		return result;
 	}
 	
-	public List<UF> listarOrdenadoPorAbreviatura(int pagina, int tamanhoPagina) throws Exception {
-		return ufDao.listarOrdenadoPorAbreviatura(pagina, tamanhoPagina);
+	public Listagem<UF> listarOrdenadoPorAbreviatura(int pagina, int tamanhoPagina) throws Exception {
+		Long count = ufDao.contarRegistros();
+		List<UF> lista = ufDao.listarOrdenadoPorAbreviatura(pagina, tamanhoPagina);
+		Listagem<UF> listagem = new Listagem<UF>(pagina, lista, count);
+		return listagem;
 	}
 }
  

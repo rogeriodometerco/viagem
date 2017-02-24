@@ -13,29 +13,29 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import modelo.UF;
-import servico.UfService;
+import modelo.Municipio;
+import servico.MunicipioService;
 import util.Ejb;
 
-@Path("/uf")
-public class UfRest {
+@Path("/municipio")
+public class MunicipioRest {
 
-	private UfService ufService;
+	private MunicipioService municipioService;
 
-	public UfRest() {
-		ufService = Ejb.lookup(UfService.class);
+	public MunicipioRest() {
+		municipioService = Ejb.lookup(MunicipioService.class);
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response salvar(@Context HttpServletRequest httpServletRequest, 
-			UF uf) throws Exception {
+			Municipio municipio) throws Exception {
 
 		try {
 			return Response.ok()
 					.entity(
-							ufService.salvar(uf))
+							municipioService.salvar(municipio))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -46,7 +46,7 @@ public class UfRest {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response listar(@QueryParam("p") int pagina, 
+	public Response listar(@QueryParam("q") String query, @QueryParam("p") int pagina, 
 			@QueryParam("t") int tamanhoPagina)  throws Exception {
 		if (pagina == 0) {
 			pagina = 1;
@@ -57,7 +57,7 @@ public class UfRest {
 		try {
 			return Response.ok()
 					.entity(
-							ufService.listarOrdenadoPorAbreviatura(pagina, tamanhoPagina))
+							municipioService.listarPorNomeOrdenadoPorNome(query, pagina, tamanhoPagina))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -73,7 +73,7 @@ public class UfRest {
 		try {
 			return Response.ok()
 					.entity(
-							ufService.recuperar(id))
+							municipioService.recuperar(id))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -86,7 +86,7 @@ public class UfRest {
 	@Path("/{id}")
 	public Response excluir(@PathParam("id") Long id) throws Exception {
 		try {
-			ufService.excluir(id);
+			municipioService.excluir(id);
 			return Response.ok()
 					.build();
 		} catch (Exception e) {

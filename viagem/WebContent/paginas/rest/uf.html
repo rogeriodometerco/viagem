@@ -6,8 +6,8 @@
 
 <script>
 	$(document).ready(function() {
-		var baseURI = "/viagem/rest/uf"
-//		var baseURI = "http://localhost:8080/viagem/rest/uf"
+		var baseURI = "/viagem/rest/uf";
+		//var baseURI = "http://54.204.114.136:8080/viagem/rest/uf";
 		$("#btSalvar").click(function() {
 			var obj = JSON.stringify({
 				"id" : $("#id").val(),
@@ -64,7 +64,7 @@
 		$("#btListar").click(function() {
 			var x = $.ajax({
 				type : "GET",
-				url : baseURI,
+				url : baseURI + "?p=" + $("#pagina").val() + "&t=" + $("#tamanhoPagina").val(),
 				dataType : "JSON",
 				success : function(data) {
 					console.log("OK");
@@ -85,7 +85,11 @@
 	<p>
 		<input type="button" id="btSalvar" value="Salvar" /> 
 		<input type="button" id="btRecuperar" value="Recuperar pelo id" /> 
-		<input type="button" id="btExcluir" value="Excluir pelo id" /> 
+		<input type="button" id="btExcluir" value="Excluir pelo id" />
+		<label for="pagina">Página</label>
+		<input type="text" id="pagina" value="1"/> 
+		<label for="tamanhoPagina">Tamanho página</label>
+		<input type="text" id="tamanhoPagina" value="5" /> 
 		<input type="button" id="btListar" value="Listar" /> 
 	</p>
 	<label for="id">Id (nulo para inclusão)</label>
