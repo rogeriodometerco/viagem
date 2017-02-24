@@ -51,7 +51,7 @@ public class UfDao extends GenericDao<UF> {
 		return result;
 	}
 
-	public Long contarRegistros() throws Exception {
+	public Long contar() throws Exception {
 		String sql = "SELECT COUNT(x.id) FROM UF x ";
 		
 		return getEntityManager()

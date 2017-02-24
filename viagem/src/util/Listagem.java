@@ -8,6 +8,10 @@ public class Listagem<T> {
 	private int pagina;
 	private List<T> lista;
 
+	public Listagem() {
+		
+	}
+	
 	public Listagem(int pagina, List<T> lista, Long count) {
 		this.lista = lista;
 		this.pagina = pagina;
@@ -25,4 +29,15 @@ public class Listagem<T> {
 	public int getPagina() {
 		return pagina;
 	}
+	
+	public boolean vazia() {
+		return lista == null || lista.isEmpty();
+	}
+
+	public void set(int pagina, List<T> lista, Long count) {
+		this.pagina = pagina;
+		this.lista = lista;
+		this.count = count;
+	}
+	
 }

@@ -55,10 +55,20 @@ public class MunicipioRest {
 			tamanhoPagina = 10;
 		}
 		try {
-			return Response.ok()
-					.entity(
-							municipioService.listarPorNomeOrdenadoPorNome(query, pagina, tamanhoPagina))
-					.build();
+			// Sem critério de pesquisa.
+			if (query == null || query.trim().equals("")) {
+				return Response.ok()
+						.entity(
+								municipioService.listarOrdenadoPorNome(pagina, tamanhoPagina))
+						.build();
+
+			// Com critério de pesquisa.
+			} else {
+				return Response.ok()
+						.entity(
+								municipioService.listarPorNomeOrdenadoPorNome(query, pagina, tamanhoPagina))
+						.build();
+			}
 		} catch (Exception e) {
 			return Response.serverError()
 					.entity(new RespostaErro(e.getMessage()))

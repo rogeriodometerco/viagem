@@ -96,4 +96,6 @@ public class UfRest {
 		}
 	}
 
+	// TODO Tratar exception gerada pelo Servlet, nem chegou na aplicação ainda. Ex.: query param errada.
+	
 }

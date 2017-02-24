@@ -91,10 +91,15 @@ public class UfService {
 		return result;
 	}
 	
-	public Listagem<UF> listarOrdenadoPorAbreviatura(int pagina, int tamanhoPagina) throws Exception {
-		Long count = ufDao.contarRegistros();
-		List<UF> lista = ufDao.listarOrdenadoPorAbreviatura(pagina, tamanhoPagina);
-		Listagem<UF> listagem = new Listagem<UF>(pagina, lista, count);
+	public Listagem<UF> listarOrdenadoPorAbreviatura(int pagina, int tamanhoPagina) throws AppException {
+		Listagem<UF> listagem = new Listagem<UF>();
+		try {
+			List<UF> lista = ufDao.listarOrdenadoPorAbreviatura(pagina, tamanhoPagina);
+			Long count = ufDao.contar();
+			listagem.set(pagina, lista, count);
+		} catch (Exception e) {
+			throw new AppException("Erro ao listar UF's: " + e.getMessage(), e);
+		}
 		return listagem;
 	}
 }

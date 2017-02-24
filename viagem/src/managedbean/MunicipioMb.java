@@ -62,7 +62,7 @@ public class MunicipioMb implements Serializable {
 	
 	public void listar() {
 		try {
-			this.lista = municipioService.listar();
+			this.lista = municipioService.listarOrdenadoPorNome(1, 5000).getLista();
 			this.estadoView = EstadoView.LISTAGEM;
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
@@ -96,7 +96,7 @@ public class MunicipioMb implements Serializable {
 	public List<Municipio> autocomplete(String query) {
 		List<Municipio> result = new ArrayList<Municipio>();
 		try {
-			result = municipioService.listarPorNome(query, 10);
+			result = municipioService.listarPorNomeOrdenadoPorNome(query, 1, 10).getLista();
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
