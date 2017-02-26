@@ -29,20 +29,22 @@ angular.module('Generic')
         scope.selectButton = attrs.selectButton == "false" ? false : true;
         scope.$parent[attrs.name] = scope;
         scope.autoLoad = attrs.autoLoad == "false" ? false : true;
-        
+        scope.remoteFilter = attrs.remoteFilter == "false" ? false : true;
+
+        function reference(attr, index){
+          if(index === divModel.length-2){
+            return attr[divModel[index]];
+          }else if(divModel.length == 1){
+            return attr;
+          }else{
+            if(attr[index] !== undefined){
+              return reference(attr, index+1);
+            }
+          }
+        }
+
         scope.setModel = function(model){
           if(attrs.ngModel !== undefined){
-            function reference(attr, index){
-              if(index === divModel.length-2){
-                return attr[divModel[index]];
-              }else if(divModel.length == 1){
-                return attr;
-              }else{
-                if(attr[index] !== undefined){
-                  return reference(attr, index+1);
-                }
-              }
-            }
             modelAux = reference(scope.$parent, 0);
             if(modelAux)
               modelAux[divModel[divModel.length-1]] = model;
@@ -50,17 +52,6 @@ angular.module('Generic')
         }
         if(attrs.ngModel !== undefined){
           divModel = attrs.ngModel.split(".");
-          function reference(attr, index){
-            if(index === divModel.length-2){
-              return attr[divModel[index]];
-            }else if(divModel.length == 1){
-              return attr;
-            }else{
-              if(attr[index] !== undefined){
-                return reference(attr, index+1);
-              }
-            }
-          }
           modelAux = reference(scope.$parent, 0);
           if(modelAux)
             scope.select(modelAux[divModel[divModel.length-1]]);
@@ -83,7 +74,7 @@ angular.module('Generic')
                 
                 var scopeModal = scope.$new();
                 
-                scopeModal.multiSelect = false;
+                //scopeModal.multiSelect = false;
                 scopeModal.selections = [];
                 modalInstance = $uibModal.open({
                   templateUrl: "modules/"+scope.templates.list,
@@ -93,7 +84,7 @@ angular.module('Generic')
                   size: 'lg'
                 });
                 scopeModal.$on(EVENTS.gridready, function(e, scopeM){
-                  scopeM.manager.filter(scope.manager.$filter);
+                  //scopeM.manager.filter(scope.manager.$filter);
                 });
                 scopeModal.select = function(){
                   modalInstance.close(scopeModal.selections);
@@ -124,7 +115,9 @@ angular.module('Generic')
           
       },
       controller: ['$scope', function($scope) {
-        
+
+        $scope.array = [];
+
         $timeout(function(){
           if(angular.isDefined($scope.disabled))
             $scope.disabled = true;
@@ -170,13 +163,17 @@ angular.module('Generic')
             $scope.autoLoad = true;
             return;
           }
-          
-          if(angular.isDefined($scope.searchField)){
-            params.data[0] = {
-              field: $scope.searchField,
-              condition: '=%',
-              value: q
-            };
+
+          if(!$scope.remoteFilter && $scope.array.length > 0){
+            return;
+          }else {
+            if (angular.isDefined($scope.searchField)) {
+              params.data[0] = {
+                field: $scope.searchField,
+                condition: '=%',
+                value: q
+              };
+            }
           }
           return $scope.manager.find(params).then(function(response) {
             $scope.array = response;

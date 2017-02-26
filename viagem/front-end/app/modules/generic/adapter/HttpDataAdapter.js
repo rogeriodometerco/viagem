@@ -117,13 +117,21 @@ angular.module("Generic")
                 };
               }
 
+              if(angular.isDefined(data.data)){
+                if(data.data.length > 0){
+                  params = angular.extend(params ? params : {}, {
+                    q: data.data[0].value
+                  })
+                }
+              }
+
               angular.extend(data, paramsDefault);
               data = convertDateString(data);
 
               $http({
                 method: data.method,
                 url: baseUrl+(data.resource ? data.resource : resourceName),
-                params: params ? params : null,
+                params: Object.keys(params ? params : {}).length > 0 ? params : null,
                 data: data.data ? data.data : null
               }).then(function (result) {
                 try {
@@ -169,7 +177,7 @@ angular.module("Generic")
           this.find = function (data) {
             var responseInterceptor = this.responseInterceptor;
 
-              data.method = 'GET';
+            data.method = 'GET';
             return this.request(data, function (result) {
               if (angular.isDefined(result.count)) {
                 total = result.count;
