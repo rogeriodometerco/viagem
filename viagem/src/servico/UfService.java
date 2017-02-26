@@ -7,9 +7,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import dao.UfDao;
+import dto.Listagem;
 import exception.AppException;
 import modelo.UF;
-import util.Listagem;
 
 @Stateless
 public class UfService {

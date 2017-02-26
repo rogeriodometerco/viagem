@@ -17,29 +17,29 @@ import javax.ws.rs.core.Response;
 import com.google.gson.Gson;
 
 import dto.ParametrosListagem;
-import modelo.Municipio;
-import servico.MunicipioService;
+import modelo.Estabelecimento;
+import servico.EstabelecimentoService;
 import util.Ejb;
 
-@Path("/municipio")
-public class MunicipioRest {
+@Path("/estabelecimento")
+public class EstabelecimentoRest {
 
-	private MunicipioService municipioService;
+	private EstabelecimentoService estabelecimentoService;
 
-	public MunicipioRest() {
-		municipioService = Ejb.lookup(MunicipioService.class);
+	public EstabelecimentoRest() {
+		estabelecimentoService = Ejb.lookup(EstabelecimentoService.class);
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response salvar(@Context HttpServletRequest httpServletRequest, 
-			Municipio municipio) throws Exception {
+			Estabelecimento estabelecimento) throws Exception {
 
 		try {
 			return Response.ok()
 					.entity(
-							municipioService.salvar(municipio))
+							estabelecimentoService.salvar(estabelecimento))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -56,18 +56,18 @@ public class MunicipioRest {
 			@QueryParam("q") String iniciandoPor)  throws Exception {
 
 		try {
-			// Sem critério de pesquisa.
+			// Sem critï¿½rio de pesquisa.
 			if (iniciandoPor == null || iniciandoPor.trim().equals("")) {
 				return Response.ok()
 						.entity(
-								municipioService.listarOrdenadoPorNome(pagina, tamanhoPagina))
+								estabelecimentoService.listarOrdenadoPorNome(pagina, tamanhoPagina))
 						.build();
 
-			// Com critério de pesquisa.
+			// Com critï¿½rio de pesquisa.
 			} else {
 				return Response.ok()
 						.entity(
-								municipioService.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor))
+								estabelecimentoService.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor))
 						.build();
 			}
 		} catch (Exception e) {
@@ -84,7 +84,7 @@ public class MunicipioRest {
 		try {
 			return Response.ok()
 					.entity(
-							municipioService.recuperar(id))
+							estabelecimentoService.recuperar(id))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -105,7 +105,7 @@ public class MunicipioRest {
 		try {
 			return Response.ok()
 					.entity(
-							municipioService.listar(p))
+							estabelecimentoService.listar(p))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -119,7 +119,7 @@ public class MunicipioRest {
 	@Path("/{id}")
 	public Response excluir(@PathParam("id") Long id) throws Exception {
 		try {
-			municipioService.excluir(id);
+			//estabelecimentoService.excluir(id);
 			return Response.ok()
 					.build();
 		} catch (Exception e) {

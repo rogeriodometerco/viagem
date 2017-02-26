@@ -1,17 +1,9 @@
 package dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
-import dto.Filtro;
-import dto.ParametrosListagem;
 import modelo.Municipio;
 
 @Stateless
@@ -38,7 +30,7 @@ public class MunicipioDao extends GenericDao<Municipio> {
 	}
 
 	public List<Municipio> listarPorNomeOrdenadoPorNome(
-			String iniciandoPor, int pagina, int tamanhoPagina) throws Exception {
+			int pagina, int tamanhoPagina, String iniciandoPor) throws Exception {
 		
 		List<Municipio> result = null;
 		String sql = "SELECT x FROM Municipio x WHERE" +
@@ -62,6 +54,7 @@ public class MunicipioDao extends GenericDao<Municipio> {
 				.getSingleResult();
 	}
 
+	/*
 	public List<Municipio> listar(ParametrosListagem params) throws Exception {
 		List<Municipio> lista = new ArrayList<Municipio>();
 		
@@ -91,5 +84,6 @@ public class MunicipioDao extends GenericDao<Municipio> {
 
 		return lista;
 	}
+	*/
 }
  

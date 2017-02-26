@@ -7,8 +7,10 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import dao.EstabelecimentoDao;
+import dto.Listagem;
 import exception.AppException;
 import modelo.Estabelecimento;
+import modelo.Municipio;
 
 @Stateless
 public class EstabelecimentoService {
@@ -33,10 +35,10 @@ public class EstabelecimentoService {
 	private List<String> validarEstabelecimento(Estabelecimento estabelecimento) {
 		List<String> erros = new ArrayList<String>();
 		if (estabelecimento.getNome() == null || estabelecimento.getNome().trim().length() == 0) {
-			erros.add("Nome do estabelecimento é obrigatório");
+			erros.add("Nome do estabelecimento ï¿½ obrigatï¿½rio");
 		}
 		if (estabelecimento.getMunicipio() == null) {
-			erros.add("Município do estabelecimento é obrigatório");
+			erros.add("Municï¿½pio do estabelecimento ï¿½ obrigatï¿½rio");
 		}
 		return erros;
 	}
@@ -70,5 +72,54 @@ public class EstabelecimentoService {
 		}
 		return result;
 	}
+
+	public Listagem<Estabelecimento> listarOrdenadoPorNome(int pagina, int tamanhoPagina)	
+			throws AppException { 
+
+		Listagem<Estabelecimento> listagem = new Listagem<Estabelecimento>();
+
+		List<Estabelecimento> lista = new ArrayList<Estabelecimento>();
+		if (pagina == 0) {
+			pagina = 1;
+		}
+		if (tamanhoPagina == 0) {
+			tamanhoPagina = 10;
+		}
+		try {
+			lista = estabelecimentoDao.listarOrdenadoPorNome(pagina, tamanhoPagina);
+			Long count = estabelecimentoDao.contar();
+			listagem.set(pagina, lista, count);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar estabelecimentos: " + e.getMessage(), e);
+		}
+		return listagem;
+	}
+
+
+	public Listagem<Estabelecimento> listarPorNomeOrdenadoPorNome(int pagina, int tamanhoPagina, String iniciandoPor)	
+			throws AppException { 
+
+		Listagem<Estabelecimento> listagem = new Listagem<Estabelecimento>();
+
+		List<Estabelecimento> lista = new ArrayList<Estabelecimento>();
+		if (iniciandoPor == null || iniciandoPor.trim() == "") {
+			throw new AppException("Nome ou parte do nome do municï¿½pio para pesquisa ï¿½ obrigatï¿½rio");
+		}
+		if (pagina == 0) {
+			pagina = 1;
+		}
+		if (tamanhoPagina == 0) {
+			tamanhoPagina = 10;
+		}
+		try {
+			//lista = municipioDao.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor);
+			//Long count = municipioDao.contarPorNome(iniciandoPor);
+			//listagem.set(pagina, lista, count);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar municÃ­pios por nome: " + e.getMessage(), e);
+		}
+		return listagem;
+	}
+	
 
 }

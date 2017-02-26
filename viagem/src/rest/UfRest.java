@@ -3,6 +3,7 @@ package rest;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -49,14 +50,10 @@ public class UfRest {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response listar(@QueryParam("p") int pagina, 
-			@QueryParam("t") int tamanhoPagina)  throws Exception {
-		if (pagina == 0) {
-			pagina = 1;
-		}
-		if (tamanhoPagina == 0) {
-			tamanhoPagina = 10;
-		}
+	public Response listar(
+			@QueryParam("p") @DefaultValue("1") int pagina, 
+			@QueryParam("t") @DefaultValue("10") int tamanhoPagina) throws Exception {
+
 		try {
 			return Response.ok()
 					.entity(

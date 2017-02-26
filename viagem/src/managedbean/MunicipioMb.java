@@ -96,7 +96,7 @@ public class MunicipioMb implements Serializable {
 	public List<Municipio> autocomplete(String query) {
 		List<Municipio> result = new ArrayList<Municipio>();
 		try {
-			result = municipioService.listarPorNomeOrdenadoPorNome(query, 1, 10).getLista();
+			result = municipioService.listarPorNomeOrdenadoPorNome(1, 10, query).getLista();
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}

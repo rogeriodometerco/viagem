@@ -7,10 +7,10 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import dao.MunicipioDao;
+import dto.Listagem;
 import dto.ParametrosListagem;
 import exception.AppException;
 import modelo.Municipio;
-import util.Listagem;
 
 @Stateless
 public class MunicipioService {
@@ -32,13 +32,13 @@ public class MunicipioService {
 		return result;
 	}
 
-	private List<String> validarMunicipio(Municipio município) {
+	private List<String> validarMunicipio(Municipio municipio) {
 		List<String> erros = new ArrayList<String>();
-		if (município.getNome() == null || município.getNome().trim().length() == 0) {
-			erros.add("Nome do município é obrigatório");
+		if (municipio.getNome() == null || municipio.getNome().trim().length() == 0) {
+			erros.add("Nome do municipio ï¿½ obrigatï¿½rio");
 		}
-		if (município.getUf() == null) {
-			erros.add("UF do município é obrigatório");
+		if (municipio.getUf() == null) {
+			erros.add("UF do municipio ï¿½ obrigatï¿½rio");
 		}
 		return erros;
 	}
@@ -48,7 +48,7 @@ public class MunicipioService {
 			municipioDao.excluir(
 					municipioDao.recuperar(id));
 		} catch(Exception e) {
-			throw new AppException("Erro ao excluir município: " + e.getMessage(), e);
+			throw new AppException("Erro ao excluir municipio: " + e.getMessage(), e);
 		}
 	}
 
@@ -57,7 +57,7 @@ public class MunicipioService {
 		try {
 			result = municipioDao.recuperar(id);
 		} catch(Exception e) {
-			throw new AppException("Erro ao recuperar município: " + e.getMessage(), e);
+			throw new AppException("Erro ao recuperar municipio: " + e.getMessage(), e);
 		}
 		return result;
 	}
@@ -79,20 +79,20 @@ public class MunicipioService {
 			Long count = municipioDao.contar();
 			listagem.set(pagina, lista, count);
 		} catch(Exception e) {
-			throw new AppException("Erro ao listar municípios: " + e.getMessage(), e);
+			throw new AppException("Erro ao listar municipios: " + e.getMessage(), e);
 		}
 		return listagem;
 	}
 
 
-	public Listagem<Municipio> listarPorNomeOrdenadoPorNome(String iniciandoPor, int pagina, int tamanhoPagina)	
+	public Listagem<Municipio> listarPorNomeOrdenadoPorNome(int pagina, int tamanhoPagina, String iniciandoPor)	
 			throws AppException { 
 
 		Listagem<Municipio> listagem = new Listagem<Municipio>();
 
 		List<Municipio> lista = new ArrayList<Municipio>();
 		if (iniciandoPor == null || iniciandoPor.trim() == "") {
-			throw new AppException("Nome ou parte do nome do município para pesquisa é obrigatório");
+			throw new AppException("Nome ou parte do nome do municipio para pesquisa ï¿½ obrigatï¿½rio");
 		}
 		if (pagina == 0) {
 			pagina = 1;
@@ -101,22 +101,25 @@ public class MunicipioService {
 			tamanhoPagina = 10;
 		}
 		try {
-			lista = municipioDao.listarPorNomeOrdenadoPorNome(iniciandoPor, pagina, tamanhoPagina);
+			lista = municipioDao.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor);
 			Long count = municipioDao.contarPorNome(iniciandoPor);
 			listagem.set(pagina, lista, count);
 		} catch(Exception e) {
-			throw new AppException("Erro ao listar municípios por nome: " + e.getMessage(), e);
+			throw new AppException("Erro ao listar municÃ­pios por nome: " + e.getMessage(), e);
 		}
 		return listagem;
 	}
-
+	
+	
+/*
 	public List<Municipio> listar(ParametrosListagem params)	
 			throws AppException {
 
 		try {
 			return municipioDao.listar(params);
 		} catch(Exception e) {
-			throw new AppException("Erro ao listar municípios: " + e.getMessage(), e);
+			throw new AppException("Erro ao listar municipios: " + e.getMessage(), e);
 		}
 	}
+*/
 }

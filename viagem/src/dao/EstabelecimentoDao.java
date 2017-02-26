@@ -7,14 +7,13 @@ import javax.persistence.NoResultException;
 
 import modelo.Estabelecimento;
 import modelo.Estabelecimento;
+import modelo.Estabelecimento;
 
 @Stateless
 public class EstabelecimentoDao extends GenericDao<Estabelecimento> {
 
 	public List<Estabelecimento> listarPorNome(String chave, int rows) throws Exception {
-		
 		List<Estabelecimento> result = null;
-		
 		// Recupera registros iniciando pela string pesquisada.
 		String sql = "SELECT x FROM Estabelecimento x WHERE" +
 				" upper(x.nome) like :iniciandoPor" +
@@ -41,6 +40,52 @@ public class EstabelecimentoDao extends GenericDao<Estabelecimento> {
 			result.addAll(result2);
 		}
 		return result;
+	}
+
+	
+	public List<Estabelecimento> listarOrdenadoPorNome(int pagina, int tamanhoPagina) throws Exception {
+		
+		List<Estabelecimento> result = null;
+		String sql = "SELECT x FROM Estabelecimento x " +
+				" order by x.nome";
+		result = getEntityManager()
+				.createQuery(sql, Estabelecimento.class)
+				.setFirstResult(pagina * tamanhoPagina - tamanhoPagina)
+				.setMaxResults(tamanhoPagina)
+				.getResultList();
+		return result;
+	}
+
+	public Long contar() throws Exception {
+		String sql = "SELECT COUNT(x) FROM Estabelecimento x";
+		return getEntityManager()
+				.createQuery(sql, Long.class)
+				.getSingleResult();
+	}
+
+	public List<Estabelecimento> listarPorNomeOrdenadoPorNome(
+			int pagina, int tamanhoPagina, String iniciandoPor) throws Exception {
+		
+		List<Estabelecimento> result = null;
+		String sql = "SELECT x FROM Estabelecimento x WHERE" +
+				" upper(x.nome) like :iniciandoPor" +
+				" order by x.nome";
+		result = getEntityManager()
+				.createQuery(sql, Estabelecimento.class)
+				.setParameter("iniciandoPor", iniciandoPor.toUpperCase().concat("%"))
+				.setFirstResult(pagina * tamanhoPagina - tamanhoPagina)
+				.setMaxResults(tamanhoPagina)
+				.getResultList();
+		return result;
+	}
+
+	public Long contarPorNome(String iniciandoPor) throws Exception {
+		String sql = "SELECT COUNT(x) FROM Estabelecimento x WHERE" +
+				" upper(x.nome) like :iniciandoPor";
+		return getEntityManager()
+				.createQuery(sql, Long.class)
+				.setParameter("iniciandoPor", iniciandoPor.toUpperCase().concat("%"))
+				.getSingleResult();
 	}
 
 }
