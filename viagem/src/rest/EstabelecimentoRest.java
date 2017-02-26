@@ -2,7 +2,6 @@ package rest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,9 +13,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.google.gson.Gson;
-
-import dto.ParametrosListagem;
 import modelo.Estabelecimento;
 import servico.EstabelecimentoService;
 import util.Ejb;
@@ -56,14 +52,14 @@ public class EstabelecimentoRest {
 			@QueryParam("q") String iniciandoPor)  throws Exception {
 
 		try {
-			// Sem crit�rio de pesquisa.
+			// Sem critério de pesquisa.
 			if (iniciandoPor == null || iniciandoPor.trim().equals("")) {
 				return Response.ok()
 						.entity(
 								estabelecimentoService.listarOrdenadoPorNome(pagina, tamanhoPagina))
 						.build();
 
-			// Com crit�rio de pesquisa.
+			// Com critério de pesquisa.
 			} else {
 				return Response.ok()
 						.entity(
@@ -93,40 +89,5 @@ public class EstabelecimentoRest {
 		}
 	}
 
-	/*
-	// apenas teste
-	@GET
-	@Path("/lista")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response listar2() throws Exception{
-		System.out.println("listar2()");
-		String json = "{p:1, t:5, filtros:[{chave: nome, valor: Campo, restricao: inicia}], ordenacao: [{chave: nome, ordem: A}]}";
-		ParametrosListagem p = new Gson().fromJson(json, ParametrosListagem.class);
-		try {
-			return Response.ok()
-					.entity(
-							estabelecimentoService.listar(p))
-					.build();
-		} catch (Exception e) {
-			return Response.serverError()
-					.entity(new RespostaErro(e.getMessage()))
-					.build();
-		}
-	}
-	*/
 	
-	@DELETE
-	@Path("/{id}")
-	public Response excluir(@PathParam("id") Long id) throws Exception {
-		try {
-			//estabelecimentoService.excluir(id);
-			return Response.ok()
-					.build();
-		} catch (Exception e) {
-			return Response.serverError()
-					.entity(new RespostaErro(e.getMessage()))
-					.build();
-		}
-	}
-
 }

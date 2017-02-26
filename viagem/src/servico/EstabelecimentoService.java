@@ -103,7 +103,7 @@ public class EstabelecimentoService {
 
 		List<Estabelecimento> lista = new ArrayList<Estabelecimento>();
 		if (iniciandoPor == null || iniciandoPor.trim() == "") {
-			throw new AppException("Nome ou parte do nome do munic�pio para pesquisa � obrigat�rio");
+			throw new AppException("Nome ou parte do nome do estabelecimento para pesquisa é obrigatório");
 		}
 		if (pagina == 0) {
 			pagina = 1;
@@ -112,11 +112,11 @@ public class EstabelecimentoService {
 			tamanhoPagina = 10;
 		}
 		try {
-			//lista = municipioDao.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor);
-			//Long count = municipioDao.contarPorNome(iniciandoPor);
-			//listagem.set(pagina, lista, count);
+			lista = estabelecimentoDao.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor);
+			Long count = estabelecimentoDao.contarPorNome(iniciandoPor);
+			listagem.set(pagina, lista, count);
 		} catch(Exception e) {
-			throw new AppException("Erro ao listar municípios por nome: " + e.getMessage(), e);
+			throw new AppException("Erro ao listar estabelecimentos por nome: " + e.getMessage(), e);
 		}
 		return listagem;
 	}
