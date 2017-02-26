@@ -7,9 +7,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import dao.MunicipioDao;
+import dto.ParametrosListagem;
 import exception.AppException;
 import modelo.Municipio;
-import modelo.UF;
 import util.Listagem;
 
 @Stateless
@@ -17,7 +17,7 @@ public class MunicipioService {
 
 	@EJB
 	private MunicipioDao municipioDao;
-	
+
 	public Municipio salvar(Municipio municipio) throws AppException {
 		Municipio result = null;
 		try {
@@ -64,9 +64,9 @@ public class MunicipioService {
 
 	public Listagem<Municipio> listarOrdenadoPorNome(int pagina, int tamanhoPagina)	
 			throws AppException { 
-		
+
 		Listagem<Municipio> listagem = new Listagem<Municipio>();
-		
+
 		List<Municipio> lista = new ArrayList<Municipio>();
 		if (pagina == 0) {
 			pagina = 1;
@@ -84,12 +84,12 @@ public class MunicipioService {
 		return listagem;
 	}
 
-	
+
 	public Listagem<Municipio> listarPorNomeOrdenadoPorNome(String iniciandoPor, int pagina, int tamanhoPagina)	
 			throws AppException { 
-		
+
 		Listagem<Municipio> listagem = new Listagem<Municipio>();
-		
+
 		List<Municipio> lista = new ArrayList<Municipio>();
 		if (iniciandoPor == null || iniciandoPor.trim() == "") {
 			throw new AppException("Nome ou parte do nome do município para pesquisa é obrigatório");
@@ -110,4 +110,13 @@ public class MunicipioService {
 		return listagem;
 	}
 
+	public List<Municipio> listar(ParametrosListagem params)	
+			throws AppException {
+
+		try {
+			return municipioDao.listar(params);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar municípios: " + e.getMessage(), e);
+		}
+	}
 }

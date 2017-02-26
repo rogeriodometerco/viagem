@@ -23,4 +23,16 @@ public class Filtro implements Serializable {
 		this.restricao = restricao;
 	}
 
+	public String getChave() {
+		return chave;
+	}
+
+	public Object getValor() {
+		return valor;
+	}
+
+	public String getRestricao() {
+		return restricao;
+	}
+
 }

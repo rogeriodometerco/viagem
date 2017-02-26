@@ -13,6 +13,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
+
+import dto.ParametrosListagem;
 import modelo.Municipio;
 import servico.MunicipioService;
 import util.Ejb;
@@ -84,6 +87,25 @@ public class MunicipioRest {
 			return Response.ok()
 					.entity(
 							municipioService.recuperar(id))
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
+	@GET
+	@Path("/lista")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listar2() throws Exception{
+		System.out.println("listar2()");
+		String json = "{p:1, t:5, filtros:[{chave: nome, valor: Campo, restricao: inicia}], ordenacao: [{chave: nome, ordem: A}]}";
+		ParametrosListagem p = new Gson().fromJson(json, ParametrosListagem.class);
+		try {
+			return Response.ok()
+					.entity(
+							municipioService.listar(p))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()

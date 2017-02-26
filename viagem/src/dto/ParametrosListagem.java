@@ -32,5 +32,21 @@ public class ParametrosListagem implements Serializable {
 		this.filtros = filtros;
 		this.ordenacao = ordenacao;
 	}
+
+	public Integer getPagina() {
+		return pagina;
+	}
+
+	public Long getTamanhoPagina() {
+		return tamanhoPagina;
+	}
+
+	public Filtro[] getFiltros() {
+		return filtros;
+	}
+
+	public Ordenacao[] getOrdenacao() {
+		return ordenacao;
+	}
 }
 

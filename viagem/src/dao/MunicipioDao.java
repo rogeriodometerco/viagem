@@ -1,9 +1,17 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
+import dto.Filtro;
+import dto.ParametrosListagem;
 import modelo.Municipio;
 
 @Stateless
@@ -54,5 +62,34 @@ public class MunicipioDao extends GenericDao<Municipio> {
 				.getSingleResult();
 	}
 
-	
+	public List<Municipio> listar(ParametrosListagem params) throws Exception {
+		List<Municipio> lista = new ArrayList<Municipio>();
+		
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Municipio> criteriaQuery = criteriaBuilder.createQuery(Municipio.class);
+		Root<Municipio> municipioRoot = criteriaQuery.from(Municipio.class);
+		
+
+		for (Filtro filtro: params.getFiltros()) {
+			if (filtro.getRestricao().toUpperCase().equals(Filtro.IGUAL)) {
+				System.out.println("igual");
+				criteriaQuery.where(criteriaBuilder.equal(municipioRoot.get(filtro.getChave()), filtro.getValor()));
+			} else if (filtro.getRestricao().toUpperCase().equals(Filtro.INICIA)) {
+				System.out.println("inicia");
+				criteriaQuery.where(criteriaBuilder.like(municipioRoot.get(filtro.getChave()), ((String)filtro.getValor()).concat("%")));
+			} else if (filtro.getRestricao().toUpperCase().equals(Filtro.TERMINA)) {
+				System.out.println("termina");
+				criteriaQuery.where(criteriaBuilder.like(municipioRoot.get(filtro.getChave()), ("%".concat((String)filtro.getValor()))));
+			} else if (filtro.getRestricao().toUpperCase().equals(Filtro.CONTEM)) {
+				System.out.println("contem");
+				criteriaQuery.where(criteriaBuilder.like(municipioRoot.get(filtro.getChave()), ("%".concat((String)filtro.getValor()).concat("%"))));
+			}
+		}
+
+		TypedQuery<Municipio> query = getEntityManager().createQuery(criteriaQuery);
+		lista = query.getResultList();
+
+		return lista;
+	}
 }
+ 
