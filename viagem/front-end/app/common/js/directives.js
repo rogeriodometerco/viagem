@@ -12,9 +12,9 @@ angular.module(APP_NAME)
           link: function(scope, element) {
             var listener = function(event, toState, toParams, fromState, fromParams) {
               // Default title - load on Dashboard 1
-              var title = 'Gestor Rural | ';
+              var title = 'Viagem | ';
               // Create your own title pattern
-              if (toState.data && toState.data.pageTitle) title = 'LUBRO | ' + toState.data.pageTitle;
+              if (toState.data && toState.data.pageTitle) title = 'Viagem | ' + toState.data.pageTitle;
               $timeout(function() {
                 element.text(title);
               });
