@@ -1,0 +1,107 @@
+
+
+<div class="text-center loginscreen col-xs-12 col-sm-8 col-md-6 col-lg-3 animated fadeInDown">
+  
+  <div>
+      <h1 class="logo-name"><i class="fa fa-pencil"></i></h1>
+  </div>
+  <br>
+  
+  <div class="col-xs-12 login-box">
+      
+      <h3>
+        Seja bem vindo ao <br>
+        Gestor Rural - Na Ponta do Lápis
+      </h3>
+              
+      <p>Autentique-se para utilizar o sistema.</p>
+      
+      <form class="row" role="form" name="loginForm" novalidate>
+      
+          <div class="form-group">
+              <input type="text" class="form-control" name="cpf" placeholder="Número do CPF" ng-model="data.cpf" maxlength="14" validator="[required, cpf]" autofocus>
+          </div>
+          
+          <div class="form-group" ng-show="unidadesGestao.length > 0">
+              <label>Escolha uma Unidade de Gestão:</label>
+              <select id="unidadeGestao" name="unidadeGestao" ng-model="unidadeGestaoV" validator="[required]" class="form-control" autofocus>
+                <option value="">Selecione</option>
+                <option ng-repeat="uG in unidadesGestao | orderBy:'+nm_undgestao'" value="{{uG.id_undgestao}}-{{uG.id_licencanpl}}">{{uG.nm_undgestao}}</option>
+              </select>
+          </div>
+          
+          <div ng-show="hasPassword && hasPassword !== null" class="animated fadeIn">
+              <div class="form-group">
+                  <input id="passwordLogin" type="password" class="form-control" placeholder="Senha de acesso" ng-model="data.senha" validator="[required]">
+              </div>
+              
+              <button ng-click="authenticate()" 
+                      class="btn btn-primary block full-width m-b">
+                  Entrar
+              </button>
+          </div>
+          
+          <div ng-show="!hasPassword && hasPassword !== null" class="animated fadeIn">
+
+              <hr />
+              
+              <div class="form-group" ng-hide="hasCode">
+                <button ng-click="codeGenerate()" 
+                        class="btn btn-primary block full-width m-b">
+                    Enviar Código
+                </button>
+              </div>
+              
+              <div ng-show="hasCode" class="animated fadeIn">
+
+                  <div class="form-group">
+                    <div class="input-group hidden-xs hidden-sm">
+                      <input type="text" name="codigoAcesso" class="form-control" placeholder="Código de Validação" ng-model="data.codigoAcesso" validator="[required]">           
+                      <div class="input-group-btn">
+                        <button class="btn btn-primary"
+                           data-toggle="tooltip" data-placement="top" title="Reenviar Código de Acesso">
+                           <i class="fa fa-refresh" aria-hidden="true"></i>
+                       </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- <div class="form-group hidden-md hidden-lg">
+                    <input type="text" class="form-control" placeholder="Código de Validação" ng-model="data.codigoAcesso" validator="[required]">         
+                  </div> -->
+                  <div class="form-group hidden-md hidden-lg">
+                    <button class="btn btn-primary block full-width m-b"><i class="fa fa-refresh" aria-hidden="true"></i> Reenviar Código de Acesso</button>
+                  </div>
+                  
+                  <div class="form-group">
+                      <input type="password" class="form-control" placeholder="Nova Senha" ng-model="data.senha" validator="[required]">
+                  </div>
+                  <div class="form-group">
+                      <input type="password" name="confirmPassword" class="form-control" placeholder="Confirme sua Nova Senha" ng-model="data.confirmaSenha" validator="[required, confirmPassword]">
+                  </div>
+                  
+                  <button ng-click="authenticate()" 
+                          class="btn btn-primary block full-width m-b">
+                      Cadastrar Senha e Acessar
+                  </button>
+                  
+              </div>
+              
+          </div>
+          
+          <div class="hidden-xs hidden-sm">
+            <a ui-sref="forgot_password"><small>Esqueceu sua senha?</small></a><br />
+            <p class="text-center" style="margin-bottom: 0px;"><a ui-sref="invitation" style="color: #fff;">Aceitar Convite</a></p>   
+            <p class="text-center"><a ui-sref="register" style="color: #f8ec59;">Cadastre-se</a></p>   
+          </div> 
+          <div class="hidden-md hidden-lg">
+            <button ui-sref="forgot_password" class="btn btn-default col-xs-12">Esqueceu sua senha?</button>
+            <button ui-sref="invitation" class="btn btn-success col-xs-12">Aceitar Convite</button>   
+            <button ui-sref="register" class="btn btn-success col-xs-12">Cadastre-se</button>   
+          </div>      
+      </form>
+      
+      <p class="row m-t"><small>Na Ponta do Lápis - Gestor Rural &COPY; 2017</small> </p>
+  </div>
+  
+</div>

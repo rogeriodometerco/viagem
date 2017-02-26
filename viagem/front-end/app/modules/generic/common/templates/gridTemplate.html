@@ -1,0 +1,55 @@
+
+<div class="row" ng-show="hasTools">
+    <div class="col-xs-12">
+        <div class="text-right">
+            <!-- <div class="btn-group"> -->
+            <button ng-click="openDetail(manager.create())" class="btn btn-primary" tooltip-placement="bottom" tooltip="Adicionar" tooltip-append-to-body="true">
+                <span class="fa fa-plus"></span>
+            </button>
+
+            <button ng-click="remove()" class="btn btn-danger" tooltip-placement="bottom" tooltip="Remover" tooltip-append-to-body="true" ng-if="multiSelect">
+                <span class="fa fa-trash"></span>
+            </button>
+            <!-- </div> -->
+        </div>
+    </div>
+</div>
+
+<div class="row">    
+    <div ng-if="datetime" ng-include="'gridSearch' + datetime + '.html'"></div>      
+</div>
+
+<div class="ngGroupPanel" ng-show="showGroupPanel()" ng-style="groupPanelStyle()">
+    <div class="ngGroupPanelDescription" ng-show="configGroups.length == 0">{{i18n.ngGroupPanelDescription}}</div>
+
+    <ul ng-show="configGroups.length > 0" class="ngGroupList">
+        <li class="ngGroupItem" ng-repeat="group in configGroups">
+            <span class="ngGroupElement">
+                <span class="ngGroupName">{{group.displayName}}
+                    <span ng-click="removeGroup($index)" class="ngRemoveGroup">x</span>
+                </span>
+
+                <span ng-hide="$last" class="ngGroupArrow"></span>
+            </span>
+        </li>
+    </ul>
+</div>
+
+<div class="ngHeaderContainer" ng-style="headerStyle()">
+    <div ng-header-row class="ngHeaderScroller" ng-style="headerScrollerStyle()"></div>
+</div>
+
+<div ng-grid-menu></div>
+
+<div class="ngViewport" unselectable="on" ng-viewport ng-style="viewportStyle()">
+    <div class="ngCanvas" ng-style="canvasStyle()" ng-show="renderedRows.length > 0">
+        <div ng-style="rowStyle(row)" ng-repeat="row in renderedRows" ng-click="row.toggleSelected($event)" ng-class="row.alternatingRowClass()" ng-row>            
+        </div>
+    </div>
+
+    <div class="ngCanvas no-row" ng-style="canvasStyle()" ng-show="renderedRows.length == 0">
+        Nenhum registro encontrado.
+    </div>
+</div>
+
+<div ng-grid-footer></div>

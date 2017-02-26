@@ -1,0 +1,66 @@
+
+
+<div class="text-center loginscreen animated fadeIn">
+
+  <div class="container">
+      
+      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-3 register-box">
+        
+        <h1>
+          <i class="fa fa-id-card-o" aria-hidden="true"></i>
+        </h1>
+        
+        <h3>
+          Aceitar Convite <br>
+          Gestor Rural - Na Ponta do Lápis
+        </h3>
+                
+        <p class="text-info-coamo">Informe seus dados cadastrados na Coamo e os dados do convite</p>
+        
+        <form class="" role="form" name="validateForm" novalidate>
+        
+          <div class="form-group">
+            <select class="form-control" ng-model="data.tipoMatricula" ng-disabled="hasCode" validator="[required]">
+              <option value="">Tipo de Matrícula</option>
+              <option value="1">Cooperado</option>
+              <option value="2">Não Cooperado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="matricula" placeholder="Número da Matrícula" ng-model="data.matricula" ng-disabled="hasCode" maxlength="14" validator="[required, matricula]" autofocus>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="cpf" placeholder="Número do CPF" ng-model="data.cpf" ng-disabled="hasCode" maxlength="14" validator="[required, cpf]">
+          </div>
+          
+          <div class="form-group">
+            <input type="text" name="codigoAcesso" class="form-control" placeholder="Código de Validação" ng-model="data.codigoAcesso" validator="[required]" autofocus>             
+          </div>
+          
+          <div class="form-group">
+              <input type="password" class="form-control" placeholder="Nova Senha" ng-model="data.senha" validator="[required]">
+          </div>
+          <div class="form-group">
+              <input type="password" name="confirmPassword" class="form-control" placeholder="Confirme sua Nova Senha" ng-model="data.confirmaSenha" validator="[required, confirmPassword]">
+          </div>
+          
+          <button type="submit" ng-click="register()" 
+                  class="btn btn-primary block full-width m-b">
+              Cadastrar Senha e Acessar
+          </button>
+          
+          <div class="hidden-xs hidden-sm">
+            <a ui-sref="login"><small> &lt; Voltar</small></a><br />  
+          </div> 
+          <div class="hidden-md hidden-lg">
+            <button ui-sref="login" class="btn btn-default col-xs-12">&lt; Voltar</button> 
+          </div>
+          
+        </form>
+        
+        <p class="m-t"><small>Na Ponta do Lápis - Gestor Rural &COPY; 2017</small> </p>
+      
+      </div>
+      
+  </div>
+</div>

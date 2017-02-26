@@ -1,0 +1,70 @@
+
+
+/*Grid*/
+.content-container .gridStyle {
+    min-height: 500px;
+    height: 100%;
+    margin-top: 10px;
+}
+.modal-content .gridStyle {
+    /*min-height: 300px;*/
+    height: 100%;
+    margin-top: 10px;
+}
+.gridStyle .btn {
+    /*height: 27px !important;
+    padding-top: 4px;*/
+}
+.gridStyle select.btn {
+    padding-top: 3px !important;
+}
+.gridStyle .ngTopPanel .btn-group {
+    float: right;
+}
+.gridStyle .ngHeaderContainer {
+    /*background: #eaeaea !important;
+    border-radius: 5px 5px 0px 0px !important;*/
+}
+.gridStyle .ngVerticalBarVisible {
+	background-color: rgba(255, 255, 255, 0) !important;
+}
+.gridStyle .ngCanvas.no-row {
+	text-align: center;
+	padding: 20px;
+}
+.gridStyle .ngFooterPanel {
+    overflow: hidden;
+    border-radius: 0 0 5px 5px;
+    background-color: rgba(255, 255, 255, 0) !important;
+    border-top: none;
+}
+.gridStyle .ngFooterPanel .ngTotalSelectContainer {
+    margin: 7px 0 5px 0;
+}
+.gridStyle .ngFooterPanel .ngPagerContainer .ngPagerControl {
+    float: right;
+    margin-right: 10px;
+    line-height: 25px;
+}
+.gridStyle .ngFooterPanel .ngPagerContainer .ngPagerControl .ngLabel {
+    margin-top: 3px;
+    margin-right: 5px;
+}
+@media (max-width: 768px) {
+    .gridStyle .ngTopPanel .btn-group {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        float: none;
+    }
+}
+@media (max-width: 991px) {
+    .gridStyle .ngFooterPanel .ngTotalSelectContainer, .gridStyle .ngFooterPanel .ngPagerContainer {
+        text-align: center;
+    }
+    .gridStyle .ngFooterPanel .ngPagerContainer {
+        margin-bottom: 7px;
+    }
+    .gridStyle .ngFooterPanel .ngPagerContainer .ngPagerControl {
+        float: none;
+    }
+}

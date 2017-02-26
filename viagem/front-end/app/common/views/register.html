@@ -1,0 +1,109 @@
+
+
+<div class="text-center loginscreen animated fadeIn">
+
+  <div class="container">
+      
+      <div class="col-xs-12 col-sm-8 col-md-6 col-lg-3 register-box">
+        
+        <h1>
+          <i class="fa fa-id-card-o" aria-hidden="true"></i>
+        </h1>
+        
+        <h3>
+          Aquisição de Licença <br>
+          Gestor Rural - Na Ponta do Lápis
+        </h3>
+                
+        <p class="text-info-coamo">Informe seus dados cadastrados na Coamo</p>
+        
+        <div ng-controller="MatriculaValidateCtrl">
+        
+          <form class="" role="form" name="validateForm" novalidate>
+          
+              <div class="form-group">
+                <select class="form-control" ng-model="data.tipoMatricula" ng-disabled="hasCode" validator="[required]">
+                  <option value="">Tipo de Matrícula</option>
+                  <option value="1">Cooperado</option>
+                  <option value="2">Não Cooperado</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" name="matricula" placeholder="Número da Matrícula" ng-model="data.matricula" ng-disabled="hasCode" maxlength="14" validator="[required, matricula]" autofocus>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" name="cpf" placeholder="Número do CPF" ng-model="data.cpf" ng-disabled="hasCode" maxlength="14" validator="[required, cpf]">
+              </div>
+              
+              <hr />
+                  
+              <div id="btnMatriculaValid" class="form-group animated" ng-hide="hasCode">
+                <button type="submit" ng-click="matriculaValid()" 
+                        class="btn btn-primary block full-width m-b">
+                  Validar Matrícula
+                </button>
+              </div>
+            
+          </form>
+          
+        </div>
+        
+        <div ng-controller="FinishRegisterCtrl">
+        
+          <form class="" role="form" name="registerForm" novalidate>
+          
+              <div ng-show="hasCode" class="animated fadeIn">
+                  
+                  <p class="text-info-coamo">Seus dados foram validados, enviamos também um código para seu e-mail e/ou celular para finalizar seu cadastro</p>
+                  
+                  <div class="input-group form-group col-xs-12">
+                    <input type="text" name="codigoAcesso" class="form-control" placeholder="Código de Validação" ng-model="data.codigoAcesso" validator="[required]" autofocus>   
+                    <div class="input-group-btn">
+                      <button type="button" class="btn btn-primary hidden-xs hidden-sm" ng-click="matriculaValid()"
+                         data-toggle="tooltip" data-placement="top" title="Reenviar Código de Acesso">
+                         <i class="fa fa-refresh" aria-hidden="true"></i>
+                     </button>
+                    </div>           
+                  </div>
+                  
+                  <!-- <div class="form-group hidden-md hidden-lg">
+                    <input type="text" name="codigoAcesso" class="form-control" placeholder="Código de Validação" ng-model="data.codigoAcesso" validator="[required]">         
+                  </div> -->
+                  <div class="form-group hidden-md hidden-lg">
+                    <button type="button" class="btn btn-primary block full-width m-b"><i class="fa fa-refresh" aria-hidden="true"></i> Reenviar Código de Acesso</button>
+                  </div>
+                  
+                  <div class="form-group">
+                      <input type="password" class="form-control" placeholder="Nova Senha" ng-model="data.senha" validator="[required]">
+                  </div>
+                  <div class="form-group">
+                      <input type="password" name="confirmPassword" class="form-control" placeholder="Confirme sua Nova Senha" ng-model="data.confirmaSenha" validator="[required, confirmPassword]">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Nome da Unidade de Gestão" ng-model="data.unidadeGestao" validator="[required]">         
+                  </div>
+                  
+                  <button type="submit" ng-click="register()" 
+                          class="btn btn-primary block full-width m-b">
+                      Cadastrar Senha e Acessar
+                  </button>
+                  
+              </div>
+              
+              <div class="hidden-xs hidden-sm">
+                <a ui-sref="login"><small> &lt; Voltar</small></a><br />  
+              </div> 
+              <div class="hidden-md hidden-lg">
+                <button ui-sref="login" class="btn btn-default col-xs-12">&lt; Voltar</button> 
+              </div>
+            
+          </form>
+        
+        </div>
+        
+        <p class="m-t"><small>Na Ponta do Lápis - Gestor Rural &COPY; 2017</small> </p>
+      
+      </div>
+      
+  </div>
+</div>

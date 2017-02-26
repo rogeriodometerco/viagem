@@ -1,0 +1,52 @@
+$icon-font-path: "../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
+
+// bower:scss
+@import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+// endbower
+
+
+html,
+body {
+  height: auto !important;
+}
+
+/* Fix para sidemenu aparecer atrás do modal */
+nav {
+    z-index: 1001 !important;
+}
+
+.no-resize {
+    resize: none !important;
+}
+
+.no-resize-w {
+    resize: vertical !important;
+}
+
+.no-resize-h {
+    resize: horizontal !important;
+}
+/*
+flot-y-axis .flot-tick-label {
+    white-space: nowrap;
+    transform: translate(-9px, 0) rotate(-60deg);
+    text-indent: -100%;
+    transform-origin: top right;
+    text-align: right !important;
+}*/
+/*
+.flot-x-axis .flot-tick-label {
+    white-space: nowrap;
+    transform: translate(-9px, 0) rotate(-60deg);
+    text-indent: -100%;
+    transform-origin: top right;
+    text-align: right !important;
+}*/
+
+.block-ui-visible > .block-ui-container {
+  position: fixed !important;
+}
+
+.modal .ibox-content {
+  border: none;
+}

@@ -1,0 +1,12 @@
+node_modules
+dist
+.tmp
+bower_components
+.ftppass
+nbproject
+Vagrantfile
+.vagrant
+back
+.idea
+.project
+.settings
