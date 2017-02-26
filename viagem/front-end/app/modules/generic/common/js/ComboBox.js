@@ -56,7 +56,7 @@ angular.module('Generic')
           if(modelAux)
             scope.select(modelAux[divModel[divModel.length-1]]);
         }
-        
+
         jQuery(el[0].parentNode).append(hidden);
         $timeout(function(){
           jQuery(el[0]).find('.btn-block').append(button);
@@ -64,17 +64,17 @@ angular.module('Generic')
           jQuery(jQuery(el[0]).find('.btn-block>.btn')[0]).addClass('col-md-8').addClass('col-xs-10').addClass('col-sm-7');
           jQuery(jQuery(el[0]).find('.btn-block>.btn')[1]).addClass('col-sm-2').addClass('hidden-xs');
         }, 100);
-        
+
         button.click(function(e){
             e.preventDefault();
-            
+
             if(!scope.disabled){
-              
+
               try{
-                
+
                 var scopeModal = scope.$new();
-                
-                //scopeModal.multiSelect = false;
+
+                scopeModal.multiSelect = false;
                 scopeModal.selections = [];
                 modalInstance = $uibModal.open({
                   templateUrl: "modules/"+scope.templates.list,
@@ -84,7 +84,7 @@ angular.module('Generic')
                   size: 'lg'
                 });
                 scopeModal.$on(EVENTS.gridready, function(e, scopeM){
-                  //scopeM.manager.filter(scope.manager.$filter);
+                  scopeM.manager.filter(scope.manager.$filter);
                 });
                 scopeModal.select = function(){
                   modalInstance.close(scopeModal.selections);
@@ -92,7 +92,7 @@ angular.module('Generic')
                 scopeModal.cancel = function(){
                   modalInstance.dismiss("cancel");
                 };
-  
+
                 modalInstance.result.then((function(result) {
                   try{
                     scope.selectModel(result[0]);
@@ -101,18 +101,18 @@ angular.module('Generic')
                     console.log(e);
                   }
                 }), function(result) {
-  
+
                 });
-              
+
               }catch(e){
                 console.log(e);
               }
-            
+
             }
-            
+
         });
-          
-          
+
+
       },
       controller: ['$scope', function($scope) {
 
@@ -124,7 +124,7 @@ angular.module('Generic')
           else
             $scope.disabled = false;
         }, 100);
-        
+
         $scope.selectModel = function($model){
           $scope.select($model.convertToObject());
           if(this.$select !== undefined)
@@ -158,7 +158,7 @@ angular.module('Generic')
             data: [],
             limit: 30
           };
-          
+
           if(!$scope.autoLoad){
             $scope.autoLoad = true;
             return;
@@ -178,9 +178,9 @@ angular.module('Generic')
           return $scope.manager.find(params).then(function(response) {
             $scope.array = response;
           });
-          
+
         };
-          
+
       }]
     };
   }])
