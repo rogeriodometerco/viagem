@@ -54,4 +54,5 @@ public class MunicipioDao extends GenericDao<Municipio> {
 				.getSingleResult();
 	}
 
+	
 }

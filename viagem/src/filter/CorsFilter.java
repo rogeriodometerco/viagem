@@ -26,7 +26,7 @@ public class CorsFilter implements Filter {
 	        try {
 	            // No Origin header present means this is not a cross-domain request
 	            String origin = httpReq.getHeader("Origin");
-	            System.out.println("origin: " + origin);
+	            //System.out.println("origin: " + origin);
 	            //DfLogger.debug(this.getClass(),"doFilter(): origin " + origin, null, null);
 	            if (origin == null) {
 	                //DfLogger.debug(this.getClass(),"doFilter(): origin == null ", null, null);

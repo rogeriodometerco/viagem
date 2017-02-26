@@ -78,6 +78,48 @@
 				}
 			});
 		});
+
+		$("#btListar2").click(function() {
+			var obj = {
+				"p" : '1',
+				"t" : '5',
+				"municipio": {
+					"nome": "Peabiru"
+				}
+			};
+			/*
+			obj = {
+				"p" : 1,
+				"t" : 5,
+				"municipio": {
+					"nome": "Peabiru"
+				}
+			};
+			*/
+			
+			// Assim funciona:
+			//http://localhost:8080/viagem/rest/uf/lista?parametros='{p:1,t:5,municipio:{nome:Peabiru}'
+				
+			console.log("obj: " + obj);
+			var x = $.ajax({
+				type : "GET",
+				//url : baseURI + "/lista?parametros=" + JSON.stringify(obj),
+				url : baseURI + "/lista?parametros='{p:1,t:5,municipio:{nome:Peabiru}'",
+				dataType : "JSON",
+				success : function(data) {
+					console.log("OK");
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log("Erro");
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+
+
 	});
 </script>
 </head>
@@ -91,6 +133,7 @@
 		<label for="tamanhoPagina">Tamanho página</label>
 		<input type="text" id="tamanhoPagina" value="5" /> 
 		<input type="button" id="btListar" value="Listar" /> 
+		<input type="button" id="btListar2" value="Listar2" /> 
 	</p>
 	<label for="id">Id (nulo para inclusão)</label>
 	<br />

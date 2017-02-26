@@ -13,6 +13,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.Gson;
+
+import dto.ParametrosListagem;
 import modelo.UF;
 import servico.UfService;
 import util.Ejb;
@@ -58,6 +61,25 @@ public class UfRest {
 			return Response.ok()
 					.entity(
 							ufService.listarOrdenadoPorAbreviatura(pagina, tamanhoPagina))
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
+	@Path("/lista")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listar2(@QueryParam("parametros") String parametros)  throws Exception {
+		String json = "{p:1, t:5, filtros:[{chave: nome, valor: campo, restricao: inicia}, {chave: uf, valor: PR, restricao: igual}], ordenacao: [{chave: nome, ordem: A}]}";
+		ParametrosListagem p = new Gson().fromJson(json, ParametrosListagem.class);
+		System.out.println("/lista: " + parametros);
+		try {
+			return Response.ok()
+					.entity(
+							new Gson().toJson(p))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
