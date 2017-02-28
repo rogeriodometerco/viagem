@@ -64,15 +64,19 @@ public class DemandaTransporteMb implements Serializable {
 	public void salvar() {
 		try {
 			sincronizarDadosEdicaoParaSalvar();
-			demandaTransporteService.salvar(demandaTransporteEdicao);
-			JsfUtil.addMsgSucesso("Informações salvas com sucesso");
+			if (estaEmModoCriacao()) {
+				demandaTransporteService.criar(demandaTransporteEdicao);
+			} else {
+				demandaTransporteService.alterar(demandaTransporteEdicao);
+			}
+			JsfUtil.addMsgSucesso("InformaÃ§Ãµes salvas com sucesso");
 			if (estaEmModoCriacao()) {
 				prepararNovo();
 			} else {
 				listar();
 			}
 		} catch (Exception e) {
-			JsfUtil.addMsgErro("Erro ao salvar informações: " + e.getMessage());
+			JsfUtil.addMsgErro("Erro ao salvar informaÃ§Ãµes: " + e.getMessage());
 		}
 	}
 
@@ -81,7 +85,7 @@ public class DemandaTransporteMb implements Serializable {
 			transportadoresEdicao = new ArrayList<Conta>();
 		}
 
-		// Remove transportadores que não estão mais na lista.
+		// Remove transportadores que nï¿½o estï¿½o mais na lista.
 		List<TransportadorDemandaAutorizado> transportadoresARemover = new ArrayList<TransportadorDemandaAutorizado>();
 		for (TransportadorDemandaAutorizado transportador: demandaTransporteEdicao.getTransportadores()) {
 			if (!transportadoresEdicao.contains(transportador.getTransportador())) {
