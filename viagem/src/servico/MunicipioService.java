@@ -35,10 +35,10 @@ public class MunicipioService {
 	private List<String> validarMunicipio(Municipio municipio) {
 		List<String> erros = new ArrayList<String>();
 		if (municipio.getNome() == null || municipio.getNome().trim().length() == 0) {
-			erros.add("Nome do municipio � obrigat�rio");
+			erros.add("Nome do municipio � obrigatório");
 		}
 		if (municipio.getUf() == null) {
-			erros.add("UF do municipio � obrigat�rio");
+			erros.add("UF do municipio � obrigatório");
 		}
 		return erros;
 	}
@@ -92,7 +92,7 @@ public class MunicipioService {
 
 		List<Municipio> lista = new ArrayList<Municipio>();
 		if (iniciandoPor == null || iniciandoPor.trim() == "") {
-			throw new AppException("Nome ou parte do nome do municipio para pesquisa � obrigat�rio");
+			throw new AppException("Nome ou parte do nome do municipio para pesquisa é obrigatório");
 		}
 		if (pagina == 0) {
 			pagina = 1;

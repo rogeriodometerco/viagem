@@ -23,7 +23,7 @@ public class ContaConverter implements Converter {
 				ContaDao contaDao = Ejb.lookup(ContaDao.class);
 				result = contaDao.recuperar(Long.parseLong(value));
 			} catch(NumberFormatException e) {
-				throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao converter identificador de conta", "O literal passado como parâmetro é um valor numérico inválido"));
+				throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao converter identificador de conta", "O literal passado como parï¿½metro ï¿½ um valor numï¿½rico invï¿½lido"));
 			} catch (Exception e) {
 				throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro ao recuperar conta: " + e.getMessage(), e.getMessage()));
 			}
