@@ -9,7 +9,9 @@ import javax.ejb.Stateless;
 import dao.DemandaTransporteDao;
 import dto.Listagem;
 import exception.AppException;
+import modelo.Conta;
 import modelo.DemandaTransporte;
+import modelo.TransportadorDemandaAutorizado;
 
 @Stateless
 public class DemandaTransporteService {
@@ -27,6 +29,9 @@ public class DemandaTransporteService {
 			if (erros.size() > 0) {
 				throw new AppException(erros.toString());
 			}
+			for (TransportadorDemandaAutorizado autorizado: demandaTransporte.getTransportadores()) {
+				autorizado.setAtivo(true);
+			}
 			result = demandaTransporteDao.salvar(demandaTransporte);
 		} catch (Exception e) {
 			throw new AppException(e);
@@ -34,6 +39,7 @@ public class DemandaTransporteService {
 		return result;
 	}
 
+	// Não utilizar, apenas teste.
 	public DemandaTransporte alterar(DemandaTransporte dto) throws AppException {
 		DemandaTransporte result = null;
 		try {
@@ -68,6 +74,63 @@ public class DemandaTransporteService {
 			result = demandaTransporteDao.recuperar(id);
 		} catch(Exception e) {
 			throw new AppException("Erro ao recuperar demanda de transporte: " + e.getMessage(), e);
+		}
+		return result;
+	}
+
+
+	public DemandaTransporte alterarQuantidade(Long demandaId, Integer novaQuantidade) throws AppException {
+		DemandaTransporte result = null;
+		// TODO Implementar regras específicas desta funcionalidade, caso existam.
+		try {
+			result = demandaTransporteDao.recuperar(demandaId);
+			result.setQuantidade(novaQuantidade);
+			List<String> erros = validarDemandaTransporte(ALTERACAO, result);
+			if (erros.size() > 0) {
+				throw new AppException(erros.toString());
+			}
+			result = demandaTransporteDao.salvar(result);
+		} catch (Exception e) {
+			throw new AppException(e);
+		}
+		return result;
+	}
+
+	public DemandaTransporte adicionarTransportadores(Long demandaId, List<Conta> transportadores) throws AppException {
+		DemandaTransporte result = null;
+		// TODO Implementar regras específicas desta funcionalidade, caso existam.
+		try {
+			result = demandaTransporteDao.recuperar(demandaId);
+			for (Conta transportador: transportadores) {
+				result.adicionarTransportador(transportador);
+			}
+			List<String> erros = validarDemandaTransporte(ALTERACAO, result);
+			if (erros.size() > 0) {
+				throw new AppException(erros.toString());
+			}
+			result = demandaTransporteDao.salvar(result);
+		} catch (Exception e) {
+			throw new AppException(e);
+		}
+		return result;
+	}
+
+	public DemandaTransporte inativarTransportadores(Long demandaId, 
+			List<TransportadorDemandaAutorizado> transportadores) throws AppException {
+		DemandaTransporte result = null;
+		// TODO Implementar regras específicas desta funcionalidade, caso existam.
+		try {
+			result = demandaTransporteDao.recuperar(demandaId);
+			for (TransportadorDemandaAutorizado transportador: transportadores) {
+				result.inativarTransportador(transportador);
+			}
+			List<String> erros = validarDemandaTransporte(ALTERACAO, result);
+			if (erros.size() > 0) {
+				throw new AppException(erros.toString());
+			}
+			result = demandaTransporteDao.salvar(result);
+		} catch (Exception e) {
+			throw new AppException(e);
 		}
 		return result;
 	}

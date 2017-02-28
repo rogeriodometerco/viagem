@@ -1,10 +1,12 @@
 package rest;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,7 +23,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import exception.AppException;
+import modelo.Conta;
 import modelo.DemandaTransporte;
 import modelo.TransportadorDemandaAutorizado;
 import servico.DemandaTransporteService;
@@ -108,6 +110,86 @@ public class DemandaTransporteRest {
 					.entity(
 							toJson(
 									demandaTransporteService.recuperar(id)))
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
+	@PUT
+	@Path("/{id}/quantidade")
+	//@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response alterarQuantidade(@PathParam("id") Long id, Integer quantidade) throws Exception {
+
+		try {
+			/*
+			Iterator<Entry<String, Object>> i = dadosAlterados.entrySet().iterator();
+			while (i.hasNext()) {
+				Entry e = i.next();
+				System.out.println(e.getKey() + " - " + e.getValue() );
+			}
+			*/
+			DemandaTransporte demanda = demandaTransporteService.recuperar(id);
+			demanda.setQuantidade(quantidade);
+			return Response.ok()
+					.entity(
+							toJson(
+									demandaTransporteService.alterar(demanda)))
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
+	@POST
+	@Path("/{id}/transportadores")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response adicionarTransportadores(@PathParam("id") Long id, List<Conta> transportadores) throws Exception {
+
+		try {
+			/*
+			Iterator<Entry<String, Object>> i = dadosAlterados.entrySet().iterator();
+			while (i.hasNext()) {
+				Entry e = i.next();
+				System.out.println(e.getKey() + " - " + e.getValue() );
+			}
+			*/
+			return Response.ok()
+					.entity(
+							toJson(
+									demandaTransporteService.adicionarTransportadores(id, transportadores)))
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
+	@DELETE
+	@Path("/{id}/transportadores")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response inativarTransportadores(@PathParam("id") Long id, List<TransportadorDemandaAutorizado> transportadores) throws Exception {
+
+		try {
+			/*
+			Iterator<Entry<String, Object>> i = dadosAlterados.entrySet().iterator();
+			while (i.hasNext()) {
+				Entry e = i.next();
+				System.out.println(e.getKey() + " - " + e.getValue() );
+			}
+			*/
+			return Response.ok()
+					.entity(
+							toJson(
+									demandaTransporteService.inativarTransportadores(id, transportadores)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()

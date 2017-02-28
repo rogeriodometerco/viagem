@@ -1,5 +1,7 @@
 package modelo;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,25 +16,25 @@ import enums.StatusDemandaTransporte;
 
 @Entity
 public class DemandaTransporte {
-	
+
 	@Id
 	@GeneratedValue
 	private Long id;
 
 	@ManyToOne
 	private Estabelecimento origem;
-	
+
 	@ManyToOne
 	private Estabelecimento destino;
-	
+
 	private String produto;
-	
+
 	private Integer quantidade;
-	
+
 	private String unidadeQuantidade;
 
 	private StatusDemandaTransporte status;
-	
+
 	@ManyToOne
 	private Conta tomador;
 
@@ -111,4 +113,26 @@ public class DemandaTransporte {
 		this.transportadores = transportadores;
 	}
 
+	public void adicionarTransportador(Conta transportador) {
+		if (this.transportadores == null) {
+			this.transportadores = new HashSet<TransportadorDemandaAutorizado>();
+		}
+		TransportadorDemandaAutorizado novo = new TransportadorDemandaAutorizado();
+		novo.setDemanda(this);
+		novo.setTransportador(transportador);
+		novo.setAtivo(true);
+		this.transportadores.add(novo);
+	}
+
+	/*
+	 * Marca transportadores autorizados como inativos.
+	 */
+	public void inativarTransportador(TransportadorDemandaAutorizado transportador) {
+		for (TransportadorDemandaAutorizado ativo: transportadores) {
+			if (transportador.getId().equals(ativo.getId())) {
+				ativo.setAtivo(false);
+				break;
+			}
+		}
+	}
 }

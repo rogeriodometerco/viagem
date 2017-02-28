@@ -51,8 +51,10 @@
 			});
 		});
 
-		$("#btAlterar").click(function() {
-			var obj = JSON.stringify({
+		$("#btAlterarQuantidade").click(function() {
+			var obj = $("#novaQuantidade").val();
+				/*
+				JSON.stringify({
 				"origem" : {
 					"id": $("#origem").val()
 				},
@@ -63,11 +65,64 @@
 				"quantidade": $("#quantidade").val(),
 				"unidadeQuantidade": $("#unidadeQuantidade").val()
 			});
+			*/
 			var x = $.ajax({
 				type : 'PUT',
 				contentType : 'application/json',
 				dataType : "JSON",
-				url : baseURI + "/" + $("#id").val(),
+				url : baseURI + "/" + $("#id").val() + "/quantidade",
+				data : obj,
+				success : function(data) {
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+
+		$("#btAdicionarTransportadores").click(function() {
+			var obj = JSON.stringify([
+					{
+						"id": $("#transportador1").val()
+					},
+					{
+						"id": $("#transportador2").val()
+					}
+				]);
+			var x = $.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				dataType : "JSON",
+				url : baseURI + "/" + $("#id").val() + "/transportadores",
+				data : obj,
+				success : function(data) {
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+
+		$("#btInativarTransportadores").click(function() {
+			var obj = JSON.stringify([
+					{
+						"id": $("#transportadorAutorizado1").val()
+					},
+					{
+						"id": $("#transportadorAutorizado2").val()
+					}
+				]);
+			var x = $.ajax({
+				type : 'DELETE',
+				contentType : 'application/json',
+				dataType : "JSON",
+				url : baseURI + "/" + $("#id").val() + "/transportadores",
 				data : obj,
 				success : function(data) {
 					console.log(data);
@@ -92,6 +147,7 @@
 					$("#produto").val(data.produto);
 					$("#quantidade").val(data.quantidade);
 					$("#unidadeQuantidade").val(data.unidadeQuantidade);
+					$("#retorno").html(x.responseText);
 				},
 				error : function(data) {
 					console.log(data);
@@ -121,18 +177,13 @@
 </head>
 <body>
 	<p>
-		<input type="button" id="btCriar" value="Criar" /> 
-		<input type="button" id="btAlterar" value="Alterar" /> 
-		<input type="button" id="btRecuperar" value="Recuperar pelo id" /> 
-		<label for="pagina">Página</label>
-		<input type="text" id="pagina" value="1"/> 
-		<label for="tamanhoPagina">Tamanho página</label>
-		<input type="text" id="tamanhoPagina" value="5" /> 
-		<input type="button" id="btListar" value="Listar" /> 
-		<label for="iniciandoPor">Iniciando por</label>
-		<input type="text" id="iniciandoPor" /> 
-		<input type="button" id="btPesquisar" value="Pesquisar" /> 
-		
+		<input type="button" id="btCriar" value="Criar" /> <input
+			type="button" id="btRecuperar" value="Recuperar pelo id" /> <label
+			for="pagina">Página</label> <input type="text" id="pagina" value="1" />
+		<label for="tamanhoPagina">Tamanho página</label> <input type="text"
+			id="tamanhoPagina" value="5" /> <input type="button" id="btListar"
+			value="Listar" />
+
 	</p>
 	<label for="id">Id (nulo para inclusão)</label>
 	<br />
@@ -140,7 +191,7 @@
 	<br />
 	<label for="nome">Origem (ID)</label>
 	<br />
-	<input type="text" id="origem"  value="87"/>
+	<input type="text" id="origem" value="87" />
 	<br />
 	<label for="destino">Destino (ID)</label>
 	<br />
@@ -153,6 +204,10 @@
 	<label for="quantidade">Qtde</label>
 	<br />
 	<input type="text" id="quantidade" value="10000" />
+	<label for="novaQuantidade">Nova qtde: </label>
+	<input type="text" id="novaQuantidade" value="" />
+	<input type="button" id="btAlterarQuantidade"
+		value="Alterar quantidade" />
 	<br />
 	<label for="unidadeQuantidade">Unidade</label>
 	<br />
@@ -166,6 +221,19 @@
 	<br />
 	<input type="text" id="transportador2" value="103" />
 	<br />
+	<input type="button" id="btAdicionarTransportadores"
+		value="Adicionar transportadores" />
+	<br />
+	<label for="transportador1">Transportador autorizado 1 (ID)</label>
+	<br />
+	<input type="text" id="transportadorAutorizado1" value="" />
+	<br />
+	<label for="transportador2">Transportador autorizado 2 (ID)</label>
+	<br />
+	<input type="text" id="transportadorAutorizado2" value="" />
+	<br />
+	<input type="button" id="btInativarTransportadores"
+		value="Inativar transportadores" />
 
 	<p>Retorno:</p>
 	<p id="retorno" />

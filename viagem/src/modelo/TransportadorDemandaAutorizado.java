@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.ws.rs.DefaultValue;
 
 @Entity
 public class TransportadorDemandaAutorizado {
@@ -17,6 +18,8 @@ public class TransportadorDemandaAutorizado {
 	
 	@ManyToOne
 	private Conta transportador;
+	
+	private Boolean ativo;
 
 	public Long getId() {
 		return id;
@@ -40,6 +43,14 @@ public class TransportadorDemandaAutorizado {
 
 	public void setTransportador(Conta transportador) {
 		this.transportador = transportador;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 	
 }
