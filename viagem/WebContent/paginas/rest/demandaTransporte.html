@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		var baseURI = "/viagem/rest/demandaTransporte";
+		//var baseURI = "http://54.204.114.136:8080/viagem/rest/demandaTransporte";
+		
+		$("#btCriar").click(function() {
+			var obj = JSON.stringify({
+				"id" : $("#id").val(),
+				"origem" : {
+					"id": $("#origem").val()
+				},
+				"destino": {
+					"id": $("#destino").val()
+				},
+				"produto": $("#produto").val(),
+				"quantidade": $("#quantidade").val(),
+				"unidadeQuantidade": $("#unidadeQuantidade").val(),
+				"transportadores": [
+					{
+						"transportador": {
+							"id": $("#transportador1").val()
+						}
+					},
+					{
+						"transportador": {
+							"id": $("#transportador2").val()
+						}
+					}
+				]
+			});
+			var x = $.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				dataType : "JSON",
+				url : baseURI,
+				data : obj,
+				success : function(data) {
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+
+		$("#btAlterar").click(function() {
+			var obj = JSON.stringify({
+				"origem" : {
+					"id": $("#origem").val()
+				},
+				"destino": {
+					"id": $("#destino").val()
+				},
+				"produto": $("#produto").val(),
+				"quantidade": $("#quantidade").val(),
+				"unidadeQuantidade": $("#unidadeQuantidade").val()
+			});
+			var x = $.ajax({
+				type : 'PUT',
+				contentType : 'application/json',
+				dataType : "JSON",
+				url : baseURI + "/" + $("#id").val(),
+				data : obj,
+				success : function(data) {
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+
+		$("#btRecuperar").click(function() {
+			var x = $.ajax({
+				type : "GET",
+				url : baseURI + "/" + $("#id").val(),
+				success : function(data) {
+					console.log(data);
+					$("#id").val(data.id);
+					$("#origem").val(data.origem.id);
+					$("#destino").val(data.destino.id);
+					$("#produto").val(data.produto);
+					$("#quantidade").val(data.quantidade);
+					$("#unidadeQuantidade").val(data.unidadeQuantidade);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+		$("#btListar").click(function() {
+			var x = $.ajax({
+				type : "GET",
+				url : baseURI + "?p=" + $("#pagina").val() + "&t=" + $("#tamanhoPagina").val(),
+				dataType : "JSON",
+				success : function(data) {
+					console.log("OK");
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log("Erro");
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+	});
+</script>
+</head>
+<body>
+	<p>
+		<input type="button" id="btCriar" value="Criar" /> 
+		<input type="button" id="btAlterar" value="Alterar" /> 
+		<input type="button" id="btRecuperar" value="Recuperar pelo id" /> 
+		<label for="pagina">Página</label>
+		<input type="text" id="pagina" value="1"/> 
+		<label for="tamanhoPagina">Tamanho página</label>
+		<input type="text" id="tamanhoPagina" value="5" /> 
+		<input type="button" id="btListar" value="Listar" /> 
+		<label for="iniciandoPor">Iniciando por</label>
+		<input type="text" id="iniciandoPor" /> 
+		<input type="button" id="btPesquisar" value="Pesquisar" /> 
+		
+	</p>
+	<label for="id">Id (nulo para inclusão)</label>
+	<br />
+	<input type="text" id="id" />
+	<br />
+	<label for="nome">Origem (ID)</label>
+	<br />
+	<input type="text" id="origem"  value="87"/>
+	<br />
+	<label for="destino">Destino (ID)</label>
+	<br />
+	<input type="text" id="destino" value="95" />
+	<br />
+	<label for="produto">Produto</label>
+	<br />
+	<input type="text" id="produto" value="soja" />
+	<br />
+	<label for="quantidade">Qtde</label>
+	<br />
+	<input type="text" id="quantidade" value="10000" />
+	<br />
+	<label for="unidadeQuantidade">Unidade</label>
+	<br />
+	<input type="text" id="unidadeQuantidade" value="TN" />
+	<br />
+	<label for="transportador1">Transportador1 (ID)</label>
+	<br />
+	<input type="text" id="transportador1" value="71" />
+	<br />
+	<label for="transportador2">Transportador2 (ID)</label>
+	<br />
+	<input type="text" id="transportador2" value="103" />
+	<br />
+
+	<p>Retorno:</p>
+	<p id="retorno" />
+</body>
+</html>

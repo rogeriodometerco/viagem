@@ -6,9 +6,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import dao.DemandaTransporteDao;
 import dto.Listagem;
 import exception.AppException;
@@ -17,17 +14,38 @@ import modelo.DemandaTransporte;
 @Stateless
 public class DemandaTransporteService {
 
+	private static final String INCLUSAO = "INCLUSAO";
+	private static final String ALTERACAO = "ALTERACAO";
+	
 	@EJB
 	private DemandaTransporteDao demandaTransporteDao;
 
-	public DemandaTransporte salvar(DemandaTransporte demandaTransporte) throws AppException {
+	public DemandaTransporte criar(DemandaTransporte demandaTransporte) throws AppException {
 		DemandaTransporte result = null;
 		try {
-			List<String> erros = validarDemandaTransporte(demandaTransporte);
+			List<String> erros = validarDemandaTransporte(INCLUSAO, demandaTransporte);
 			if (erros.size() > 0) {
 				throw new AppException(erros.toString());
 			}
 			result = demandaTransporteDao.salvar(demandaTransporte);
+		} catch (Exception e) {
+			throw new AppException(e);
+		}
+		return result;
+	}
+
+	public DemandaTransporte alterar(DemandaTransporte dto) throws AppException {
+		DemandaTransporte result = null;
+		try {
+			result = demandaTransporteDao.recuperar(dto.getId());
+			// Altera apenas quantidade.
+			// TODO Pensar num método mais coeso. Ex.: alterarQuantidade(demanda).
+			result.setQuantidade(dto.getQuantidade());
+			List<String> erros = validarDemandaTransporte(ALTERACAO, dto);
+			if (erros.size() > 0) {
+				throw new AppException(erros.toString());
+			}
+			result = demandaTransporteDao.salvar(dto);
 		} catch (Exception e) {
 			throw new AppException(e);
 		}
@@ -48,15 +66,18 @@ public class DemandaTransporteService {
 		DemandaTransporte result = null;
 		try {
 			result = demandaTransporteDao.recuperar(id);
-			System.out.println(new Gson().toJsonTree(result).getAsJsonObject());
 		} catch(Exception e) {
 			throw new AppException("Erro ao recuperar demanda de transporte: " + e.getMessage(), e);
 		}
 		return result;
 	}
 
-	private List<String> validarDemandaTransporte(DemandaTransporte demandaTransporte) {
+	private List<String> validarDemandaTransporte(String operacao, DemandaTransporte demandaTransporte) {
 		List<String> erros = new ArrayList<String>();
+
+		if (operacao.equals(INCLUSAO) && demandaTransporte.getId() != null) {
+			erros.add("ID da demanda de transporte deve ser nula para inclusão");
+		}
 		if (demandaTransporte.getOrigem() == null) {
 			erros.add("Origem da demanda de transporte deve ser informada");
 		}

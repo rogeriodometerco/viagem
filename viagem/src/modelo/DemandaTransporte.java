@@ -35,10 +35,9 @@ public class DemandaTransporte {
 	
 	@ManyToOne
 	private Conta tomador;
-	
+
 	@OneToMany(mappedBy="demanda", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
 	private Set<TransportadorDemandaAutorizado> transportadores;
-
 
 	public Long getId() {
 		return id;
