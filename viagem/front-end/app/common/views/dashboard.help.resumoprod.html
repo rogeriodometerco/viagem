@@ -1,0 +1,38 @@
+<form novalidate name="formDetail" class="inmodal">
+    <div class="modal-header">
+        <i class="fa fa-info modal-icon"></i>
+        <p class="text-navy">Detalhamento das informações apontadas no resumo da cultura</p>
+        <!-- h4 class="modal-title">Help - Resumo da Cultura</h4>   -->
+    </div>
+
+    <div class="modal-body">                
+        <h3>Área explorada</h3>
+        <p>Área explorada da cultura é obtida através do cadastro de exploração agrícola realizada na COAMO, a quantidade da área apresentada é o resultado da soma das propriedades vinculadas as matrículas da unidade de gestão.</p>
+
+        <hr class="hr-line-solid">
+
+        <h3>Produção Entregue</h3>
+        <p>A produção entregue é apurada a partir dos documentos de entrega de produção digitados no sistema, ou alimentados automáticamente pelas entregas realzadas na COAMO, a quantidade de produto entregue apresentada é o resultado da soma dos documentos de entrega de produção das propriedades vinculadas as matrículas da unidade de gestão.</p>
+
+        <hr class="hr-line-solid">
+
+        <h3>Produtividade</h3>        
+        <p>A produtividade é apurada a partir da quantide de produto entregue, divida pela área explorada da cultura.</p>
+        
+        <hr class="hr-line-solid">
+
+        <h3>Ponto de Equilíbrio</h3>
+        <p>O ponto de equilíbrio é apurado a partir de produção da cultura, divido pelo preço do dia do produto.</p>
+        
+        <hr class="hr-line-solid">
+
+        <h3>Rentabilidade</h3>
+        <p>A rentabilidade é apurada a partir da receita da venda da produção somada, divida pelo custo de produção da cultura.</p>
+    </div>
+
+    <div class="modal-footer">
+        <div class="btn-group">
+            <button class="btn btn-default" ng-click="modalInstance.close()">Fechar</button>
+        </div>
+    </div>
+</form>

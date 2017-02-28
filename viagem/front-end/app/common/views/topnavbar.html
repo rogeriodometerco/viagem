@@ -1,0 +1,44 @@
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <span minimaliza-sidebar></span>
+        </div>
+        
+        <ul class="nav navbar-top-links navbar-right"
+            ng-show="notificacoes.length > 0">            
+            <li uib-dropdown>
+                <a class="count-info" href uib-dropdown-toggle>
+                    <i class="fa fa-bell"></i> <span class="label label-primary">{{ notificacoes.length }}</span>
+                </a>
+                
+                <ul class="dropdown-alerts" uib-dropdown-menu>
+                    <li ng-repeat-start="notificacao in notificacoes">
+                        <a ui-sref="inbox">
+                            <div>
+                                <i class="fa {{ notificacao.icone }} fa-fw"></i> {{ notificacao.descricao }}
+                                <span class="pull-right text-muted small">4 minutes ago</span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li ng-repeat-end class="divider"></li>
+                    
+                    <li>
+                        <div class="text-center link-block">
+                            <a ui-sref="miscellaneous.notify">
+                                <strong>Ver todas notificações</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            
+            <li>
+                <a ng-click="logout()">
+                    <i class="fa fa-sign-out"></i> Sair
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

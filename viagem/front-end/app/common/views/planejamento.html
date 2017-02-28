@@ -1,0 +1,354 @@
+<div class="page">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Planejamento da Safra</h2>
+            <ol class="breadcrumb">
+                <li>
+                    <a ui-sref="panel.home">Principal</a>
+                </li>
+                <li class="active">
+                    <strong>Planejamento da Safra</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeIn">   
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Informações Básicas</h5>
+                    </div>
+
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="form-group col-lg-2 col-xs-12 col-md-2">
+                                <label>Safra:</label>
+                                <input type="text" id="safra" ng-model="planejamento.safra" ng-value="planejamento.safra | safra" validator="[required, safra]" class="form-control" placeholder="____/____" />
+                            </div>
+
+                            <div class="form-group col-xs-12 col-md-3">
+                                <label>Cultura:</label>
+                                <combo-box class="col-sm-12" id="cultura" select-button="false" ng-model="planejamento.cultura" ng-controller="Geral.Controller.Cultura" display-field="nome" search-field="nome" />
+                            </div>
+
+                            <div class="form-group col-lg-2 col-sm-12 col-md-2">
+                                <label>Preço da Saca:</label>                                
+                                <input type="text" 
+                                       id="valor" 
+                                       ng-model="planejamento.preco" 
+                                       validator="[required]" 
+                                       ng-currency 
+                                       symbol="R$ " 
+                                       decimal="2" 
+                                       class="form-control text-right"
+                                       ng-blur="atualizarGraficos()"/>                                                                    
+                            </div>
+
+                            <div class="form-group col-sm-12 col-md-2">
+                                <label>Área da Cultura:</label>
+                                <div class="input-group">
+                                    <input type="text" 
+                                           id="valor" 
+                                           ng-model="planejamento.area" 
+                                           validator="[required]" 
+                                           ng-currency 
+                                           symbol="" 
+                                           decimal="2" 
+                                           class="form-control text-right"
+                                           ng-blur="atualizarGraficos()" />
+                                    <div class="input-group-addon">HA</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-sm-12 col-md-3">
+                                <label>Produtividade Estimada</label>
+                                <div class="input-group">
+                                    <input type="text"
+                                           id="valor" 
+                                           ng-model="planejamento.produtividade" 
+                                           validator="[required]"
+                                           ng-currency 
+                                           symbol="" 
+                                           decimal="2" 
+                                           class="form-control text-right"
+                                           ng-blur="atualizarGraficos()"/>
+                                    <div class="input-group-addon">Sacas/HA</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>      
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <h4>Resumo do Planejamento da Safra</h4>
+
+                                <hr class="hr-line-solid m-b-sm">
+
+                                <table class="table table-hover no-margins">                            
+                                    <tbody>
+                                        <tr>
+                                            <td class="no-borders">
+                                                <b>Área Explorada</b>
+                                            </td>
+                                            <td class="text-right no-borders">{{ planejamento.area || 0 | number : 2 }} HA</td>                                 
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <b>Produtividade Estimada</b>
+                                            </td>
+                                            <td class="text-right">{{ planejamento.produtividade || 0 | number : 2 }} Sacas por HA</td>                                 
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>
+                                                <b>Produção Estimada</b>
+                                            </td>
+                                            <td class="text-right">{{ planejamento.area * planejamento.produtividade || 0 | number : 2 }} Sacas</td>                                 
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <b>Produção Mínima</b>
+                                            </td>
+                                            <td class="text-right">{{ planejamento.qt_pontoequilibrio || 0 | number : 2 }} Sacas</td>                                 
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <table class="table table-hover no-margins">        
+                                    <h4>Custo do Planejamento</h4>
+
+                                    <hr class="hr-line-solid m-b-sm">
+
+                                    <tbody>
+                                        <tr>
+                                            <td class="no-borders">
+                                                <b>Custo de Produção</b>
+                                            </td>
+                                            <td class="text-right no-borders">R$ {{ planejamento.vl_total || 0 | number : 2 }}</td>                                 
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <b>Custo em Sacas por Área</b>
+                                            </td>
+                                            <td class="text-right">{{ planejamento.vl_custoarea || 0 | number : 2 }} Sacas por HA</td>                                 
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <b>Custo por Saca</b>
+                                            </td>
+                                            <td class="text-right">R$ {{ planejamento.vl_custosaca || 0 | number : 2 }}</td>                                 
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <table class="table table-hover no-margins">        
+                                    <h4>Resultado do Planejamento</h4>
+
+                                    <hr class="hr-line-solid m-b-sm">
+
+                                    <tbody>
+                                        <tr>
+                                            <td class="no-borders">
+                                                <b>Lucro em Sacas por Área</b>
+                                            </td>
+                                            <td class="text-right no-borders" ng-class="{'text-navy' : planejamento.vl_lucroarea.toFixed(2) > 0, 'text-danger' : planejamento.vl_lucroarea.toFixed(2) < 0}">{{ planejamento.vl_lucroarea || 0 | number : 2 }} Sacas por HA</td>                                 
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <b>Lucro por Saca</b>
+                                            </td>                                            
+                                            <td class="text-right" ng-class="{'text-navy' : planejamento.vl_lucrosaca.toFixed(2) > 0, 'text-danger' : planejamento.vl_lucrosaca.toFixed(2) < 0}">R$ {{ planejamento.vl_lucrosaca || 0 | number : 2 }}</td>                                 
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <b>Lucratividade</b>
+                                            </td>
+                                            <td class="text-right" ng-class="{'text-navy' : planejamento.pe_lucratividade.toFixed(2) > 0, 'text-danger' : planejamento.pe_lucratividade.toFixed(2)< 0}">{{ planejamento.pe_lucratividade || 0 | number : 2 }} %</td>                                 
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <b>Rentabilidade</b>
+                                            </td>
+                                            <td class="text-right" ng-class="{'text-navy' : planejamento.pe_rentabilidade.toFixed(2) > 0, 'text-danger' : planejamento.pe_rentabilidade.toFixed(2)< 0}">{{ planejamento.pe_rentabilidade || 0 | number : 2 }}</td>                                 
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" 
+             ng-repeat="grupo in grupos| orderBy : 'nr_ordem'"
+             ng-show="grupo.contas.length">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>{{ grupo.nm_grupo}}</h5>
+                        <div ibox-tools></div>    
+                    </div>
+
+                    <div class="ibox-content">
+                        <table class="table table-bordered no-margins">
+                            <thead>
+                                <tr>
+                                    <th>Conta Financeira</th>
+                                    <th class="text-right">Valor</th>
+                                    <th class="text-right">Custo Hectare</th>
+                                    <th class="text-right">Custo Alqueire</th>
+                                    <th class="text-right">%</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr ng-repeat="conta in grupo.contas| orderBy : 'nm_conta'">
+                                    <td class="bg-muted"> {{ conta.nm_conta}} </td>
+                                    <td class="no-padding">
+                                        <input class="form-control no-borders text-right"
+                                               type="text"
+                                               ng-model="conta.vl_conta"
+                                               ng-currency 
+                                               symbol="R$ " 
+                                               decimal="2"
+                                               style="font-size: 12px !important"
+                                               ng-blur="atualizarGraficos()">
+                                    </td>
+                                    <td class="text-right bg-muted">R$ {{ conta.vl_hectare || 0| number : 2 }} </td>
+                                    <td class="text-right bg-muted">R$ {{ conta.vl_alqueire || 0| number : 2 }} </td>
+                                    <td class="text-right bg-muted"> {{ conta.pe_conta || 0 | number : 2 }}%</td>
+                                </tr>
+
+                                <tr>
+                                    <td style="border-top: 1px #fff solid !important; border-left: 1px #fff solid !important; border-bottom: 1px #fff solid !important"></td>
+                                    <td class="text-right bg-muted" style="padding-right: 11px">R$ {{ grupo.vl_total || 0 | number : 2}}</td>
+                                    <td class="text-right bg-muted" style="padding-right: 11px">R$ {{ grupo.vl_hectare || 0 | number : 2}}</td>
+                                    <td class="text-right bg-muted" style="padding-right: 11px">R$ {{ grupo.vl_alqueire || 0 | number : 2}}</td>
+                                    <td class="text-right bg-muted" style="padding-right: 11px">{{grupo.pe_grupo | number : 2}}%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" ng-show="planejamento.custoInsumo.data.length">
+            <div class="col-xs-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>
+                            Custo de Insumos
+                        </h5>
+
+                        <div class="ibox-tools">
+                            <a>
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">                                
+                        <div class="flot-chart">
+                            <div flot class="flot-chart-content" dataset="planejamento.custoInsumo.chartData" options="planejamento.custoInsumo.chartOptions"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" ng-show="planejamento.custoOperacao.data.length">
+            <div class="col-xs-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>
+                            Custo de Operações
+                        </h5>
+
+                        <div class="ibox-tools">
+                            <a>
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">                                
+                        <div class="flot-chart">
+                            <div flot class="flot-chart-content" dataset="planejamento.custoOperacao.chartData" options="planejamento.custoOperacao.chartOptions"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" ng-show="planejamento.custoOutros.data.length">
+            <div class="col-xs-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>
+                            Outros Custos
+                            <small>por Grupo de Produto</small>
+                        </h5>
+
+                        <div class="ibox-tools">
+                            <a>
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">                                
+                        <div class="flot-chart">
+                            <div flot class="flot-chart-content" dataset="planejamento.custoOutros.chartData" options="planejamento.custoOutros.chartOptions"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>         
+
+        <div class="row" ng-show="planejamento.custoGeral.chartData.length">
+            <div class="col-xs-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>
+                            Custos Gerais
+                        </h5>
+
+                        <div class="ibox-tools">
+                            <a>
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content"> 
+                        <div class="flot-chart">
+                            <div flot class="flot-chart-content" dataset="planejamento.custoGeral.chartData" options="planejamento.custoGeral.chartOptions"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+</div>

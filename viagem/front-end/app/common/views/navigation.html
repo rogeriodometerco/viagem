@@ -1,0 +1,47 @@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul side-navigation class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="profile-element" align="center">
+
+
+                    <a>
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong class="font-bold">Jonathan Bogdanovicz</strong>
+                            </span>
+
+                            <span class="text-muted text-xs block">
+                                Menu do usuário <b class="caret"></b>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="logo-element">VIG</div>
+            </li>
+
+            <li>
+                <a>
+                    <i class="fa fa-book"></i> <span class="nav-label">Cadastros</span>
+                    <span class="fa arrow"></span>
+                </a>
+
+                <ul class="nav nav-second-level collapse"
+                    ng-class="{in: $state.is('panel.two', {path1: 'financeiro', controller: 'grupo - conta', action: 'list'}) 
+                                || $state.is('panel.two', {path1: 'financeiro', controller: 'documento', action: 'list'})}">
+
+                    <li ui-sref-active="active">
+                        <a ui-sref="panel.two({path1: 'localizacao', controller: 'estado', action: 'list'})">
+                            <i class="fa fa-globe"></i> <span class="nav-label">Estado</span>
+                        </a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="panel.two({path1: 'localizacao', controller: 'cidade', action: 'list'})">
+                            <i class="fa fa-globe"></i> <span class="nav-label">Cidade</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

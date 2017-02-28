@@ -1,0 +1,32 @@
+
+.register {
+  background-image: url(/common/img/diagonal-line-trans.png), url(/common/img/papel-parede2.jpg);
+  background-color: #2f4050;
+  background-size: 100%;
+
+  .register-box {
+    background-color: #fff;
+    float: none;
+    padding: 10px;
+    margin: auto;
+    margin-bottom: 20px;
+    border-radius: 10px;  
+    color: #333;
+    h1 {
+      font-size: 5em;
+    }
+    .text-info-coamo {
+      color: #00f
+    }
+    input, select, option {
+      color: #333;
+    }
+    form {
+      width: 249px; 
+      margin: auto;
+      hr {
+        border-top: 2px solid #44586b
+      }
+    }
+  }
+}

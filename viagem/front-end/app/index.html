@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html ng-app="Viagem">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <!-- Page title set in pageTitle directive -->
+        <title page-title></title>
+
+        <!-- build:css(.) styles/vendor.css -->
+        <!-- bower:css -->
+        <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="/bower_components/animate.css/animate.css" />
+        <link rel="stylesheet" href="/bower_components/metisMenu/dist/metisMenu.css" />
+        <link rel="stylesheet" href="/bower_components/angular-block-ui/dist/angular-block-ui.css" />
+        <link rel="stylesheet" href="/bower_components/angular-dialog-service/dist/dialogs.css" />
+        <link rel="stylesheet" href="/bower_components/ng-grid/ng-grid.css" />
+        <link rel="stylesheet" href="/bower_components/pnotify/dist/pnotify.brighttheme.css" />
+        <link rel="stylesheet" href="/bower_components/pnotify/dist/pnotify.buttons.css" />
+        <link rel="stylesheet" href="/bower_components/pnotify/dist/pnotify.css" />
+        <link rel="stylesheet" href="/bower_components/pnotify/dist/pnotify.history.css" />
+        <link rel="stylesheet" href="/bower_components/pnotify/dist/pnotify.mobile.css" />
+        <link rel="stylesheet" href="/bower_components/angular-ui-select/dist/select.css" />
+        <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
+        <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
+        <link rel="stylesheet" href="/bower_components/angular-ui-switch/angular-ui-switch.css" />
+        <!-- endbower -->
+        <!-- include: "type": "css", "files": "modules/**/*.css" -->
+        <link href="/modules/generic/common/styles/gridStyle.css" rel="stylesheet" type="text/css">
+        <!-- /include -->
+        <!-- endbuild -->
+
+        <!-- Alterados códigos CSS da template para evitar a sobreposição de modais -->
+        <!-- build:css(.tmp) common/styles/main.css -->
+        <!-- include: "type": "css", "files": "common/styles/**/*.scss" -->
+        <link href="/common/styles/custom.css" rel="stylesheet" type="text/css">
+        <link href="/common/styles/login.css" rel="stylesheet" type="text/css">
+        <link href="/common/styles/register.css" rel="stylesheet" type="text/css">
+        <link href="/common/styles/style.css" rel="stylesheet" type="text/css">
+        <!-- /include -->
+        <!-- endbuild -->
+
+        <base href="/">
+    </head>
+
+    <!-- ControllerAs syntax -->
+    <!-- Main controller with serveral data used in Inspinia theme on diferent view -->
+    <body class="{{$state.current.data.specialClass}}" ng-controller="MainCtrl" landing-scrollspy>
+        <!-- Main view  -->
+        <div ui-view></div>
+
+        <!-- build:js(.) js/vendor.js -->
+        <!-- bower:js -->
+        <script src="/bower_components/jquery/dist/jquery.js"></script>
+        <script src="/bower_components/underscore/underscore.js"></script>
+        <script src="/bower_components/angular/angular.js"></script>
+        <script src="/bower_components/angular-input-masks/angular-input-masks-standalone.js"></script>
+        <script src="/bower_components/moment/moment.js"></script>
+        <script src="/bower_components/moment/locale/pt-br.js"></script>
+        <script src="/bower_components/metisMenu/dist/metisMenu.js"></script>
+        <script src="/bower_components/jquery-slimscroll/jquery.slimscroll.js"></script>
+        <script src="/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="/bower_components/PACE/pace.js"></script>
+        <script src="/bower_components/oclazyload/dist/ocLazyLoad.js"></script>
+        <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+        <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="/bower_components/angular-route/angular-route.js"></script>
+        <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="/bower_components/lodash/lodash.js"></script>
+        <script src="/bower_components/restangular/dist/restangular.js"></script>
+        <script src="/bower_components/angular-block-ui/dist/angular-block-ui.js"></script>
+        <script src="/bower_components/angular-translate/angular-translate.js"></script>
+        <script src="/bower_components/angular-dialog-service/dist/dialogs.js"></script>
+        <script src="/bower_components/angular-dialog-service/dist/dialogs-default-translations.js"></script>
+        <script src="/bower_components/ng-grid/build/ng-grid.js"></script>
+        <script src="/bower_components/pnotify/dist/pnotify.js"></script>
+        <script src="/bower_components/pnotify/dist/pnotify.animate.js"></script>
+        <script src="/bower_components/pnotify/dist/pnotify.buttons.js"></script>
+        <script src="/bower_components/pnotify/dist/pnotify.callbacks.js"></script>
+        <script src="/bower_components/pnotify/dist/pnotify.confirm.js"></script>
+        <script src="/bower_components/pnotify/dist/pnotify.desktop.js"></script>
+        <script src="/bower_components/pnotify/dist/pnotify.history.js"></script>
+        <script src="/bower_components/pnotify/dist/pnotify.mobile.js"></script>
+        <script src="/bower_components/pnotify/dist/pnotify.nonblock.js"></script>
+        <script src="/bower_components/angular-pnotify/src/angular-pnotify.js"></script>
+        <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
+        <script src="/bower_components/angular-validator/dist/angular-validator.js"></script>
+        <script src="/bower_components/angular-ui-select/dist/select.js"></script>
+        <script src="/bower_components/angular-i18n/angular-locale_pt-br.js"></script>
+        <script src="/bower_components/angular-mask/dist/ngMask.js"></script>
+        <script src="/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+        <script src="/bower_components/br-validations/releases/br-validations.js"></script>
+        <script src="/bower_components/string-mask/src/string-mask.js"></script>
+        <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
+        <script src="/bower_components/angular-ui-switch/angular-ui-switch.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
+
+        <!-- build:js(.) js/plugins.js -->
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/button.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/carousel.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+        <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js js/main.js -->
+        <script src="/config/inspinia.js"></script>
+        <script src="/config/constants.js"></script>
+        <script src="/config/app.js"></script>    
+        <!-- include: "type": "js", "files": "common/js/*.js" -->
+        <script src="/common/js/controllers.js"></script>
+        <script src="/common/js/directives.js"></script>
+        <script src="/common/js/factories.js"></script>
+        <script src="/common/js/providers.js"></script>
+        <script src="/common/js/services.js"></script>
+        <!-- /include -->  
+        
+        <!-- include: "type": "js", "files": "modules/**/**/*.js" -->
+        <script src="/modules/generic/_app.js"></script>
+        <script src="/modules/generic/adapter/HttpDataAdapter.js"></script>
+        <script src="/modules/generic/adapter/OffLineDataAdapter.js"></script>
+        <script src="/modules/generic/common/js/ComboBox.js"></script>
+        <script src="/modules/generic/common/js/DataBase.js"></script>
+        <script src="/modules/generic/common/js/DatePicker.js"></script>
+        <script src="/modules/generic/common/js/Grid.js"></script>
+        <script src="/modules/generic/common/js/Utils.js"></script>
+        <script src="/modules/generic/model/Generic.js"></script>
+        <script src="/modules/generic/service/Generic.js"></script>
+        <script src="/modules/localizacao/_app.js"></script>
+        <script src="/modules/localizacao/controller/Cidade.js"></script>
+        <script src="/modules/localizacao/controller/Estado.js"></script>
+        <script src="/modules/localizacao/controller/Pais.js"></script>
+        <script src="/modules/localizacao/model/Cidade.js"></script>
+        <script src="/modules/localizacao/model/Estado.js"></script>
+        <script src="/modules/localizacao/model/Pais.js"></script>
+        <script src="/modules/localizacao/service/Cidade.js"></script>
+        <script src="/modules/localizacao/service/Estado.js"></script>
+        <script src="/modules/localizacao/service/Pais.js"></script>
+        <!-- /include -->
+        <!-- endbuild -->
+    </body>
+</html>
