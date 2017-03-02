@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 
 import dto.Listagem;
 import enums.Perfil;
+import json.JsonModelo;
 import modelo.AdminConta;
 import modelo.Conta;
 import modelo.PerfilConta;
@@ -93,7 +94,9 @@ public class ContaRest {
 	public Response recuperar(@PathParam("id") Long id) throws Exception{
 		try {
 			return Response.ok()
-					.entity(toJson(
+					.entity(
+							//toJson(
+							new JsonModelo().toJson(
 							contaService.recuperar(id)))
 					.build();
 		} catch (Exception e) {

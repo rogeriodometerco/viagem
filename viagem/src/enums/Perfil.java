@@ -4,7 +4,7 @@ public enum Perfil {
 	ADMINISTRADOR_SISTEMA("Administrador do sistema"),
 	MOTORISTA("Motorista"), 
 	TRANSPORTADOR("Transportador"), 
-	TOMADOR("Tomador de serviço"), 
+	TOMADOR("Tomador de serviÃ§o"), 
 	ESTABELECIMENTO("Estabelecimento");
 	
 	private String descricao;

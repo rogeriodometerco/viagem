@@ -23,6 +23,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import json.JsonModelo;
 import modelo.Conta;
 import modelo.DemandaTransporte;
 import modelo.TransportadorDemandaAutorizado;
@@ -108,7 +109,8 @@ public class DemandaTransporteRest {
 		try {
 			return Response.ok()
 					.entity(
-							toJson(
+							//toJson(
+							new JsonModelo().toJson(
 									demandaTransporteService.recuperar(id)))
 					.build();
 		} catch (Exception e) {
