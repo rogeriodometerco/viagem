@@ -1,0 +1,164 @@
+Conta - listagem
+{
+	"nome" : "Coamo"
+	"perfis" : ["Tomador de serviço", "Transportador"]
+}
+
+Conta - cadastro
+
+{
+	"id" : 123,
+	"nome" : "Coamo"
+	"perfis" : [TOMADOR, TRANSPORTADOR]
+}
+
+Usuaro - listagem
+{
+	"nome" : "Rogério Fernando Dometerco",
+	"login" : "rogeriodometerco",
+	"ativo" : "true",
+	"contas" : [
+		"Rogério Fernando Dometerco",
+		"Coamo"
+	]
+}
+
+Usuario - criação
+{
+	"nome" : "Rogério Fernando Dometerco",
+	"login" : "rogeriodometerco",
+	"senha" : "abc",
+	"confirmaSenha" : "abc",
+	"conta" : {
+		"id" : 123
+	}
+}
+
+Uf - listagem
+{
+	"nome" : "Paraná",
+	"abreviatura" : "PR"
+}
+
+Uf - cadastro
+{
+	"id" : 123,
+	"nome" : "Paraná",
+	"abreviatura" : "PR"
+}
+
+Municipio - listagem
+{
+	"nome" : "Campo Mourão",
+	"Uf" : "PR"
+}
+
+Municipio - cadastro
+{
+	"id" : 123,
+	"nome" : "Campo Mourão"
+	"Uf" : {
+		"id" : 123,
+		"abreviatura" : "PR"
+	}
+}
+
+Estabelecimento - listagem
+{
+	"id" : 123,
+	"nome" : "Coamo Mamborê",
+	"município": "Mamborê",
+	"uf": "PR!
+}
+
+Estabelecimento - cadastro
+{
+	"id" : 123,
+	"nome" : "Coamo Mamborê",
+	"município": {
+		"id" : 123,
+		"nome": "Mamborê"
+		"uf": "PR"
+	}
+}
+
+DemandaTransporte - listagem
+{
+	"id" : 123,
+	"origem" : {
+		"nome" : "Coamo Mamborê",
+		"municipio" : "Mamborê",
+		"uf" : "PR"
+	},
+	"destino" : {
+		"nome" : "Coamo Pguá",
+		"municipio" : "Paranaguá",
+		"uf" : "PR"
+	},
+	"produto" : "soja",
+	"quantidade" : 1500,
+	"unidadeQuantidade" : "TN"
+}
+
+DemandaTransporte - listagem
+{
+	"id" : 123,
+	"origem" : {
+		"nome" : "Coamo Mamborê",
+		"municipio" : "Mamborê",
+		"uf" : "PR"
+	},
+	"destino" : {
+		"nome" : "Coamo Pguá",
+		"municipio" : "Paranaguá",
+		"uf" : "PR"
+	},
+	"produto" : "soja",
+	"quantidade" : 1500,
+	"unidadeQuantidade" : "TN"
+ 	"transportadores": [
+		"ATDL Transportadora Ltda",
+		"Buturi Transportadora Ltda"
+	]	
+}
+
+DemandaTransporte - cadastro
+{
+	"id" : 173,
+	"origem" : {
+		"id" : 54,
+		"nome" : 
+		"Coamo Mamborê",
+		"municipio" : "Mamborê",
+		"uf" : "PR"
+	},
+	"destino" : {
+		"id" : 59,
+		"nome" : "Coamo Pgua",
+		"municipio" : "Paranaguá",
+		"uf" : "PR"
+	},
+	"produto" : "Soja",
+	"quantidade" : 15,
+    	"unidadeQuantidade" : "Tn",
+ 	"transportadores":[
+		{
+			"id" : 17",
+			"nome" : "ATDL Transportadora Ltda"
+		},
+		{
+			"id" : 18",
+			"nome" : "Buturi Transportadora Ltda"
+		}
+	]
+}
+		
+DemandaTransporte - alterar quantidade
+	1500
+	
+DemandaTransporte - adicionar transportador
+	[132, 3434, 2343]
+
+DemandaTransporte - inativar transportador
+	[132, 3434, 2343]
+
