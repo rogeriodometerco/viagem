@@ -34,10 +34,10 @@ public class UfService {
 	private List<String> validarUf(UF uf) {
 		List<String> erros = new ArrayList<String>();
 		if (uf.getNome() == null || uf.getNome().trim().length() == 0) {
-			erros.add("Nome da UF é obrigatório");
+			erros.add("Nome da UF Ã© obrigatÃ³rio");
 		}
 		if (uf.getAbreviatura() == null || uf.getAbreviatura().trim().length() == 0) {
-			erros.add("Abreviatura da UF é obrigatório");
+			erros.add("Abreviatura da UF Ã© obrigatÃ³rio");
 		}
 		return erros;
 	}

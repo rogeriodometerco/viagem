@@ -97,7 +97,7 @@ public class ContaRest {
 					.entity(
 							//toJson(
 							new JsonModelo().toJson(
-							contaService.recuperar(id)))
+									contaService.recuperar(id)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -120,18 +120,33 @@ public class ContaRest {
 		}
 	}
 
-	// TODO Uma forma de retornar o json do objeto que seja reaproveitável na aplicação.
 	private String toJson(Object source) {
 		Gson g = new GsonBuilder()
 				.setExclusionStrategies(new ExclusionStrategy() {
 
 					@Override
 					public boolean shouldSkipField(FieldAttributes field) {
-						//return false;
-						return field.getDeclaringClass().equals(PerfilConta.class) && field.getName().equals("conta")
+						boolean serializar =
+								field.getDeclaringClass().equals(Listagem.class)
+								||
+								(
+										field.getDeclaringClass().equals(Conta.class)
+										&& (
+												field.getName().equals("id")
+												|| field.getName().equals("nome")
+												|| field.getName().equals("perfis")
+												)
+										|| field.getDeclaringClass().equals(PerfilConta.class)
+										&& (
+												field.getName().equals("perfil")
+										)
+								);
+						return !serializar;
+
+/*						return field.getDeclaringClass().equals(PerfilConta.class) && field.getName().equals("conta")
 								|| field.getDeclaringClass().equals(AdminConta.class) && field.getName().equals("conta")
 								|| field.getName().equals("senha");
-					}
+*/					}
 
 					@Override
 					public boolean shouldSkipClass(Class<?> clazz) {
@@ -142,5 +157,5 @@ public class ContaRest {
 				.create();
 		return g.toJson(source);
 	}
-	
+
 }

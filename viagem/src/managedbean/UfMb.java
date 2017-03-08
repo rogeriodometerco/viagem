@@ -49,14 +49,14 @@ public class UfMb implements Serializable {
 	public void salvar() {
 		try {
 			ufService.salvar(ufEdicao);
-			JsfUtil.addMsgSucesso("Informações salvas com sucesso");
+			JsfUtil.addMsgSucesso("InformaÃ§Ãµes salvas com sucesso");
 			if (estaEmModoCriacao()) {
 				prepararNovo();
 			} else {
 				listar();
 			}
 		} catch (Exception e) {
-			JsfUtil.addMsgErro("Erro ao salvar informações: " + e.getMessage());
+			JsfUtil.addMsgErro("Erro ao salvar informaÃ§Ãµes: " + e.getMessage());
 		}
 	}
 	

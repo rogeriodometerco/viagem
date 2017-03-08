@@ -15,13 +15,17 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import dto.Listagem;
 import modelo.Estabelecimento;
 import modelo.Municipio;
+import modelo.UF;
 import servico.EstabelecimentoService;
 import util.Ejb;
 
@@ -72,7 +76,8 @@ public class EstabelecimentoRest {
 			}
 			return Response.ok()
 					.entity(
-							new Gson().toJson(toJsonObject(listagem)))
+							toJson(listagem))
+							//new Gson().toJson(toJsonObject(listagem)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -96,6 +101,49 @@ public class EstabelecimentoRest {
 					.entity(new RespostaErro(e.getMessage()))
 					.build();
 		}
+	}
+	
+	private String toJson(Object source) {
+		Gson g = new GsonBuilder()
+				.setExclusionStrategies(new ExclusionStrategy() {
+
+					@Override
+					public boolean shouldSkipField(FieldAttributes field) {
+						boolean serializar =
+								field.getDeclaringClass().equals(Listagem.class)
+								||
+								(
+										field.getDeclaringClass().equals(Estabelecimento.class)
+										&& (
+												field.getName().equals("id")
+												|| field.getName().equals("nome")
+												|| field.getName().equals("municipio")
+												)
+										|| field.getDeclaringClass().equals(Municipio.class)
+										&& (
+												field.getName().equals("id")
+												|| field.getName().equals("nome")
+												|| field.getName().equals("uf")
+										)
+										|| field.getDeclaringClass().equals(UF.class)
+										&& (
+												field.getName().equals("id")
+												|| field.getName().equals("nome")
+												|| field.getName().equals("abreviatura")
+										)
+								);
+						return !serializar;
+
+					}
+
+					@Override
+					public boolean shouldSkipClass(Class<?> clazz) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+				})
+				.create();
+		return g.toJson(source);
 	}
 	
 	private JsonObject toJsonObject(Listagem<Estabelecimento> listagem) {
