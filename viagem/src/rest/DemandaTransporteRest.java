@@ -23,10 +23,13 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import json.JsonModelo;
+import dto.Listagem;
 import modelo.Conta;
 import modelo.DemandaTransporte;
+import modelo.Estabelecimento;
+import modelo.Municipio;
 import modelo.TransportadorDemandaAutorizado;
+import modelo.UF;
 import servico.DemandaTransporteService;
 import util.Ejb;
 
@@ -49,32 +52,6 @@ public class DemandaTransporteRest {
 					.entity(
 							toJson(
 									demandaTransporteService.criar(demandaTransporte)))
-					.build();
-		} catch (Exception e) {
-			return Response.serverError()
-					.entity(new RespostaErro(e.getMessage()))
-					.build();
-		}
-	}
-
-	@PUT
-	@Path("/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response alterar(@PathParam("id") Long id, Map<String, Object> dadosAlterados) throws Exception {
-
-		try {
-			Iterator<Entry<String, Object>> i = dadosAlterados.entrySet().iterator();
-			while (i.hasNext()) {
-				Entry e = i.next();
-				System.out.println(e.getKey() + " - " + e.getValue() );
-			}
-			DemandaTransporte demanda = demandaTransporteService.recuperar(id);
-			demanda.setQuantidade(Integer.valueOf((String)dadosAlterados.get("quantidade")));
-			return Response.ok()
-					.entity(
-							toJson(
-									demandaTransporteService.alterar(demanda)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -109,8 +86,8 @@ public class DemandaTransporteRest {
 		try {
 			return Response.ok()
 					.entity(
-							//toJson(
-							new JsonModelo().toJson(
+							toJson(
+									//new JsonModelo().toJson(
 									demandaTransporteService.recuperar(id)))
 					.build();
 		} catch (Exception e) {
@@ -122,18 +99,10 @@ public class DemandaTransporteRest {
 
 	@PUT
 	@Path("/{id}/quantidade")
-	//@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response alterarQuantidade(@PathParam("id") Long id, Integer quantidade) throws Exception {
 
 		try {
-			/*
-			Iterator<Entry<String, Object>> i = dadosAlterados.entrySet().iterator();
-			while (i.hasNext()) {
-				Entry e = i.next();
-				System.out.println(e.getKey() + " - " + e.getValue() );
-			}
-			*/
 			DemandaTransporte demanda = demandaTransporteService.recuperar(id);
 			demanda.setQuantidade(quantidade);
 			return Response.ok()
@@ -155,17 +124,29 @@ public class DemandaTransporteRest {
 	public Response adicionarTransportadores(@PathParam("id") Long id, List<Conta> transportadores) throws Exception {
 
 		try {
-			/*
-			Iterator<Entry<String, Object>> i = dadosAlterados.entrySet().iterator();
-			while (i.hasNext()) {
-				Entry e = i.next();
-				System.out.println(e.getKey() + " - " + e.getValue() );
-			}
-			*/
 			return Response.ok()
 					.entity(
 							toJson(
 									demandaTransporteService.adicionarTransportadores(id, transportadores)))
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
+	@GET
+	@Path("/{id}/transportadores")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response recuperarTransportadores(@PathParam("id") Long id) throws Exception {
+
+		try {
+			return Response.ok()
+					.entity(
+							toJson(
+									demandaTransporteService.recuperar(id).getTransportadores()))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -181,13 +162,6 @@ public class DemandaTransporteRest {
 	public Response inativarTransportadores(@PathParam("id") Long id, List<TransportadorDemandaAutorizado> transportadores) throws Exception {
 
 		try {
-			/*
-			Iterator<Entry<String, Object>> i = dadosAlterados.entrySet().iterator();
-			while (i.hasNext()) {
-				Entry e = i.next();
-				System.out.println(e.getKey() + " - " + e.getValue() );
-			}
-			*/
 			return Response.ok()
 					.entity(
 							toJson(
@@ -206,12 +180,48 @@ public class DemandaTransporteRest {
 
 					@Override
 					public boolean shouldSkipField(FieldAttributes field) {
-						//return false;
-						return field.getDeclaringClass().equals(TransportadorDemandaAutorizado.class) && field.getName().equals("demanda")
-								|| field.getName().equals("administradores")
-								|| field.getName().equals("senha")
-								|| field.getName().equals("perfis")
-								;
+						boolean serializar =
+								field.getDeclaringClass().equals(Listagem.class)
+								||
+								field.getDeclaringClass().equals(DemandaTransporte.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("origem")
+										|| field.getName().equals("destino")
+										|| field.getName().equals("produto")
+										|| field.getName().equals("quantidade")
+										|| field.getName().equals("unidadeQuantidade")
+										|| field.getName().equals("status")
+										|| field.getName().equals("tomador")
+										)
+								|| field.getDeclaringClass().equals(Estabelecimento.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("nome")
+										|| field.getName().equals("municipio")
+										)
+								|| field.getDeclaringClass().equals(Municipio.class)
+								&& (
+										field.getName().equals("nome")
+										|| field.getName().equals("uf")
+										)
+								|| field.getDeclaringClass().equals(UF.class)
+								&& (
+										field.getName().equals("abreviatura")
+										)
+
+								|| field.getDeclaringClass().equals(Conta.class)
+								&& (
+										field.getName().equals("id") 
+										|| field.getName().equals("nome")
+										)
+								|| field.getDeclaringClass().equals(TransportadorDemandaAutorizado.class)
+								&& (
+										field.getName().equals("id") 
+										|| field.getName().equals("transportador")
+										);
+						return !serializar;
+
 					}
 
 					@Override
@@ -223,4 +233,6 @@ public class DemandaTransporteRest {
 				.create();
 		return g.toJson(source);
 	}
+
+
 }

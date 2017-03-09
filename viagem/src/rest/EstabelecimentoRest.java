@@ -1,7 +1,5 @@
 package rest;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -19,8 +17,6 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import dto.Listagem;
 import modelo.Estabelecimento;
@@ -47,8 +43,9 @@ public class EstabelecimentoRest {
 		try {
 			return Response.ok()
 					.entity(
-							new Gson().toJson(toJsonObjectDetalhado(
-									estabelecimentoService.salvar(estabelecimento))))
+							toJson(
+									//new Gson().toJson(toJsonObjectDetalhado(
+									estabelecimentoService.salvar(estabelecimento)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -70,14 +67,14 @@ public class EstabelecimentoRest {
 			if (iniciandoPor == null || iniciandoPor.trim().equals("")) {
 				listagem  = estabelecimentoService.listarOrdenadoPorNome(pagina, tamanhoPagina);
 
-			// Com critério de pesquisa.
+				// Com critério de pesquisa.
 			} else {
 				listagem  = estabelecimentoService.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor);
 			}
 			return Response.ok()
 					.entity(
 							toJson(listagem))
-							//new Gson().toJson(toJsonObject(listagem)))
+					//new Gson().toJson(toJsonObject(listagem)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -93,8 +90,9 @@ public class EstabelecimentoRest {
 		try {
 			return Response.ok()
 					.entity(
-							new Gson().toJson(toJsonObjectDetalhado(
-									estabelecimentoService.recuperar(id))))
+							toJson(
+									//new Gson().toJson(toJsonObjectDetalhado(
+									estabelecimentoService.recuperar(id)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -102,7 +100,7 @@ public class EstabelecimentoRest {
 					.build();
 		}
 	}
-	
+
 	private String toJson(Object source) {
 		Gson g = new GsonBuilder()
 				.setExclusionStrategies(new ExclusionStrategy() {
@@ -112,26 +110,23 @@ public class EstabelecimentoRest {
 						boolean serializar =
 								field.getDeclaringClass().equals(Listagem.class)
 								||
-								(
-										field.getDeclaringClass().equals(Estabelecimento.class)
-										&& (
-												field.getName().equals("id")
-												|| field.getName().equals("nome")
-												|| field.getName().equals("municipio")
-												)
-										|| field.getDeclaringClass().equals(Municipio.class)
-										&& (
-												field.getName().equals("id")
-												|| field.getName().equals("nome")
-												|| field.getName().equals("uf")
+								field.getDeclaringClass().equals(Estabelecimento.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("nome")
+										|| field.getName().equals("municipio")
 										)
-										|| field.getDeclaringClass().equals(UF.class)
-										&& (
-												field.getName().equals("id")
-												|| field.getName().equals("nome")
-												|| field.getName().equals("abreviatura")
+								|| field.getDeclaringClass().equals(Municipio.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("nome")
+										|| field.getName().equals("uf")
 										)
-								);
+								|| field.getDeclaringClass().equals(UF.class)
+								&& (
+										field.getName().equals("nome")
+										|| field.getName().equals("abreviatura")
+										);
 						return !serializar;
 
 					}
@@ -145,45 +140,5 @@ public class EstabelecimentoRest {
 				.create();
 		return g.toJson(source);
 	}
-	
-	private JsonObject toJsonObject(Listagem<Estabelecimento> listagem) {
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.addProperty("count", listagem.getCount());
-		jsonObject.addProperty("pagina", listagem.getPagina());
-		jsonObject.add("lista", toJsonArrayResumido(listagem.getLista()));
-		return jsonObject;
-	}
 
-	private JsonArray toJsonArrayResumido(List<Estabelecimento> lista) {
-		JsonArray jsonArray = new JsonArray();
-		for (Estabelecimento e: lista) {
-			jsonArray.add(toJsonObjectResumido(e));
-		}
-		return jsonArray;
-	}
-	
-	private JsonObject toJsonObjectResumido(Estabelecimento estabelecimento) {
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.addProperty("id", estabelecimento.getId());
-		jsonObject.addProperty("nome", estabelecimento.getNome());
-		jsonObject.addProperty("municipio", estabelecimento.getMunicipio().getNome());
-		jsonObject.addProperty("uf", estabelecimento.getMunicipio().getUf().getAbreviatura());
-		return jsonObject;
-	}
-	
-	private JsonObject toJsonObjectDetalhado(Estabelecimento estabelecimento) {
-		JsonObject jsonObject = new JsonObject();
-		JsonObject jsonMunicipio = new JsonObject();
-
-		jsonObject.addProperty("id", estabelecimento.getId());
-		jsonObject.addProperty("nome", estabelecimento.getNome());
-		jsonObject.add("municipio", jsonMunicipio);
-
-		Municipio municipio = estabelecimento.getMunicipio();
-		jsonMunicipio.addProperty("id", municipio.getId());
-		jsonMunicipio.addProperty("nome", municipio.getId());
-		jsonMunicipio.addProperty("uf", municipio.getUf().getAbreviatura());
-		
-		return jsonObject;
-	}
 }

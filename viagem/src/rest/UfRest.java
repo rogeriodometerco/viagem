@@ -14,9 +14,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import dto.ParametrosListagem;
+import dto.Listagem;
 import modelo.UF;
 import servico.UfService;
 import util.Ejb;
@@ -39,7 +42,8 @@ public class UfRest {
 		try {
 			return Response.ok()
 					.entity(
-							ufService.salvar(uf))
+							toJson(
+									ufService.salvar(uf)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -57,7 +61,8 @@ public class UfRest {
 		try {
 			return Response.ok()
 					.entity(
-							ufService.listarOrdenadoPorAbreviatura(pagina, tamanhoPagina))
+							toJson(
+									ufService.listarOrdenadoPorAbreviatura(pagina, tamanhoPagina)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -66,7 +71,7 @@ public class UfRest {
 		}
 	}
 
-	@Path("/lista")
+	/*@Path("/lista")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response listar2(@QueryParam("parametros") String parametros)  throws Exception {
@@ -83,7 +88,7 @@ public class UfRest {
 					.entity(new RespostaErro(e.getMessage()))
 					.build();
 		}
-	}
+	}*/
 
 	@GET
 	@Path("/{id}")
@@ -92,7 +97,8 @@ public class UfRest {
 		try {
 			return Response.ok()
 					.entity(
-							ufService.recuperar(id))
+							toJson(
+									ufService.recuperar(id)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -115,6 +121,35 @@ public class UfRest {
 		}
 	}
 
-	// TODO Tratar exception gerada pelo Servlet, nem chegou na aplicação ainda. Ex.: query param errada.
-	
+	// TODO Tratar exception gerada pelo Servlet, nem chegou na aplicaÃ§Ã£o ainda. Ex.: query param errada.
+
+	private String toJson(Object source) {
+		Gson g = new GsonBuilder()
+				.setExclusionStrategies(new ExclusionStrategy() {
+
+					@Override
+					public boolean shouldSkipField(FieldAttributes field) {
+						boolean serializar =
+								field.getDeclaringClass().equals(Listagem.class)
+								||
+								field.getDeclaringClass().equals(UF.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("nome")
+										|| field.getName().equals("abreviatura")
+										);
+						return !serializar;
+
+					}
+
+					@Override
+					public boolean shouldSkipClass(Class<?> clazz) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+				})
+				.create();
+		return g.toJson(source);
+	}
+
 }

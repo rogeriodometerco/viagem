@@ -14,10 +14,16 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import dto.Listagem;
 import dto.ParametrosListagem;
+import modelo.Estabelecimento;
 import modelo.Municipio;
+import modelo.UF;
 import servico.MunicipioService;
 import util.Ejb;
 
@@ -39,7 +45,8 @@ public class MunicipioRest {
 		try {
 			return Response.ok()
 					.entity(
-							municipioService.salvar(municipio))
+							toJson(
+									municipioService.salvar(municipio)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -56,20 +63,17 @@ public class MunicipioRest {
 			@QueryParam("q") String iniciandoPor)  throws Exception {
 
 		try {
-			// Sem critério de pesquisa.
+			Listagem<Municipio> result = null;
 			if (iniciandoPor == null || iniciandoPor.trim().equals("")) {
-				return Response.ok()
-						.entity(
-								municipioService.listarOrdenadoPorNome(pagina, tamanhoPagina))
-						.build();
+				result = municipioService.listarOrdenadoPorNome(pagina, tamanhoPagina);
 
-			// Com critério de pesquisa.
 			} else {
-				return Response.ok()
-						.entity(
-								municipioService.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor))
-						.build();
+				result = municipioService.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor);
 			}
+			return Response.ok()
+					.entity(
+							toJson(result))
+					.build();
 		} catch (Exception e) {
 			return Response.serverError()
 					.entity(new RespostaErro(e.getMessage()))
@@ -84,7 +88,8 @@ public class MunicipioRest {
 		try {
 			return Response.ok()
 					.entity(
-							municipioService.recuperar(id))
+							toJson(
+									municipioService.recuperar(id)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -113,8 +118,8 @@ public class MunicipioRest {
 					.build();
 		}
 	}
-	*/
-	
+	 */
+
 	@DELETE
 	@Path("/{id}")
 	public Response excluir(@PathParam("id") Long id) throws Exception {
@@ -128,5 +133,41 @@ public class MunicipioRest {
 					.build();
 		}
 	}
+
+	private String toJson(Object source) {
+		Gson g = new GsonBuilder()
+				.setExclusionStrategies(new ExclusionStrategy() {
+
+					@Override
+					public boolean shouldSkipField(FieldAttributes field) {
+						boolean serializar =
+								field.getDeclaringClass().equals(Listagem.class)
+								||
+								field.getDeclaringClass().equals(Municipio.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("nome")
+										|| field.getName().equals("uf")
+										)
+								|| field.getDeclaringClass().equals(UF.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("nome")
+										|| field.getName().equals("abreviatura")
+										);
+						return !serializar;
+
+					}
+
+					@Override
+					public boolean shouldSkipClass(Class<?> clazz) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+				})
+				.create();
+		return g.toJson(source);
+	}
+
 
 }
