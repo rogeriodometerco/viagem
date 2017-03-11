@@ -52,20 +52,9 @@
 		});
 
 		$("#btAlterarQuantidade").click(function() {
-			var obj = $("#novaQuantidade").val();
-				/*
-				JSON.stringify({
-				"origem" : {
-					"id": $("#origem").val()
-				},
-				"destino": {
-					"id": $("#destino").val()
-				},
-				"produto": $("#produto").val(),
-				"quantidade": $("#quantidade").val(),
-				"unidadeQuantidade": $("#unidadeQuantidade").val()
+			var obj = JSON.stringify({
+				"quantidade" : $("#novaQuantidade").val()
 			});
-			*/
 			var x = $.ajax({
 				type : 'PUT',
 				contentType : 'application/json',
@@ -86,10 +75,14 @@
 		$("#btAdicionarTransportadores").click(function() {
 			var obj = JSON.stringify([
 					{
-						"id": $("#transportador1").val()
+						"transportador" : {
+							"id": $("#transportador1").val()
+						}
 					},
 					{
-						"id": $("#transportador2").val()
+						"transportador" : {
+							"id": $("#transportador2").val()
+						}
 					}
 				]);
 			var x = $.ajax({
@@ -172,6 +165,21 @@
 				}
 			});
 		});
+
+		$("#btRecuperarTransportadores").click(function() {
+			var x = $.ajax({
+				type : "GET",
+				url : baseURI + "/" + $("#id").val() + "/transportadores",
+				success : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
 	});
 </script>
 </head>
@@ -182,7 +190,7 @@
 			for="pagina">Página</label> <input type="text" id="pagina" value="1" />
 		<label for="tamanhoPagina">Tamanho página</label> <input type="text"
 			id="tamanhoPagina" value="5" /> <input type="button" id="btListar"
-			value="Listar" />
+			value="Listar" /> <input type="button" id="btRecuperarTransportadores" value="Listar transportadores" />
 
 	</p>
 	<label for="id">Id (nulo para inclusão)</label>

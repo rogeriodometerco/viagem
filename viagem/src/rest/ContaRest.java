@@ -44,9 +44,15 @@ public class ContaRest {
 			Conta conta) throws Exception {
 
 		try {
+			Conta result = null; 
+			if (conta.getId() != null) {
+				result = contaService.recuperar(conta.getId());
+			}
+			result.setNome(conta.getNome());
+			result.setPerfis(conta.getPerfis());
 			return Response.ok()
 					.entity(toJson(
-							contaService.salvar(conta)))
+							contaService.salvar(result)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -108,9 +114,9 @@ public class ContaRest {
 
 	@DELETE
 	@Path("/{id}")
-	public Response excluir(@PathParam("id") Long id) throws Exception {
+	public Response inativar(@PathParam("id") Long id) throws Exception {
 		try {
-			//contaService.excluir(id);
+			contaService.inativar(id);
 			return Response.ok()
 					.build();
 		} catch (Exception e) {

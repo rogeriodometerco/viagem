@@ -21,6 +21,9 @@ public class ContaService {
 	public Conta salvar(Conta conta) throws AppException {
 		Conta result = null;
 		try {
+			if (conta.getId() == null) {
+				conta.setAtiva(true);
+			}
 			List<String> erros = validarConta(conta);
 			if (erros.size() > 0) {
 				throw new AppException(erros.toString());
@@ -30,6 +33,17 @@ public class ContaService {
 			throw new AppException(e);
 		}
 		return result;
+	}
+
+	public void inativar(Long id) throws AppException {
+		Conta result = null;
+		try {
+			result = contaDao.recuperar(id);
+			result.setAtiva(false);
+			result = contaDao.salvar(result);
+		} catch (Exception e) {
+			throw new AppException(e);
+		}
 	}
 
 	public List<Conta> listar() throws AppException {

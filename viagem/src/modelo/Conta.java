@@ -18,6 +18,8 @@ public class Conta {
 
 	private String nome;
 	
+	private Boolean ativa;
+	
 	@OneToMany(mappedBy="conta", fetch=FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
 	private Set<PerfilConta> perfis;
 
@@ -54,6 +56,14 @@ public class Conta {
 
 	public void setAdministradores(Set<AdminConta> administradores) {
 		this.administradores = administradores;
+	}
+
+	public Boolean getAtiva() {
+		return ativa;
+	}
+
+	public void setAtiva(Boolean ativa) {
+		this.ativa = ativa;
 	}
 	
 }

@@ -116,11 +116,20 @@ public class DemandaTransporte {
 		if (this.transportadores == null) {
 			this.transportadores = new HashSet<TransportadorDemandaAutorizado>();
 		}
-		TransportadorDemandaAutorizado novo = new TransportadorDemandaAutorizado();
-		novo.setDemanda(this);
-		novo.setTransportador(transportador);
-		novo.setAtivo(true);
-		this.transportadores.add(novo);
+		boolean ativo = false;
+		for (TransportadorDemandaAutorizado pesquisa: transportadores) {
+			if (pesquisa.getAtivo() && pesquisa.getTransportador().getId().equals(transportador.getId())) {
+				ativo = true;
+				break;
+			}
+		}
+		if (!ativo) {
+			TransportadorDemandaAutorizado novo = new TransportadorDemandaAutorizado();
+			novo.setDemanda(this);
+			novo.setTransportador(transportador);
+			novo.setAtivo(true);
+			this.transportadores.add(novo);
+		}
 	}
 
 	/*

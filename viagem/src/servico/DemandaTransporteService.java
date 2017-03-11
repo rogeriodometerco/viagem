@@ -1,11 +1,14 @@
 package servico;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import dao.ContaDao;
 import dao.DemandaTransporteDao;
 import dto.Listagem;
 import exception.AppException;
@@ -21,7 +24,9 @@ public class DemandaTransporteService {
 	
 	@EJB
 	private DemandaTransporteDao demandaTransporteDao;
-
+	@EJB
+	private ContaDao contaDao;
+	
 	public DemandaTransporte criar(DemandaTransporte demandaTransporte) throws AppException {
 		DemandaTransporte result = null;
 		try {
@@ -96,26 +101,29 @@ public class DemandaTransporteService {
 		return result;
 	}
 
-	public DemandaTransporte adicionarTransportadores(Long demandaId, List<Conta> transportadores) throws AppException {
-		DemandaTransporte result = null;
-		// TODO Implementar regras específicas desta funcionalidade, caso existam.
+	public Set<TransportadorDemandaAutorizado> adicionarTransportadores(Long demandaId, List<Conta> transportadores) throws AppException {
+		DemandaTransporte demanda = null;
+		// TODO Validar se a Conta é de transportador.
 		try {
-			result = demandaTransporteDao.recuperar(demandaId);
-			for (Conta transportador: transportadores) {
-				result.adicionarTransportador(transportador);
+			demanda = demandaTransporteDao.recuperar(demandaId);
+
+			for (Conta contaTransportador: transportadores) {
+				
+				demanda.adicionarTransportador(contaTransportador);
 			}
-			List<String> erros = validarDemandaTransporte(ALTERACAO, result);
+			
+			List<String> erros = validarDemandaTransporte(ALTERACAO, demanda);
 			if (erros.size() > 0) {
 				throw new AppException(erros.toString());
 			}
-			result = demandaTransporteDao.salvar(result);
+			demanda = demandaTransporteDao.salvar(demanda);
 		} catch (Exception e) {
 			throw new AppException(e);
 		}
-		return result;
+		return demanda.getTransportadores();
 	}
 
-	public DemandaTransporte inativarTransportadores(Long demandaId, 
+	public void inativarTransportadores(Long demandaId, 
 			List<TransportadorDemandaAutorizado> transportadores) throws AppException {
 		DemandaTransporte result = null;
 		// TODO Implementar regras específicas desta funcionalidade, caso existam.
@@ -132,7 +140,6 @@ public class DemandaTransporteService {
 		} catch (Exception e) {
 			throw new AppException(e);
 		}
-		return result;
 	}
 
 	private List<String> validarDemandaTransporte(String operacao, DemandaTransporte demandaTransporte) {

@@ -1,9 +1,8 @@
 package rest;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -22,6 +21,8 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import dto.Listagem;
 import modelo.Conta;
@@ -100,11 +101,16 @@ public class DemandaTransporteRest {
 	@PUT
 	@Path("/{id}/quantidade")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response alterarQuantidade(@PathParam("id") Long id, Integer quantidade) throws Exception {
+	/*
+	{
+		"quantidade": 1500
+	}
+	 */
+	public Response alterarQuantidade(@PathParam("id") Long id, Map<String, Object> dados) throws Exception {
 
 		try {
 			DemandaTransporte demanda = demandaTransporteService.recuperar(id);
-			demanda.setQuantidade(quantidade);
+			demanda.setQuantidade(Integer.valueOf(dados.get("quantidade").toString()));
 			return Response.ok()
 					.entity(
 							toJson(
@@ -121,13 +127,31 @@ public class DemandaTransporteRest {
 	@Path("/{id}/transportadores")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response adicionarTransportadores(@PathParam("id") Long id, List<Conta> transportadores) throws Exception {
+	/*
+	[
+		{
+			"transportador" : {
+				"id": 123
+			}
+		},
+		{
+			"transportador" : {
+				"id": 456
+			}
+		}
+	 ]
+	 */
+	public Response adicionarTransportadores(@PathParam("id") Long id, List<TransportadorDemandaAutorizado> transportadores) throws Exception {
 
 		try {
+			List<Conta> contasTransportador = new ArrayList<Conta>();
+			for (TransportadorDemandaAutorizado transportadorDemanda: transportadores) {
+				contasTransportador.add(transportadorDemanda.getTransportador());
+			}
 			return Response.ok()
 					.entity(
 							toJson(
-									demandaTransporteService.adicionarTransportadores(id, transportadores)))
+									demandaTransporteService.adicionarTransportadores(id, contasTransportador)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -135,6 +159,7 @@ public class DemandaTransporteRest {
 					.build();
 		}
 	}
+
 
 	@GET
 	@Path("/{id}/transportadores")
@@ -162,10 +187,8 @@ public class DemandaTransporteRest {
 	public Response inativarTransportadores(@PathParam("id") Long id, List<TransportadorDemandaAutorizado> transportadores) throws Exception {
 
 		try {
+			demandaTransporteService.inativarTransportadores(id, transportadores);
 			return Response.ok()
-					.entity(
-							toJson(
-									demandaTransporteService.inativarTransportadores(id, transportadores)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -219,6 +242,7 @@ public class DemandaTransporteRest {
 								&& (
 										field.getName().equals("id") 
 										|| field.getName().equals("transportador")
+										|| field.getName().equals("ativo")
 										);
 						return !serializar;
 
