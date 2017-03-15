@@ -21,8 +21,6 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import dto.Listagem;
 import modelo.Conta;
@@ -47,8 +45,11 @@ public class DemandaTransporteRest {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response criar(DemandaTransporte demandaTransporte) throws Exception {
-
 		try {
+			// Seta a demanda de transporte nos transportadores porque a página não submete.
+			for (TransportadorDemandaAutorizado t: demandaTransporte.getTransportadores()) {
+				t.setDemanda(demandaTransporte);
+			}
 			return Response.ok()
 					.entity(
 							toJson(

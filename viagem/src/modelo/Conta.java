@@ -1,5 +1,6 @@
 package modelo;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -64,6 +65,35 @@ public class Conta {
 
 	public void setAtiva(Boolean ativa) {
 		this.ativa = ativa;
+	}
+
+	public void adicionarAdministrador(Usuario usuario) {
+		if (this.administradores == null) {
+			this.administradores = new HashSet<AdminConta>();
+		}
+		boolean existe = false;
+		for (AdminConta admin: administradores) {
+			if (admin.getUsuario().getId().equals(usuario.getId())) {
+				existe = true;
+				break;
+			}
+		}
+		if (!existe) {
+			AdminConta novo = new AdminConta();
+			novo.setConta(this);
+			novo.setUsuario(usuario);
+			this.administradores.add(novo);
+		}
+	}
+
+	public void removerAdministrador(AdminConta admin) {
+		for (AdminConta atual: administradores) {
+			if (atual.getId().equals(admin.getId())) {
+				atual.setConta(null);
+				administradores.remove(atual);
+				break;
+			}
+		}
 	}
 	
 }

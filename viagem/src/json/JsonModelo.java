@@ -16,9 +16,9 @@ public class JsonModelo {
 	public JsonModelo() {
 		GsonBuilder builder = new GsonBuilder();
 		builder.registerTypeAdapter(Conta.class, new ContaSerializer());
-		builder.registerTypeAdapter(PerfilConta.class, new PerfilContaSerializer());
+		builder.registerTypeAdapter(PerfilConta.class, new PerfilContaJsonAdapter());
 		builder.registerTypeAdapter(AdminConta.class, new AdminContaSerializer());
-		builder.registerTypeAdapter(Perfil.class, new PerfilSerializer());
+		builder.registerTypeAdapter(Perfil.class, new PerfilJsonAdapter());
 		builder.registerTypeAdapter(Perfil.class, new PerfilDeserializer());
 		builder.registerTypeAdapter(TransportadorDemandaAutorizado.class, new TransportadorDemandaAutorizadoSerializer());
 		gson = builder.create();

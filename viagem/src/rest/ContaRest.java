@@ -1,5 +1,8 @@
 package rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -25,6 +28,7 @@ import json.JsonModelo;
 import modelo.AdminConta;
 import modelo.Conta;
 import modelo.PerfilConta;
+import modelo.Usuario;
 import servico.ContaService;
 import util.Ejb;
 
@@ -44,12 +48,33 @@ public class ContaRest {
 			Conta conta) throws Exception {
 
 		try {
+			/*
+			Gson g = new GsonBuilder()
+					.registerTypeAdapter(Perfil.class, new PerfilJsonAdapter())
+					.registerTypeAdapter(PerfilConta.class, new PerfilContaJsonAdapter())
+					.registerTypeAdapter(Long.class, new LongTypeAdapter())
+					.create();
+
+			Conta conta = g.fromJson(json, Conta.class);
+			 */
+			//Conta conta = new Conta();
+			//conta.setNome(contaDto.getNome());
+
 			Conta result = null; 
 			if (conta.getId() != null) {
 				result = contaService.recuperar(conta.getId());
+				result.setNome(conta.getNome());
+				result.setPerfis(conta.getPerfis());
+			} else {
+				result = conta;
 			}
-			result.setNome(conta.getNome());
-			result.setPerfis(conta.getPerfis());
+
+			// Seta a conta de perfis porque a página não submete a conta do PerfilConta.
+			if (result.getPerfis() != null) {
+				for (PerfilConta p: result.getPerfis()) {
+					p.setConta(result);
+				}
+			}
 			return Response.ok()
 					.entity(toJson(
 							contaService.salvar(result)))
@@ -126,8 +151,86 @@ public class ContaRest {
 		}
 	}
 
+	@POST
+	@Path("/{id}/administradores")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	/*
+	[
+		{
+			"usuario" : {
+				"id": 123
+			}
+		},
+		{
+			"usuario" : {
+				"id": 456
+			}
+		}
+	 ]
+	 */
+	public Response adicionarAdministradores(@PathParam("id") Long id, List<AdminConta> administradores) 
+			throws Exception {
+
+		try {
+			List<Usuario> usuarios = new ArrayList<Usuario>();
+			for (AdminConta admin: administradores) {
+				usuarios.add(admin.getUsuario());
+			}
+			return Response.ok()
+					.entity(
+							toJson(
+									contaService.adicionarAdministradores(id, usuarios)))
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
+
+	@GET
+	@Path("/{id}/administradores")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response recuperarAdministradores(@PathParam("id") Long id) throws Exception {
+
+		try {
+			return Response.ok()
+					.entity(
+							toJson(
+									contaService.recuperar(id).getAdministradores()))
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
+
+	@DELETE
+	@Path("/{id}/administradores")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response removerAdministradores(@PathParam("id") Long id, List<AdminConta> administradores) throws Exception {
+
+		try {
+			contaService.removerAdministradores(id, administradores);
+			return Response.ok()
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
 	private String toJson(Object source) {
 		Gson g = new GsonBuilder()
+				//.registerTypeAdapter(Perfil.class, new PerfilJsonAdapter())
+				//.registerTypeAdapter(PerfilConta.class, new PerfilContaJsonAdapter())
 				.setExclusionStrategies(new ExclusionStrategy() {
 
 					@Override
@@ -135,24 +238,24 @@ public class ContaRest {
 						boolean serializar =
 								field.getDeclaringClass().equals(Listagem.class)
 								||
-								(
-										field.getDeclaringClass().equals(Conta.class)
-										&& (
-												field.getName().equals("id")
-												|| field.getName().equals("nome")
-												|| field.getName().equals("perfis")
-												)
-										|| field.getDeclaringClass().equals(PerfilConta.class)
-										&& (
-												field.getName().equals("perfil")
+								field.getDeclaringClass().equals(Conta.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("nome")
+										|| field.getName().equals("ativa")
+										|| field.getName().equals("perfis")
 										)
-								);
+								|| field.getDeclaringClass().equals(PerfilConta.class)
+								&& (
+										field.getName().equals("perfil")
+										)
+								|| field.getDeclaringClass().equals(AdminConta.class)
+								&& (
+										field.getName().equals("usuario")
+										);
 						return !serializar;
 
-/*						return field.getDeclaringClass().equals(PerfilConta.class) && field.getName().equals("conta")
-								|| field.getDeclaringClass().equals(AdminConta.class) && field.getName().equals("conta")
-								|| field.getName().equals("senha");
-*/					}
+					}
 
 					@Override
 					public boolean shouldSkipClass(Class<?> clazz) {

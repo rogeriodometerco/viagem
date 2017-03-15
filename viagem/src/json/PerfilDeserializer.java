@@ -13,7 +13,7 @@ public class PerfilDeserializer implements JsonDeserializer<Perfil> {
 
     @Override
     public Perfil deserialize(JsonElement json, Type arg1, JsonDeserializationContext context) throws JsonParseException {
-	Perfil p = Perfil.valueOf(json.getAsJsonObject().get("nome").getAsString());
+	Perfil p = Perfil.valueOf(json.getAsJsonObject().get("id").getAsString());
 	return p;
     }
 

@@ -2,6 +2,7 @@ package servico;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -10,7 +11,11 @@ import dao.ContaDao;
 import dto.Listagem;
 import enums.Perfil;
 import exception.AppException;
+import modelo.AdminConta;
 import modelo.Conta;
+import modelo.DemandaTransporte;
+import modelo.AdminConta;
+import modelo.Usuario;
 
 @Stateless
 public class ContaService {
@@ -187,5 +192,50 @@ public class ContaService {
 		}
 		return listagem;
 	}
+
+	
+	public Set<AdminConta> adicionarAdministradores(Long contaId, List<Usuario> usuarios) throws AppException {
+		Conta conta = null;
+		// TODO Validar se o usuário está vinculado a conta.
+		try {
+			conta = contaDao.recuperar(contaId);
+
+			for (Usuario usuario: usuarios) {
+				conta.adicionarAdministrador(usuario);
+			}
+			
+			List<String> erros = validarConta(conta);
+			if (erros.size() > 0) {
+				throw new AppException(erros.toString());
+			}
+			conta = contaDao.salvar(conta);
+		} catch (Exception e) {
+			throw new AppException(e);
+		}
+		return conta.getAdministradores();
+	}
+	
+	public void removerAdministradores(Long contaId, List<AdminConta> administradores) 
+			throws AppException {
+		
+		Conta result = null;
+		try {
+			result = contaDao.recuperar(contaId);
+			result.getAdministradores().removeAll(administradores);
+			
+			for (AdminConta admin: administradores) {
+				result.removerAdministrador(admin);
+			}
+			List<String> erros = validarConta(result);
+			if (erros.size() > 0) {
+				throw new AppException(erros.toString());
+			}
+			result = contaDao.salvar(result);
+		} catch (Exception e) {
+			throw new AppException(e);
+		}
+	}
+
+
 
 }
