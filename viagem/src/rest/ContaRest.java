@@ -69,7 +69,8 @@ public class ContaRest {
 				result = conta;
 			}
 
-			// Seta a conta de perfis porque a página não submete a conta do PerfilConta.
+			// Seta o atributo "conta" das entidades em "perfis" porque a página submete esta coleção
+			// sem este atributo.
 			if (result.getPerfis() != null) {
 				for (PerfilConta p: result.getPerfis()) {
 					p.setConta(result);
