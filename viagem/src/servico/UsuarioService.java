@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import dao.AdminContaDao;
 import dao.UsuarioContaDao;
 import dao.UsuarioDao;
+import dto.Listagem;
 import enums.Crud;
 import exception.AppException;
 import modelo.AdminConta;
@@ -41,13 +42,13 @@ public class UsuarioService {
 			}
 			result = usuarioDao.salvar(usuario);
 			
-			// Vincula o usuário a conta.
+			// Vincula o usuï¿½rio a conta.
 			UsuarioConta usuarioConta = new UsuarioConta();
 			usuarioConta.setUsuario(result);
 			usuarioConta.setConta(conta);
 			usuarioContaDao.salvar(usuarioConta);
 			
-			// Torna o usuário administrador da conta se ele é o primeiro a ser cadastrado na conta.
+			// Torna o usuï¿½rio administrador da conta se ele ï¿½ o primeiro a ser cadastrado na conta.
 			if (adminContaDao.listarPorConta(conta).isEmpty()) {
 				AdminConta adminConta = new AdminConta();
 				adminConta.setUsuario(result);
@@ -55,7 +56,7 @@ public class UsuarioService {
 				adminContaDao.salvar(adminConta);
 			}
 		} catch (Exception e) {
-			throw new AppException("Erro ao criar usuário: " + e.getMessage(), e);
+			throw new AppException("Erro ao criar usuï¿½rio: " + e.getMessage(), e);
 		}
 		return result;
 	}
@@ -63,34 +64,34 @@ public class UsuarioService {
 	private List<String> validarUsuario(Usuario usuario, String confirmacaoSenha, Crud crud) throws Exception {
 		List<String> erros = new ArrayList<String>();
 		if (usuario.getId() != null && crud.equals(Crud.INCLUSAO)) {
-			throw new AppException("Usuário a ser criado não pode ter um identificador do banco de dados");
+			throw new AppException("Usuï¿½rio a ser criado nï¿½o pode ter um identificador do banco de dados");
 		}
 		if (usuario.getNome() == null || usuario.getLogin().trim().length() < 5) {
-			erros.add("Nome do usuário deve ter no mínimo 5 caracteres");
+			erros.add("Nome do usuï¿½rio deve ter no mï¿½nimo 5 caracteres");
 		}
 		if (usuario.getLogin() == null || usuario.getLogin().trim().length() < 5) {
-			erros.add("Login do usuário deve ter no mínimo 5 caracteres");
+			erros.add("Login do usuï¿½rio deve ter no mï¿½nimo 5 caracteres");
 		}
 		if (usuario.getSenha() == null || usuario.getSenha().trim().length() < 5) {
-			erros.add("Senha do usuário deve ter no mínimo 5 caracteres");
+			erros.add("Senha do usuï¿½rio deve ter no mï¿½nimo 5 caracteres");
 		}
 		
-		// Verifica se login já existe para evitar duplicação de usuário.
+		// Verifica se login jï¿½ existe para evitar duplicaï¿½ï¿½o de usuï¿½rio.
 		if (Crud.INCLUSAO.equals(crud)) {
 			
 			if (confirmacaoSenha == null || confirmacaoSenha.trim().length() == 0) {
-				erros.add("Confirmação da senha deve ser informada");
+				erros.add("Confirmaï¿½ï¿½o da senha deve ser informada");
 			} else {
 				if (!usuario.getSenha().equals(confirmacaoSenha)) {
-					erros.add("Confirmação da senha não bate com a senha informada");
+					erros.add("Confirmaï¿½ï¿½o da senha nï¿½o bate com a senha informada");
 				}
 				if (!usuario.getSenha().equals(usuario.getLogin())) {
-					erros.add("Senha deve ser igual ao login na criação do usuário");
+					erros.add("Senha deve ser igual ao login na criaï¿½ï¿½o do usuï¿½rio");
 				}
 			}
 			Usuario usuarioPesquisa = usuarioDao.recuperarPeloLoginSeExistir(usuario.getLogin());
 			if (usuarioPesquisa != null && !usuarioPesquisa.getId().equals(usuario.getId())) {
-				erros.add("Já existe um usuário com este login");
+				erros.add("Jï¿½ existe um usuï¿½rio com este login");
 			}
 		}
 		return erros;
@@ -101,7 +102,7 @@ public class UsuarioService {
 		try {
 			result = usuarioDao.listar();
 		} catch(Exception e) {
-			throw new AppException("Erro ao listar usuários: " + e.getMessage(), e);
+			throw new AppException("Erro ao listar usuï¿½rios: " + e.getMessage(), e);
 		}
 		return result;
 	}
@@ -111,11 +112,69 @@ public class UsuarioService {
 		try {
 			result = usuarioDao.listarPorNome(chave, rows);
 		} catch(Exception e) {
-			throw new AppException("Erro ao listar usuários por nome: " + e.getMessage(), e);
+			throw new AppException("Erro ao listar usuï¿½rios por nome: " + e.getMessage(), e);
 		}
 		return result;
 	}
+
 	
+	public Listagem<Usuario> listarOrdenadoPorNome(int pagina, int tamanhoPagina)	
+			throws AppException { 
+
+		Listagem<Usuario> listagem = new Listagem<Usuario>();
+
+		List<Usuario> lista = new ArrayList<Usuario>();
+		if (pagina == 0) {
+			pagina = 1;
+		}
+		if (tamanhoPagina == 0) {
+			tamanhoPagina = 10;
+		}
+		try {
+			lista = usuarioDao.listarOrdenadoPorNome(pagina, tamanhoPagina);
+			Long count = usuarioDao.contar();
+			listagem.set(pagina, lista, count);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar usuÃ¡rios: " + e.getMessage(), e);
+		}
+		return listagem;
+	}
+
+
+	public Listagem<Usuario> listarPorNomeOrdenadoPorNome(int pagina, int tamanhoPagina, String contendo)	
+			throws AppException { 
+
+		Listagem<Usuario> listagem = new Listagem<Usuario>();
+
+		List<Usuario> lista = new ArrayList<Usuario>();
+		if (contendo == null || contendo.trim() == "") {
+			throw new AppException("Nome ou parte do nome do usuÃ¡rio para pesquisa Ã© obrigatÃ³rio");
+		}
+		if (pagina == 0) {
+			pagina = 1;
+		}
+		if (tamanhoPagina == 0) {
+			tamanhoPagina = 10;
+		}
+		try {
+			lista = usuarioDao.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, contendo);
+			Long count = usuarioDao.contarPorNome(contendo);
+			listagem.set(pagina, lista, count);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar contas por nome: " + e.getMessage(), e);
+		}
+		return listagem;
+	}
+
+	public Usuario recuperar(Long id) throws AppException {
+		try {
+			return usuarioDao.recuperar(id);
+		} catch (Exception e) {
+			throw new AppException("Erro ao recupear usuÃ¡rio: " + e.getMessage(), e);
+		}
+	}
+
+
 }
 
 

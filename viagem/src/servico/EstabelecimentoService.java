@@ -35,10 +35,10 @@ public class EstabelecimentoService {
 	private List<String> validarEstabelecimento(Estabelecimento estabelecimento) {
 		List<String> erros = new ArrayList<String>();
 		if (estabelecimento.getNome() == null || estabelecimento.getNome().trim().length() == 0) {
-			erros.add("Nome do estabelecimento � obrigat�rio");
+			erros.add("Nome do estabelecimento é obrigatório");
 		}
 		if (estabelecimento.getMunicipio() == null) {
-			erros.add("Munic�pio do estabelecimento � obrigat�rio");
+			erros.add("Município do estabelecimento é obrigatório");
 		}
 		return erros;
 	}

@@ -127,8 +127,8 @@ public class ContaRest {
 		try {
 			return Response.ok()
 					.entity(
-							//toJson(
-							new JsonModelo().toJson(
+							toJson(
+							//new JsonModelo().toJson(
 									contaService.recuperar(id)))
 					.build();
 		} catch (Exception e) {
@@ -253,6 +253,12 @@ public class ContaRest {
 								|| field.getDeclaringClass().equals(AdminConta.class)
 								&& (
 										field.getName().equals("usuario")
+										)
+								|| field.getDeclaringClass().equals(Usuario.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("login")
+										|| field.getName().equals("nome")
 										);
 						return !serializar;
 

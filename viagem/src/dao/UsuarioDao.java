@@ -20,28 +20,28 @@ public class UsuarioDao extends GenericDao<Usuario> {
 					.setParameter("login", login)
 					.getSingleResult();
 		} catch (NoResultException e) {
-			// Situação não é exceção.
+			// Situaï¿½ï¿½o nï¿½o ï¿½ exceï¿½ï¿½o.
 		}
 		return result;
 	}
 
 
-public List<Usuario> listarPorNome(String chave, int rows) throws Exception {
-		
+	public List<Usuario> listarPorNome(String chave, int rows) throws Exception {
+
 		List<Usuario> result = null;
-		
+
 		// Recupera registros iniciando pela string pesquisada.
 		String sql = "SELECT x FROM Usuario x WHERE" +
 				" upper(x.nome) like :iniciandoPor" +
 				" order by x.nome";
-		
+
 		result = getEntityManager()
 				.createQuery(sql, Usuario.class)
 				.setParameter("iniciandoPor", chave.toUpperCase().concat("%"))
 				.setMaxResults(rows)
 				.getResultList();
-		
-		// Recupera registros contendo string pesquisada até completar a quantidade de linhas a retornar.
+
+		// Recupera registros contendo string pesquisada atï¿½ completar a quantidade de linhas a retornar.
 		if (result.size() < rows) {
 			List<Usuario> result2 = null;
 			String sql2 = "SELECT x FROM Usuario x WHERE" +
@@ -57,5 +57,54 @@ public List<Usuario> listarPorNome(String chave, int rows) throws Exception {
 			result.addAll(result2);
 		}
 		return result;
-	}	
+	}
+
+
+	public List<Usuario> listarOrdenadoPorNome(int pagina, int tamanhoPagina) throws Exception {
+
+		List<Usuario> result = null;
+		String sql = "SELECT x FROM Usuario x " +
+				" ORDER BY x.nome";
+		result = getEntityManager()
+				.createQuery(sql, Usuario.class)
+				.setFirstResult(pagina * tamanhoPagina - tamanhoPagina)
+				.setMaxResults(tamanhoPagina)
+				.getResultList();
+		return result;
+	}
+
+	public Long contar() throws Exception {
+		String sql = "SELECT COUNT(x) FROM Usuario x";
+		return getEntityManager()
+				.createQuery(sql, Long.class)
+				.getSingleResult();
+	}
+
+	public List<Usuario> listarPorNomeOrdenadoPorNome(
+			int pagina, int tamanhoPagina, String contendo) throws Exception {
+
+		List<Usuario> result = null;
+		String sql = "SELECT x FROM Usuario x WHERE" +
+				" UPPER(x.nome) LIKE :contendo" +
+				" ORDER BY x.nome";
+		result = getEntityManager()
+				.createQuery(sql, Usuario.class)
+				.setParameter("contendo", "%".concat(contendo.toUpperCase()).concat("%"))
+				.setFirstResult(pagina * tamanhoPagina - tamanhoPagina)
+				.setMaxResults(tamanhoPagina)
+				.getResultList();
+		return result;
+	}
+
+	public Long contarPorNome(String contendo) throws Exception {
+		String sql = "SELECT COUNT(x) FROM Usuario x WHERE" +
+				" UPPER(x.nome) LIKE :contendo";
+		return getEntityManager()
+				.createQuery(sql, Long.class)
+				.setParameter("contendo", "%".concat(contendo.toUpperCase()).concat("%"))
+				.getSingleResult();
+	}
+
+
+
 }

@@ -16,7 +16,6 @@ public class Estabelecimento {
 	
 	@ManyToOne
 	private Municipio municipio;
-
 	
 	public Long getId() {
 		return id;
@@ -41,5 +40,6 @@ public class Estabelecimento {
 	public void setMunicipio(Municipio municipio) {
 		this.municipio = municipio;
 	}
+
 
 }
