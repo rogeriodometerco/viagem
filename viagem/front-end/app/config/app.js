@@ -6,6 +6,7 @@ angular.module(APP_NAME, [
     'ui.utils.masks', // Angular input mask
     'blockUI',
     'ngSanitize',
+    'Geral',
     'Localizacao',
     'ngCookies'
   ])

@@ -26,11 +26,11 @@
     border-radius: 5px 5px 0px 0px !important;*/
 }
 .gridStyle .ngVerticalBarVisible {
-	background-color: rgba(255, 255, 255, 0) !important;
+    background-color: rgba(255, 255, 255, 0) !important;
 }
 .gridStyle .ngCanvas.no-row {
-	text-align: center;
-	padding: 20px;
+    text-align: center;
+    padding: 20px;
 }
 .gridStyle .ngFooterPanel {
     overflow: hidden;
@@ -49,6 +49,9 @@
 .gridStyle .ngFooterPanel .ngPagerContainer .ngPagerControl .ngLabel {
     margin-top: 3px;
     margin-right: 5px;
+}
+.gridStyle .ngRow {
+    border-bottom: none;
 }
 @media (max-width: 768px) {
     .gridStyle .ngTopPanel .btn-group {

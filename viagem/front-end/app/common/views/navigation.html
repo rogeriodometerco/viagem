@@ -40,6 +40,21 @@
                             <i class="fa fa-globe"></i> <span class="nav-label">Cidade</span>
                         </a>
                     </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="panel.two({path1: 'geral', controller: 'estabelecimento', action: 'list'})">
+                            <i class="fa fa-map-marker"></i> <span class="nav-label">Estabelecimento</span>
+                        </a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="panel.two({path1: 'geral', controller: 'conta', action: 'list'})">
+                            <i class="fa fa-building"></i> <span class="nav-label">Conta</span>
+                        </a>
+                    </li>
+                    <li ui-sref-active="active">
+                        <a ui-sref="panel.two({path1: 'geral', controller: 'usuario', action: 'list'})">
+                            <i class="fa fa-users"></i> <span class="nav-label">Usuário</span>
+                        </a>
+                    </li>
                 </ul>
             </li>
         </ul>

@@ -54,14 +54,14 @@ angular.module('Generic')
       $get: function () {
         return {
           objectStores: function (collections, callbackFn) {
-            getInstance(function (db) {    
+            getInstance(function (db) {
               var transaction = db.transaction(collections, "readwrite");
-              
+
               callbackFn(transaction);
             });
           },
           objectStore: function (collection, transaction, callbackFn) {
-            if (transaction){        
+            if (transaction){
               var objectStore = transaction.objectStore(collection);
 
               callbackFn(objectStore, transaction);
@@ -78,4 +78,3 @@ angular.module('Generic')
       }
     };
   });
-

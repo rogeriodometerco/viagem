@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
-  
+
   // Automatically load required grunt tasks
   require('jit-grunt')(grunt, {
     useminPrepare: 'grunt-usemin'
@@ -34,12 +34,9 @@ module.exports = function (grunt) {
 
   // Define the configuration for all the tasks
   grunt.initConfig({
-
     pkg: grunt.file.readJSON('package.json'),
-
     // Project settings
     config: config,
-
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
@@ -66,27 +63,33 @@ module.exports = function (grunt) {
         tasks: ['newer:copy:styles', 'postcss']
       }
     },
-
     browserSync: {
       options: {
         notify: false,
-        background: true
+        background: true,
+        ghostMode: false
       },
       livereload: {
         options: {
           files: [
             '<%= config.app %>/**/*.html',
-            '<%= config.app %>/dentalfoz.appcache',
             '.tmp/styles/{,*/}*.css',
             '.tmp/common/styles/{,*/}*.css',
             '<%= config.app %>/images/{,*/}*',
             '.tmp/scripts/{,*/}*.js'
           ],
           port: 8082,
+          watchTask: true,
+          open: 'external',
+          host: '127.0.0.1',
           server: {
             baseDir: ['.tmp', config.app],
             routes: {
               '/bower_components': './bower_components',
+              '/common': 'app/common',
+              '/config': 'app/config',
+              '/modules': 'app/modules',
+              '/views': 'app/modules',
               '/login': 'app/index.html',
               '/pais': 'app/index.html',
               '/dashboard': 'app/index.html',
@@ -97,7 +100,7 @@ module.exports = function (grunt) {
               '/localizacao/cidade.edit': 'app/index.html',
               '/localizacao/cidade.list': 'app/index.html'
             }
-          }
+          },
         }
       },
       test: {
@@ -117,11 +120,59 @@ module.exports = function (grunt) {
       dist: {
         options: {
           background: false,
-          server: '<%= config.dist %>'
+          server: {
+            baseDir: '<%= config.dist %>',
+            routes: {
+              '/npl': 'dist/index.html',
+              '/npl/common': 'dist/common',
+              '/npl/config': 'dist/config',
+              '/npl/modules': 'dist/modules',
+              '/npl/views': 'dist/views',
+              '/bower_components': './bower_components',
+              '/npl/login': 'dist/index.html',
+              '/npl/pais': 'dist/index.html',
+              '/npl/dashboard': 'dist/index.html',
+              '/npl/planejamento': 'app/index.html',
+              '/npl/detalhamento': 'app/index.html',
+              '/npl/n-p-l/pessoa/pessoa.edit': 'dist/index.html',
+              '/npl/n-p-l/pessoa/pessoa.list': 'dist/index.html',
+              '/npl/geral/cultura.edit': 'dist/index.html',
+              '/npl/geral/cultura.list': 'dist/index.html',
+              '/npl/localizacao/pais.edit': 'dist/index.html',
+              '/npl/localizacao/pais.list': 'dist/index.html',
+              '/npl/localizacao/estado.edit': 'dist/index.html',
+              '/npl/localizacao/estado.list': 'dist/index.html',
+              '/npl/localizacao/cidade.edit': 'dist/index.html',
+              '/npl/localizacao/cidade.list': 'dist/index.html',
+              '/npl/n-p-l/financeiro/tipo-conta.edit': 'dist/index.html',
+              '/npl/n-p-l/financeiro/tipo-conta.list': 'dist/index.html',
+              '/npl/n-p-l/financeiro/grupo-conta.edit': 'dist/index.html',
+              '/npl/n-p-l/financeiro/grupo-conta.list': 'dist/index.html',
+              '/npl/n-p-l/financeiro/item-documento.edit': 'dist/index.html',
+              '/npl/n-p-l/financeiro/item-documento.list': 'dist/index.html',
+              '/npl/n-p-l/financeiro/documento.edit': 'dist/index.html',
+              '/npl/n-p-l/financeiro/documento.list': 'dist/index.html',
+              '/npl/n-p-l/producao/origem-entrega.edit': 'dist/index.html',
+              '/npl/n-p-l/producao/origem-entrega.list': 'dist/index.html',
+              '/npl/n-p-l/producao/entrega.edit': 'dist/index.html',
+              '/npl/n-p-l/producao/entrega.list': 'dist/index.html',
+              '/npl/n-p-l/producao/venda.edit': 'dist/index.html',
+              '/npl/n-p-l/producao/venda.list': 'dist/index.html',
+              '/npl/propriedade/talhao.edit': 'dist/index.html',
+              '/npl/propriedade/talhao.list': 'dist/index.html',
+              '/npl/propriedade/exploracao.edit': 'dist/index.html',
+              '/npl/propriedade/exploracao.list': 'dist/index.html',
+              '/npl/propriedade/propriedade.edit': 'dist/index.html',
+              '/npl/propriedade/propriedade.list': 'dist/index.html',
+            }
+          },
+          port: 8085,
+          startPath: "/npl",
+          open: 'external',
+          host: '127.0.0.1',
         }
       }
     },
-
     // Empties folders to start fresh
     clean: {
       dist: {
@@ -136,7 +187,6 @@ module.exports = function (grunt) {
       },
       server: '.tmp'
     },
-
     // Make sure code styles are up to par and there are no obvious mistakes
     eslint: {
       target: [
@@ -146,7 +196,6 @@ module.exports = function (grunt) {
         'test/spec/{,*/}*.js'
       ]
     },
-
     // Mocha testing framework configuration options
     mocha: {
       all: {
@@ -156,7 +205,6 @@ module.exports = function (grunt) {
         }
       }
     },
-
     // Compiles ES6 with Babel
     babel: {
       options: {
@@ -181,7 +229,6 @@ module.exports = function (grunt) {
         }]
       }
     },
-
     // Compiles Sass to CSS and generates necessary files if requested
     sass: {
       options: {
@@ -197,7 +244,7 @@ module.exports = function (grunt) {
           src: ['*.{scss,sass}'],
           dest: '.tmp/styles',
           ext: '.css'
-        },{
+        }, {
           expand: true,
           cwd: '<%= config.app %>/common/styles',
           src: ['*.{scss,sass}'],
@@ -212,7 +259,7 @@ module.exports = function (grunt) {
           src: ['*.{scss,sass}'],
           dest: '.tmp/styles',
           ext: '.css'
-        },{
+        }, {
           expand: true,
           cwd: '<%= config.app %>/common/styles',
           src: ['*.{scss,sass}'],
@@ -221,7 +268,6 @@ module.exports = function (grunt) {
         }]
       }
     },
-
     postcss: {
       options: {
         map: true,
@@ -238,15 +284,19 @@ module.exports = function (grunt) {
           cwd: '.tmp/styles/',
           src: '{,*/}*.css',
           dest: '.tmp/styles/'
-        },{
+        }, {
           expand: true,
           cwd: '.tmp/common/styles/',
           src: '{,*/}*.css',
           dest: '.tmp/common/styles/'
+        }, {
+          expand: true,
+          cwd: 'app/modules/',
+          src: '{,**/}*.css',
+          dest: '.tmp/modules/'
         }]
       }
     },
-
     // Automatically inject Bower components into the HTML file
     wiredep: {
       app: {
@@ -262,11 +312,10 @@ module.exports = function (grunt) {
          }*/
       },
       sass: {
-        src: ['<%= config.app %>/styles/{,*/}*.{scss,sass}','<%= config.app %>/common/styles/{,*/}*.{scss,sass}'],
+        src: ['<%= config.app %>/styles/{,*/}*.{scss,sass}', '<%= config.app %>/common/styles/{,*/}*.{scss,sass}'],
         ignorePath: /^(\.\.\/)+/
       }
     },
-
     // Renames files for browser caching purposes
     filerev: {
       dist: {
@@ -280,7 +329,6 @@ module.exports = function (grunt) {
         ]
       }
     },
-
     // Reads HTML for usemin blocks to enable smart builds that automatically
     // concat, minify and revision files. Creates configurations in memory so
     // additional tasks can operate on them
@@ -290,7 +338,6 @@ module.exports = function (grunt) {
       },
       html: '<%= config.app %>/index.html'
     },
-
     // Performs rewrites based on rev and the useminPrepare configuration
     usemin: {
       options: {
@@ -304,7 +351,6 @@ module.exports = function (grunt) {
       html: ['<%= config.dist %>/**/*.html'],
       css: ['<%= config.dist %>/styles/{,*/}*.css', '<%= config.dist %>/common/styles/{,*/}*.css']
     },
-
     // The following *-min tasks produce minified files in the dist folder
     imagemin: {
       dist: {
@@ -316,7 +362,6 @@ module.exports = function (grunt) {
         }]
       }
     },
-
     svgmin: {
       dist: {
         files: [{
@@ -327,7 +372,6 @@ module.exports = function (grunt) {
         }]
       }
     },
-
     htmlmin: {
       dist: {
         options: {
@@ -350,7 +394,24 @@ module.exports = function (grunt) {
         }]
       }
     },
-
+    cssmin: {
+      options: {
+        processImport: false
+      }
+    },
+    uglify: {
+      //options : {
+      //  sourceMap: true,
+      //  sourceMapIncludeSources: true
+      //},
+      dist: {
+        files: [{
+          expand: true,
+          src: ['<%= config.dist %>/common/js/*.js', '!<%= config.dist %>/common/js/*.min.js'],
+          cwd: '.'
+        }]
+      }
+    },
     // By default, your `index.html`'s <!-- Usemin block --> will take care
     // of minification. These next options are pre-configured if you do not
     // wish to use the Usemin blocks.
@@ -388,16 +449,25 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             'images/{,*/}*.webp',
-            '**/*.html',
             'fonts/{,*/}*.*',
             'styles/{,*/}*.css',
             'common/styles/{,*/}*.css',
+            'common/styles/patterns/{,*/}*',
             'common/img/{,*/}*',
             'common/fonts/{,*/}*',
-            'common/js//plugins/{,*/}*',
-            'scripts/magiczoomplus.js'
+            'common/js/plugins/{,*/}*',
+            'common/views/*.html',
+            '*.html'
           ]
-        },{
+        }, {
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>/modules',
+          dest: '<%= config.dist %>/views',
+          src: [
+            '**/*.html'
+          ]
+        }, {
           expand: true,
           dot: true,
           cwd: '.tmp/concat',
@@ -417,17 +487,10 @@ module.exports = function (grunt) {
           flatten: true,
           filter: 'isFile',
           src: 'bower_components/font-awesome/fonts/*',
-          dest: '<%= config.dist %>/fonts/'
-        }]
-      },
-      index: {
-        files: [{
-          src: '<%= config.dist %>/index.html',
-          dest: '<%= config.dist %>/index.phtml'
+          dest: '<%= config.dist %>/common/fonts/'
         }]
       }
     },
-
     // Generates a custom Modernizr build that includes only the tests you
     // reference in your app
     modernizr: {
@@ -445,7 +508,6 @@ module.exports = function (grunt) {
         uglify: true
       }
     },
-
     // Run some tasks in parallel to speed up build process
     concurrent: {
       server: [
@@ -462,7 +524,6 @@ module.exports = function (grunt) {
         'svgmin'
       ]
     },
-
     'ftp_upload': {
       'build-public': {
         auth: {
@@ -485,7 +546,6 @@ module.exports = function (grunt) {
         dest: '/module/Application/view/layout'
       }
     },
-
     http: {
       'clear-cache': {
         options: {
@@ -498,7 +558,6 @@ module.exports = function (grunt) {
         }
       }
     },
-
     wait: {
       wait: {
         options: {
@@ -506,7 +565,6 @@ module.exports = function (grunt) {
         }
       }
     },
-
     appcache: {
       options: {
         // appcache is always for the distrib version not for development
@@ -532,17 +590,16 @@ module.exports = function (grunt) {
         //fallback: '/ /offline.html'
       }
     },
-    
     includeSource: {
       options: {
         basePath: 'app',
         baseUrl: '/',
         ordering: 'top-down',
-        rename: function(dest, matchedSrcPath, options) {
-          if(matchedSrcPath.indexOf('.scss') === -1)
-            return dest+matchedSrcPath;
+        rename: function (dest, matchedSrcPath, options) {
+          if (matchedSrcPath.indexOf('.scss') === -1)
+            return dest + matchedSrcPath;
           else
-            return dest+matchedSrcPath.replace('.scss', '.css');
+            return dest + matchedSrcPath.replace('.scss', '.css');
         }
       },
       myTarget: {
@@ -559,7 +616,7 @@ module.exports = function (grunt) {
   grunt.registerTask('serve', 'start the server and preview your app', function (target) {
 
     if (target === 'dist') {
-      return grunt.task.run(['build', 'browserSync:dist']);
+      return grunt.task.run(['browserSync:dist']);
     }
 
     grunt.task.run([
@@ -601,8 +658,8 @@ module.exports = function (grunt) {
     'postcss',
     'concat',
     'cssmin',
-    //'uglify',
     'copy:dist',
+    'uglify',
     //'modernizr',
     'filerev',
     'usemin',

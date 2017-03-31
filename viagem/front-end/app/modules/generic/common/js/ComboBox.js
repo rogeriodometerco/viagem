@@ -3,56 +3,49 @@
 
 angular.module('Generic')
   .directive('comboBox', ['$uibModal', '$timeout', 'EVENTS', function($uibModal, $timeout, EVENTS){
+    function reference(attr, index, arrayPath){
+      if(index === arrayPath.length-2){
+        return attr[arrayPath[index]];
+      }else if(arrayPath.length == 1){
+        return attr;
+      }else{
+        if(attr[index] !== undefined){
+          return reference(attr, index+1);
+        }
+      }
+    }
+
     return {
       restrict: 'E',
       templateUrl: function(el, attrs){
         return 'select.html';
       },
-      /*scope: {
-        ngModel: "=",
-        displayField: "@",
-        searchField: "@",
-        validator: "@",
-        disabled: "@"
-      },*/
       link: function(scope, el, attrs){
         var hidden          = jQuery(el[0].children[0].children[1]),
-            button          = jQuery(el[0].children[0].children[2]),
-            modalInstance   = null,
-            divModel        = [],
-            modelAux        = {};
+          button          = jQuery(el[0].children[0].children[2]),
+          modalInstance   = null,
+          divModel        = [],
+          modelAux        = {};
 
         scope.displayField = attrs.displayField;
         scope.searchField = attrs.searchField;
         scope.validator = attrs.validator;
-        scope.disabled = attrs.disabled;
         scope.selectButton = attrs.selectButton == "false" ? false : true;
-        scope.$parent[attrs.name] = scope;
+        scope.$parent[attrs.name] = scope
         scope.autoLoad = attrs.autoLoad == "false" ? false : true;
-        scope.remoteFilter = attrs.remoteFilter == "false" ? false : true;
-
-        function reference(attr, index){
-          if(index === divModel.length-2){
-            return attr[divModel[index]];
-          }else if(divModel.length == 1){
-            return attr;
-          }else{
-            if(attr[index] !== undefined){
-              return reference(attr, index+1);
-            }
-          }
-        }
+        scope.ngChange = attrs.ngChange;
+        scope.disabled = scope.$eval(attrs.ngDisabled);
 
         scope.setModel = function(model){
           if(attrs.ngModel !== undefined){
-            modelAux = reference(scope.$parent, 0);
+            modelAux = reference(scope.$parent, 0, divModel);
             if(modelAux)
               modelAux[divModel[divModel.length-1]] = model;
           }
         }
         if(attrs.ngModel !== undefined){
           divModel = attrs.ngModel.split(".");
-          modelAux = reference(scope.$parent, 0);
+          modelAux = reference(scope.$parent, 0, divModel);
           if(modelAux)
             scope.select(modelAux[divModel[divModel.length-1]]);
         }
@@ -66,49 +59,49 @@ angular.module('Generic')
         }, 100);
 
         button.click(function(e){
-            e.preventDefault();
+          e.preventDefault();
 
-            if(!scope.disabled){
+          if(!scope.disabled){
 
-              try{
+            try{
 
-                var scopeModal = scope.$new();
+              var scopeModal = scope.$new();
 
-                scopeModal.multiSelect = false;
-                scopeModal.selections = [];
-                modalInstance = $uibModal.open({
-                  templateUrl: "modules/"+scope.templates.list,
-                  windowTemplateUrl: 'windowSelect.html',
-                  controller: attrs.ngController,
-                  scope: scopeModal,
-                  size: 'lg'
-                });
-                scopeModal.$on(EVENTS.gridready, function(e, scopeM){
-                  scopeM.manager.filter(scope.manager.$filter);
-                });
-                scopeModal.select = function(){
-                  modalInstance.close(scopeModal.selections);
-                };
-                scopeModal.cancel = function(){
-                  modalInstance.dismiss("cancel");
-                };
+              scopeModal.multiSelect = false;
+              scopeModal.selections = [];
+              modalInstance = $uibModal.open({
+                templateUrl: "views/"+scope.templates.list,
+                windowTemplateUrl: 'windowSelect.html',
+                controller: attrs.ngController,
+                scope: scopeModal,
+                size: 'lg'
+              });
+              scopeModal.$on(EVENTS.gridready, function(e, scopeM){
+                scopeM.manager.filter(scope.manager.$filter);
+              });
+              scopeModal.select = function(){
+                modalInstance.close(scopeModal.selections);
+              };
+              scopeModal.cancel = function(){
+                modalInstance.dismiss("cancel");
+              };
 
-                modalInstance.result.then((function(result) {
-                  try{
-                    scope.selectModel(result[0]);
-                    scope.addList(result[0]);
-                  }catch(e){
-                    console.log(e);
-                  }
-                }), function(result) {
+              modalInstance.result.then((function(result) {
+                try{
+                  scope.selectModel(result[0]);
+                  scope.addList(result[0]);
+                }catch(e){
+                  console.log(e);
+                }
+              }), function(result) {
 
-                });
+              });
 
-              }catch(e){
-                console.log(e);
-              }
-
+            }catch(e){
+              console.log(e);
             }
+
+          }
 
         });
 
@@ -125,7 +118,30 @@ angular.module('Generic')
             $scope.disabled = false;
         }, 100);
 
+        function triggerChange(){
+          if(angular.isDefined($scope.ngChange) && $scope.ngChange != ''){
+            try{
+              $scope.$eval($scope.ngChange);
+            }catch(e){}
+            try{
+              eval($scope.ngChange);
+            }catch(e){}
+          }
+        }
+
+        function findModel(model){
+          var modelF = $scope.manager.create();
+          modelF.set(model);
+          modelF = $scope.manager.$search(modelF.getPrimaryKey());
+          if(modelF !== null)
+            return modelF;
+          return null;
+        }
+
         $scope.selectModel = function($model){
+          var modelF = findModel($model.convertToObject());
+          if(modelF !== null)
+            $model = modelF;
           $scope.select($model.convertToObject());
           if(this.$select !== undefined)
             this.$select.selected = $model.convertToObject();
@@ -135,6 +151,7 @@ angular.module('Generic')
         $scope.select = function(model){
           $scope.ngModel = model;
           $scope.setModel(model);
+          triggerChange();
         };
         $scope.addList = function(model){
           var has = false;
@@ -164,19 +181,26 @@ angular.module('Generic')
             return;
           }
 
-          if(!$scope.remoteFilter && $scope.array.length > 0){
-            return;
-          }else {
-            if (angular.isDefined($scope.searchField)) {
-              params.data[0] = {
-                field: $scope.searchField,
-                condition: '=%',
-                value: q
-              };
-            }
+          if(angular.isDefined($scope.searchField)){
+            params.data[0] = {
+              field: $scope.searchField,
+              condition: '=%',
+              value: q
+            };
           }
           return $scope.manager.find(params).then(function(response) {
-            $scope.array = response;
+
+            try{
+              var modelA = $scope.manager.create();
+              $scope.array = response;
+              if(angular.isDefined($scope.ngModel) && $scope.ngModel !== null){
+                modelA.set($scope.ngModel)
+                $scope.selectModel(modelA);
+              }
+            }catch(e){
+              console.log(e);
+            }
+
           });
 
         };
@@ -201,7 +225,7 @@ angular.module('Generic')
       "       <div ng-bind-html=\"rs.$data[displayField] | highlight: $select.search\"></div>\r" +
       "   </ui-select-choices>\r" +
       "</ui-select>\r" +
-      "<input type=\"hidden\" ng-model=\"ngModel\" validator=\"[required]\" class=\"form-control\" />\r" +
+      "<input type=\"hidden\" ng-model=\"ngModel\" validator=\"{{validator}}\" class=\"form-control\" />\r" +
       "<button class=\"btn btn-info col-md-3 col-sm-3 col-xs-2\" ng-show=\"selectButton\" style=\"height: 33px\" type=\"button\" ng-disabled=\"disabled\"><span class=\"fa fa-search\"></span><span class=\"hidden-xs hidden-sm hidden-md hidden-lg\">Selecionar</span></button></div>"
     );
 

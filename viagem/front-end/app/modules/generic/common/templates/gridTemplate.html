@@ -1,4 +1,3 @@
-
 <div class="row" ng-show="hasTools">
     <div class="col-xs-12">
         <div class="text-right">
@@ -15,8 +14,8 @@
     </div>
 </div>
 
-<div class="row">    
-    <div ng-if="datetime" ng-include="'gridSearch' + datetime + '.html'"></div>      
+<div class="row">
+    <div ng-if="datetime" ng-include="'gridSearch' + datetime + '.html'"></div>
 </div>
 
 <div class="ngGroupPanel" ng-show="showGroupPanel()" ng-style="groupPanelStyle()">
@@ -43,7 +42,7 @@
 
 <div class="ngViewport" unselectable="on" ng-viewport ng-style="viewportStyle()">
     <div class="ngCanvas" ng-style="canvasStyle()" ng-show="renderedRows.length > 0">
-        <div ng-style="rowStyle(row)" ng-repeat="row in renderedRows" ng-click="row.toggleSelected($event)" ng-class="row.alternatingRowClass()" ng-row>            
+        <div ng-style="rowStyle(row)" ng-repeat="row in renderedRows" ng-click="row.toggleSelected($event)" ng-class="row.alternatingRowClass()" ng-row>
         </div>
     </div>
 
