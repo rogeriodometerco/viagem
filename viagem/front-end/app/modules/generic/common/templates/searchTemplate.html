@@ -1,5 +1,5 @@
 <div class="input-group" ng-if="searchField">
-    <input type="text" name="filterText" class="form-control" ng-model="filter." + $scope.searchField + "" style="height: 25px;"/>
+    <input type="text" name="filterText" class="form-control" ng-model="filter[$scope.searchField]" style="height: 25px;"/>
     <span class="input-group-btn" style="height: 25px;">
         <button ng-click="searchGrid()" class="btn btn-default" style="height: 25px !important; padding-top: 3px !important;">
             <span class="visible-xs fa fa-search"></span>

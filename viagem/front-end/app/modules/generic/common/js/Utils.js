@@ -2,7 +2,7 @@
 "use strict";
 
 angular.extend(angular, function(){
-    
+
   function buildParams(prefix, obj, add) {
     var name, i, l, rbracket;
     rbracket = /\[\]$/;
@@ -24,7 +24,7 @@ angular.extend(angular, function(){
       add(prefix, obj);
     }
   };
-    
+
   return {
     toParam: function (a) {
       var prefix, s, add, name, r20, output;
@@ -48,7 +48,7 @@ angular.extend(angular, function(){
       return output;
     },
     navigateObject: function(object, path){
-      
+
       if(angular.isObject(object) && angular.isString(path)){
         var div = path.split('.');
         for(var i in div){
@@ -59,9 +59,18 @@ angular.extend(angular, function(){
         }
         return object;
       }
-      
+
       return undefined;
-      
+
+    },
+    decodeTOKENJWT: function (token) {
+      var div = token.split('.');
+
+      if (div.length === 3) {
+        return angular.fromJson(atob(div[1]));
+      } else  {
+        return null;
+      }
     }
   };
 }());

@@ -1,13 +1,12 @@
 <form novalidate name="formDetail" class="inmodal">
     <div class="modal-header">
-      <i class="fa fa-globe modal-icon"></i>
-      <h4 class="modal-title" ng-init="addTitle = 'Adicionar Cidade'; editTitle = 'Editar Cidade'">{{title}}</h4>   
+      <i class="fa fa-map-marker modal-icon"></i>
+      <h4 class="modal-title" ng-init="addTitle = 'Adicionar Estabelecimento'; editTitle = 'Editar Estabelecimento'">{{title}}</h4>
     </div>
     <div class="modal-body">
     
       <div class="col-12">
-        <h4>Dados da Cidade</h4>
-        <p class="text-navy">Informe ou altere os dados básicos da cidade</p>
+        <h4>Dados do Estabelecimento</h4>
         <div class="row">
     
           <div class="form-group col-xs-12 col-md-6">
@@ -15,8 +14,8 @@
             <input type="text" id="nome" ng-model="modelEdit.nome" validator="[required]" class="form-control" autofocus />
           </div>
           <div class="form-group col-xs-12">
-            <label>Estado</label>
-            <combo-box class="col-sm-12" ng-model="modelEdit.estado" ng-controller="Localizacao.Controller.Estado" display-field="nome" search-field="nome" remote-filter="false" />
+            <label>Cidade</label>
+            <combo-box class="col-sm-12" ng-model="modelEdit.cidade" ng-controller="Localizacao.Controller.Cidade" display-field="nome" search-field="nome" auto-load="false" />
           </div>
         </div>
       </div>

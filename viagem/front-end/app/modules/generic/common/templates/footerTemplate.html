@@ -10,40 +10,53 @@
         </div>-->
     </div>
 
-    <div class="ngPagerContainer col-md-7 col-sm-12 col-xs-12" style="margin-top: 10px;" ng-show="enablePaging" ng-class="{
+    <div class="ngPagerContainer col-md-7 col-sm-12 col-xs-12" style="margin-top: 10px" ng-show="enablePaging" ng-class="{
             'ngNoMultiSelect': !multiSelect}">
         <div class="ngPagerControl">
             <span class="ngLabel hidden-xs">{{i18n.ngPageSizeLabel}}</span>
 
             <div class="btn-group">
-                <select class="btn btn-default hidden-xs" style="float: left;height: 27px; width: 100px" ng-model="pagingOptions.pageSize" >
-                    <option ng-repeat="size in pagingOptions.pageSizes" >{{size}}</option>
+                <select class="btn btn-default hidden-xs" style="float: left;width: 100px; padding: 5px 5px 6px 5px !important" ng-model="pagingOptions.pageSize" >
+                    <option ng-repeat="size in pagingOptions.pageSizes" ng-value="size" >{{size}}</option>
                 </select>
 
                 <div ng-if="maxPages() > 1" class="btn-group">
-                    <button type="button" class="btn btn-default" ng-click="pageToFirst()" ng-disabled="cantPageBackward()" title="{{i18n.ngPagerFirstTitle}}"><div class="ngPagerFirstTriangle"><div class="ngPagerFirstBar"></div></div></button>
-                    <button type="button" class="btn btn-default" ng-click="pageBackward()" ng-disabled="cantPageBackward()" title="{{i18n.ngPagerPrevTitle}}"><div class="ngPagerFirstTriangle ngPagerPrevTriangle"></div></button>
-                    <input class="btn btn-default hidden-xs" min="1" max="{{currentMaxPages}}" type="number" style="width:50px; height: 27px; padding: 0 4px;" ng-model="pagingOptions.currentPage"/>
-                    <input class="btn hidden-xs" ng-class="{'btn-default' : maxPages() <= 1, 'btn-primary': maxPages() > 1}" ng-show="maxPages() > 0" ng-disabled="true" value="/ {{maxPages()}}" type="text" style="width:50px; height: 27px; padding: 0 4px;"/>
-                    <button type="button" class="btn btn-default" ng-click="pageForward()" ng-disabled="cantPageForward()" title="{{i18n.ngPagerNextTitle}}"><div class="ngPagerLastTriangle ngPagerNextTriangle"></div></button>
-                    <button type="button" class="btn btn-default" ng-click="pageToLast()" ng-disabled="cantPageToLast()" title="{{i18n.ngPagerLastTitle}}"><div class="ngPagerLastTriangle"><div class="ngPagerLastBar"></div></div></button>
+                    <button type="button" class="btn btn-default" ng-click="pageToFirst()" ng-disabled="cantPageBackward()" title="{{i18n.ngPagerFirstTitle}}">
+                        <i class="fa fa-angle-double-left"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-default" ng-click="pageBackward()" ng-disabled="cantPageBackward()" title="{{i18n.ngPagerPrevTitle}}">
+                        <i class="fa fa-angle-left"></i>
+                    </button>
+
+                    <input class="btn btn-default hidden-xs" min="1" max="{{currentMaxPages}}" type="number" ng-model="pagingOptions.currentPage" style="max-width: 70px !important"/>
+
+                    <input class="btn hidden-xs" ng-class="{'btn-default' : maxPages() <= 1, 'btn-primary': maxPages() > 1}" ng-show="maxPages() > 0" ng-disabled="true" value="/ {{maxPages()}}" type="text" style="max-width: 70px !important"/>
+
+                    <button type="button" class="btn btn-default" ng-click="pageForward()" ng-disabled="cantPageForward()" title="{{i18n.ngPagerNextTitle}}">
+                        <i class="fa fa-angle-right"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-default" ng-click="pageToLast()" ng-disabled="cantPageToLast()" title="{{i18n.ngPagerLastTitle}}">
+                        <i class="fa fa-angle-double-right"></i>
+                    </button>
                 </div>
             </div>
 
             <div class="btn-group hidden-sm hidden-md hidden-lg">
-                <input class="btn btn-default" 
+                <input class="btn btn-default"
                        min="1"
-                       max="{{currentMaxPages}}" 
-                       type="number" 
-                       style="width:50px; height: 27px; padding: 0 4px;" 
+                       max="{{currentMaxPages}}"
+                       type="number"
+                       style="width:50px; height: 27px; padding: 0 4px;"
                        ng-model="pagingOptions.currentPage"/>
 
-                <input class="btn" 
-                       ng-class="{'btn-default': maxPages() <= 1, 'btn-primary': maxPages() > 1}" 
-                       ng-show="maxPages() > 0" 
-                       ng-disabled="true" 
-                       value="/ {{maxPages()}}" 
-                       type="text" 
+                <input class="btn"
+                       ng-class="{'btn-default': maxPages() <= 1, 'btn-primary': maxPages() > 1}"
+                       ng-show="maxPages() > 0"
+                       ng-disabled="true"
+                       value="/ {{maxPages()}}"
+                       type="text"
                        style="width:50px; height: 27px; padding: 0 4px;"/>
             </div>
         </div>
