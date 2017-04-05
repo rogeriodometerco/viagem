@@ -25,10 +25,13 @@ import com.google.gson.GsonBuilder;
 import dto.Listagem;
 import modelo.Conta;
 import modelo.DemandaTransporte;
+import modelo.Endereco;
 import modelo.Estabelecimento;
 import modelo.Municipio;
+import modelo.Produto;
 import modelo.TransportadorDemandaAutorizado;
 import modelo.UF;
+import modelo.UnidadeQuantidade;
 import servico.DemandaTransporteService;
 import util.Ejb;
 
@@ -222,7 +225,13 @@ public class DemandaTransporteRest {
 								&& (
 										field.getName().equals("id")
 										|| field.getName().equals("nome")
-										|| field.getName().equals("municipio")
+										|| field.getName().equals("endereco")
+										)
+								|| field.getDeclaringClass().equals(Endereco.class)
+								&& (
+										field.getName().equals("municipio")
+										|| field.getName().equals("latitude")
+										|| field.getName().equals("longitude")
 										)
 								|| field.getDeclaringClass().equals(Municipio.class)
 								&& (
@@ -233,7 +242,15 @@ public class DemandaTransporteRest {
 								&& (
 										field.getName().equals("abreviatura")
 										)
-
+								|| field.getDeclaringClass().equals(Produto.class)
+								&& (
+										field.getName().equals("id")
+										|| field.getName().equals("nome")
+										)
+								|| field.getDeclaringClass().equals(UnidadeQuantidade.class)
+								&& (
+										field.getName().equals("abreviacao")
+										)
 								|| field.getDeclaringClass().equals(Conta.class)
 								&& (
 										field.getName().equals("id") 

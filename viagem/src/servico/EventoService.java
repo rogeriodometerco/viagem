@@ -1,6 +1,7 @@
 package servico;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -14,7 +15,9 @@ import modelo.EventoAceiteViagem;
 import modelo.EventoChegada;
 import modelo.EventoCriacaoViagem;
 import modelo.EventoInicioViagem;
+import modelo.EventoLocalizacao;
 import modelo.EventoPrevisaoChegada;
+import modelo.EventoRecusaViagem;
 import modelo.EventoSaida;
 import modelo.EventoTerminoOperacao;
 import modelo.EventoTerminoViagem;
@@ -26,9 +29,13 @@ public class EventoService {
 	private EventoDao eventoDao;
 	
 	@EJB
+	private ProcessadorEventoLocalizacao processadorEventoLocalizacao;
+	@EJB
 	private ProcessadorEventoCriacaoViagem processadorEventoCriacaoViagem;
 	@EJB
 	private ProcessadorEventoAceiteViagem processadorEventoAceiteViagem;
+	@EJB
+	private ProcessadorEventoRecusaViagem processadorEventoRecusaViagem;
 	@EJB
 	private ProcessadorEventoInicioViagem processadorEventoInicioViagem;
 	@EJB
@@ -48,8 +55,10 @@ public class EventoService {
 	private void inicializar() {
 		
 		processadores = new HashMap<Object, ProcessadorEvento>();
+		processadores.put(EventoLocalizacao.class, processadorEventoLocalizacao);
 		processadores.put(EventoCriacaoViagem.class, processadorEventoCriacaoViagem);
 		processadores.put(EventoAceiteViagem.class, processadorEventoAceiteViagem);
+		processadores.put(EventoRecusaViagem.class, processadorEventoRecusaViagem);
 		processadores.put(EventoInicioViagem.class, processadorEventoInicioViagem);
 		processadores.put(EventoPrevisaoChegada.class, processadorEventoPrevisaoChegada);
 		processadores.put(EventoChegada.class, processadorEventoChegada);
@@ -65,6 +74,16 @@ public class EventoService {
 		} catch (Exception e) {
 			throw new AppException("Erro ao registrar evento: " + e.getMessage());
 		}
+	}
+	
+	public List<Evento> listar() throws AppException {
+		List<Evento> result = null;
+		try {
+			result = eventoDao.listar();
+		} catch (Exception e) {
+			throw new AppException("Erro ao listar eventos: " + e.getMessage());
+		}
+		return result;
 	}
 	
 }

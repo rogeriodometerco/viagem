@@ -37,7 +37,7 @@ public class EstabelecimentoService {
 		if (estabelecimento.getNome() == null || estabelecimento.getNome().trim().length() == 0) {
 			erros.add("Nome do estabelecimento é obrigatório");
 		}
-		if (estabelecimento.getMunicipio() == null) {
+		if (estabelecimento.getEndereco() == null || estabelecimento.getEndereco().getMunicipio() == null) {
 			erros.add("Município do estabelecimento é obrigatório");
 		}
 		return erros;

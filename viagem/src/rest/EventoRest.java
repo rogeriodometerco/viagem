@@ -28,23 +28,16 @@ import dao.DispositivoDao;
 import dao.LocalizacaoDao;
 import dao.MotoristaDao;
 import dto.Listagem;
-import modelo.Conta;
 import modelo.Dispositivo;
-import modelo.Endereco;
 import modelo.Evento;
 import modelo.Localizacao;
 import modelo.Motorista;
-import modelo.Municipio;
-import modelo.Produto;
-import modelo.TransportadorDemandaAutorizado;
-import modelo.UF;
-import modelo.UnidadeQuantidade;
 import modelo.Viagem;
 import servico.EventoService;
 import util.Ejb;
 
-@Path("/mobile/evento")
-public class MobileRest {
+@Path("/evento")
+public class EventoRest {
 
 	//private LocalizacaoService localizacaoService;
 	private LocalizacaoDao localizacaoDao; // para testar funcionalidades que n�o estar�o no service.
@@ -52,13 +45,63 @@ public class MobileRest {
 	private DispositivoDao dispositivoDao; // para testar funcionalidades que n�o estar�o no service.
 	private EventoService eventoService;
 
-	public MobileRest() {
+	public EventoRest() {
 		//localizacaoService = Ejb.lookup(LocalizacaoService.class);
 		localizacaoDao = Ejb.lookup(LocalizacaoDao.class);
 		motoristaDao = Ejb.lookup(MotoristaDao.class);
 		dispositivoDao = Ejb.lookup(DispositivoDao.class);
 		eventoService = Ejb.lookup(EventoService.class);
 	}
+
+	/*
+	{
+		eventos: [
+			{
+				"tipo" : "LOCALIZACAO",
+				"dados" : {
+					"dataHoraRegistro": "21/03/2017 17:22",
+					"localizacao": {
+						"dispositivo": {
+							"id": "9944903"
+						},
+						"motorista": {
+							"id": "3339"
+						},
+						"dataHora": "21/03/2017 17:22",
+						"latitude": "-24.5050",
+						"longitude": "-52.230291",
+						"velocidade": "63"
+					}
+				}
+			},
+			{
+				"tipo" : "ACEITE_VIAGEM",
+				"dados" : {
+					"dataHoraRegistro": "21/03/2017 17:22",
+					"localizacao": {
+						"dispositivo": {
+							"id": "9944903"
+						},
+						"motorista": {
+							"id": "3339"
+						},
+						"dataHora": "21/03/2017 17:22",
+						"latitude": "-24.5050",
+						"longitude": "-52.230291",
+						"velocidade": "63"
+					},
+					"viagem": {
+						"id": "9494"
+					},
+					"dataHoraAceite": "31/03/2017 07:22"
+					
+				}
+			}
+		]
+	
+	}
+	 */
+
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)

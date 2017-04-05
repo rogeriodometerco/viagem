@@ -31,11 +31,13 @@ public class Entrega {
 	@OneToMany(mappedBy="entrega", fetch=FetchType.EAGER)
 	private Set<EtapaEntrega> etapas;
 	
-	private String produto;
+	@ManyToOne
+	private Produto produto;
 	
 	private Integer quantidade;
 	
-	private String unidadeQuantidade;
+	@ManyToOne
+	private UnidadeQuantidade unidadeQuantidade;
 	
 	private StatusEntrega status;
 	
@@ -65,11 +67,11 @@ public class Entrega {
 		this.destino = destino;
 	}
 
-	public String getProduto() {
+	public Produto getProduto() {
 		return produto;
 	}
 
-	public void setProduto(String produto) {
+	public void setProduto(Produto produto) {
 		this.produto = produto;
 	}
 
@@ -81,11 +83,11 @@ public class Entrega {
 		this.quantidade = quantidade;
 	}
 
-	public String getUnidadeQuantidade() {
+	public UnidadeQuantidade getUnidadeQuantidade() {
 		return unidadeQuantidade;
 	}
 
-	public void setUnidadeQuantidade(String unidadeQuantidade) {
+	public void setUnidadeQuantidade(UnidadeQuantidade unidadeQuantidade) {
 		this.unidadeQuantidade = unidadeQuantidade;
 	}
 

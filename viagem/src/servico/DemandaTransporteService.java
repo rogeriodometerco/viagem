@@ -154,14 +154,14 @@ public class DemandaTransporteService {
 		if (demandaTransporte.getDestino() == null) {
 			erros.add("Destino da demanda de transporte deve ser informado");
 		}
-		if (demandaTransporte.getProduto() == null || demandaTransporte.getProduto().trim().length() < 3) {
-			erros.add("Produto da demanda de transporte deve ter no m�nimo 3 caracteres");
+		if (demandaTransporte.getProduto() == null) {
+			erros.add("Produto da demanda de transporte deve ser informado");
 		}
 		if (demandaTransporte.getQuantidade() == null || demandaTransporte.getQuantidade() <= 0) {
 			erros.add("Quantidade de produto da demanda de transporte deve ser informada e maior que zero");
 		}
 		if (demandaTransporte.getUnidadeQuantidade() == null 
-				|| demandaTransporte.getUnidadeQuantidade().trim().length() == 0) {
+				|| demandaTransporte.getUnidadeQuantidade().getId() == null) {
 			erros.add("Unidade de quantidade de produto da demanda de transporte deve ser informada");
 		}
 		if (demandaTransporte.getTransportadores() == null || demandaTransporte.getTransportadores().isEmpty()) {

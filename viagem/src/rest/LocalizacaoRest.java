@@ -14,17 +14,16 @@ import javax.ws.rs.core.Response;
 
 import dao.LocalizacaoDao;
 import modelo.Localizacao;
-import servico.LocalizacaoService;
 import util.Ejb;
 
 @Path("/localizacao")
 public class LocalizacaoRest {
 
-	private LocalizacaoService localizacaoService;
-	private LocalizacaoDao localizacaoDao; // para testar funcionalidades que não estarão no service.
+	//private LocalizacaoService localizacaoService;
+	private LocalizacaoDao localizacaoDao; // para testar funcionalidades que nï¿½o estarï¿½o no service.
 
 	public LocalizacaoRest() {
-		localizacaoService = Ejb.lookup(LocalizacaoService.class);
+	//	localizacaoService = Ejb.lookup(LocalizacaoService.class);
 		localizacaoDao = Ejb.lookup(LocalizacaoDao.class);
 	}
 	
@@ -35,8 +34,9 @@ public class LocalizacaoRest {
 			Localizacao localizacao) throws Exception {
 		return Response.ok()
 				.entity(
-						localizacaoService
-						.registrar(localizacao))
+						localizacao)
+					//	localizacaoService
+					//	.registrar(localizacao))
 				.build();
 	}
 

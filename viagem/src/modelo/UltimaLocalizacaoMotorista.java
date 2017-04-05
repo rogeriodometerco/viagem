@@ -8,17 +8,20 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Localizacao {
+public class UltimaLocalizacaoMotorista {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 	
 	@ManyToOne
-	private Dispositivo dispositivo;
+	private Conta motorista;
 	
 	@ManyToOne
-	private Conta motorista;
+	private Veiculo veiculo;
+	
+	@ManyToOne
+	private Dispositivo dispositivo;
 	
 	private Date dataHora;
 	
@@ -36,20 +39,28 @@ public class Localizacao {
 		this.id = id;
 	}
 
-	public Dispositivo getDispositivo() {
-		return dispositivo;
-	}
-
-	public void setDispositivo(Dispositivo dispositivo) {
-		this.dispositivo = dispositivo;
-	}
-
 	public Conta getMotorista() {
 		return motorista;
 	}
 
 	public void setMotorista(Conta motorista) {
 		this.motorista = motorista;
+	}
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+	public Dispositivo getDispositivo() {
+		return dispositivo;
+	}
+
+	public void setDispositivo(Dispositivo dispositivo) {
+		this.dispositivo = dispositivo;
 	}
 
 	public Date getDataHora() {
@@ -83,4 +94,5 @@ public class Localizacao {
 	public void setVelocidade(Double velocidade) {
 		this.velocidade = velocidade;
 	}
+
 }

@@ -19,34 +19,30 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import dto.Listagem;
-import modelo.Endereco;
-import modelo.Estabelecimento;
-import modelo.Municipio;
-import modelo.UF;
-import servico.EstabelecimentoService;
+import modelo.TipoCarroceria;
+import servico.TipoCarroceriaService;
 import util.Ejb;
 
-@Path("/estabelecimento")
-public class EstabelecimentoRest {
+@Path("/tipoCarroceria")
+public class TipoCarroceriaRest {
 
-	private EstabelecimentoService estabelecimentoService;
+	private TipoCarroceriaService tipoCarroceriaService;
 
-	public EstabelecimentoRest() {
-		estabelecimentoService = Ejb.lookup(EstabelecimentoService.class);
+	public TipoCarroceriaRest() {
+		tipoCarroceriaService = Ejb.lookup(TipoCarroceriaService.class);
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response salvar(@Context HttpServletRequest httpServletRequest, 
-			Estabelecimento estabelecimento) throws Exception {
+			TipoCarroceria tipoCarroceria) throws Exception {
 
 		try {
 			return Response.ok()
 					.entity(
 							toJson(
-									//new Gson().toJson(toJsonObjectDetalhado(
-									estabelecimentoService.salvar(estabelecimento)))
+									tipoCarroceriaService.salvar(tipoCarroceria)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -62,20 +58,19 @@ public class EstabelecimentoRest {
 			@QueryParam("t") @DefaultValue("10") int tamanhoPagina, 
 			@QueryParam("q") String iniciandoPor)  throws Exception {
 
-		Listagem<Estabelecimento> listagem = null;
+		Listagem<TipoCarroceria> listagem = null;
 		try {
 			// Sem critério de pesquisa.
 			if (iniciandoPor == null || iniciandoPor.trim().equals("")) {
-				listagem  = estabelecimentoService.listarOrdenadoPorNome(pagina, tamanhoPagina);
+				listagem  = tipoCarroceriaService.listarOrdenadoPorNome(pagina, tamanhoPagina);
 
 				// Com critério de pesquisa.
 			} else {
-				listagem  = estabelecimentoService.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor);
+				listagem  = tipoCarroceriaService.listarPorNomeOrdenadoPorNome(pagina, tamanhoPagina, iniciandoPor);
 			}
 			return Response.ok()
 					.entity(
 							toJson(listagem))
-					//new Gson().toJson(toJsonObject(listagem)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -92,8 +87,7 @@ public class EstabelecimentoRest {
 			return Response.ok()
 					.entity(
 							toJson(
-									//new Gson().toJson(toJsonObjectDetalhado(
-									estabelecimentoService.recuperar(id)))
+									tipoCarroceriaService.recuperar(id)))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -111,31 +105,10 @@ public class EstabelecimentoRest {
 						boolean serializar =
 								field.getDeclaringClass().equals(Listagem.class)
 								||
-								field.getDeclaringClass().equals(Estabelecimento.class)
+								field.getDeclaringClass().equals(TipoCarroceria.class)
 								&& (
 										field.getName().equals("id")
 										|| field.getName().equals("nome")
-										|| field.getName().equals("endereco")
-										)
-								|| field.getDeclaringClass().equals(Endereco.class)
-								&& (
-										field.getName().equals("logradouro")
-										|| field.getName().equals("bairro")
-										|| field.getName().equals("municipio")
-										|| field.getName().equals("complemento")
-										|| field.getName().equals("latitude")
-										|| field.getName().equals("longitude")
-										)
-								|| field.getDeclaringClass().equals(Municipio.class)
-								&& (
-										field.getName().equals("id")
-										|| field.getName().equals("nome")
-										|| field.getName().equals("uf")
-										)
-								|| field.getDeclaringClass().equals(UF.class)
-								&& (
-										field.getName().equals("nome")
-										|| field.getName().equals("abreviatura")
 										);
 						return !serializar;
 

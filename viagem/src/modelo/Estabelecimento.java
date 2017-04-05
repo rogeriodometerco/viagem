@@ -1,9 +1,9 @@
 package modelo;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Estabelecimento {
@@ -14,8 +14,13 @@ public class Estabelecimento {
 	
 	private String nome;
 	
+	/*
 	@ManyToOne
 	private Municipio municipio;
+	*/
+	
+	@Embedded
+	private Endereco endereco;
 	
 	public Long getId() {
 		return id;
@@ -33,6 +38,16 @@ public class Estabelecimento {
 		this.nome = nome;
 	}
 
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
+	
+	/*
 	public Municipio getMunicipio() {
 		return municipio;
 	}
@@ -40,6 +55,7 @@ public class Estabelecimento {
 	public void setMunicipio(Municipio municipio) {
 		this.municipio = municipio;
 	}
+	*/
 
 
 }

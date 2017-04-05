@@ -1,12 +1,14 @@
 package modelo;
 
 import java.util.Date;
+
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -17,6 +19,9 @@ public abstract class Evento {
 	private Long id;
 	
 	private Date dataHoraRegistro;
+	
+	@OneToOne
+	private Localizacao localizacao;
 
 	public Long getId() {
 		return id;
@@ -32,6 +37,14 @@ public abstract class Evento {
 
 	public void setDataHoraRegistro(Date dataHoraRegistro) {
 		this.dataHoraRegistro = dataHoraRegistro;
+	}
+
+	public Localizacao getLocalizacao() {
+		return localizacao;
+	}
+
+	public void setLocalizacao(Localizacao localizacao) {
+		this.localizacao = localizacao;
 	}
 }
 

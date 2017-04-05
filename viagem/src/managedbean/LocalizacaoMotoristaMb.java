@@ -11,19 +11,19 @@ import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 
-import modelo.LocalizacaoMotorista;
-import servico.LocalizacaoMotoristaService;
+import modelo.UltimaLocalizacaoMotorista;
+import servico.UltimaLocalizacaoMotoristaService;
 
 @ManagedBean
 @ViewScoped
 public class LocalizacaoMotoristaMb {
 
 	@EJB
-	private LocalizacaoMotoristaService localizacaoMotoristaService;
+	private UltimaLocalizacaoMotoristaService ultimaLocalizacaoMotoristaService;
 	private MapModel mapModel;
-	private List<LocalizacaoMotorista> localizacoes;
+	private List<UltimaLocalizacaoMotorista> localizacoes;
 
-	public List<LocalizacaoMotorista> getLocalizacoes() throws Exception {
+	public List<UltimaLocalizacaoMotorista> getLocalizacoes() throws Exception {
 		return localizacoes;
 	}
 
@@ -31,7 +31,7 @@ public class LocalizacaoMotoristaMb {
 		return "rogerio";
 	}
 	public void listar() throws Exception {
-		localizacoes = localizacaoMotoristaService.listar();
+		localizacoes = ultimaLocalizacaoMotoristaService.listar();
 	}
 
 	public MapModel getMapModel() {
@@ -40,8 +40,8 @@ public class LocalizacaoMotoristaMb {
 		}
 		if (localizacoes != null) {
 			mapModel.getMarkers().clear();
-			for (LocalizacaoMotorista localizacao: localizacoes) {
-				LatLng latLng = new LatLng(localizacao.getLat(), localizacao.getLng());
+			for (UltimaLocalizacaoMotorista localizacao: localizacoes) {
+				LatLng latLng = new LatLng(localizacao.getLatitude(), localizacao.getLongitude());
 				mapModel.addOverlay(new Marker(latLng, localizacao.getMotorista().getNome()));
 			}
 		}

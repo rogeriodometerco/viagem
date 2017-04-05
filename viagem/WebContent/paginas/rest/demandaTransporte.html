@@ -18,7 +18,9 @@
 				"destino": {
 					"id": $("#destino").val()
 				},
-				"produto": $("#produto").val(),
+				"produto": {
+					"id" : $("#produto").val()
+				},
 				"quantidade": $("#quantidade").val(),
 				"unidadeQuantidade": $("#unidadeQuantidade").val(),
 				"transportadores": [
@@ -137,7 +139,7 @@
 					$("#id").val(data.id);
 					$("#origem").val(data.origem.id);
 					$("#destino").val(data.destino.id);
-					$("#produto").val(data.produto);
+					$("#produto").val(data.produto.id);
 					$("#quantidade").val(data.quantidade);
 					$("#unidadeQuantidade").val(data.unidadeQuantidade);
 					$("#retorno").html(x.responseText);

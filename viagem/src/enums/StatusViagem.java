@@ -5,5 +5,6 @@ public enum StatusViagem {
 	ACEITA,
 	INICIADA,
 	CONCLUIDA,
-	ABORTADA
+	ABORTADA,
+	RECUSADA
 }

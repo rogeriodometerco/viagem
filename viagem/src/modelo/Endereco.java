@@ -1,12 +1,14 @@
 package modelo;
 
 import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
 
 @Embeddable
 public class Endereco {
 
 	private String logradouro;
 	private String bairro;
+	@ManyToOne
 	private Municipio municipio;
 	private String complemento;
 	private Double latitude;

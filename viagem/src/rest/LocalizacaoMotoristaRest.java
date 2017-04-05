@@ -12,31 +12,31 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import dao.LocalizacaoMotoristaDao;
-import modelo.LocalizacaoMotorista;
-import servico.LocalizacaoMotoristaService;
+import dao.UltimaLocalizacaoMotoristaDao;
+import modelo.UltimaLocalizacaoMotorista;
+import servico.UltimaLocalizacaoMotoristaService;
 import util.Ejb;
 
 @Path("/localizacaoMotorista")
 public class LocalizacaoMotoristaRest {
 
-	private LocalizacaoMotoristaService localizacaoMotoristaService;
-	private LocalizacaoMotoristaDao localizacaoMotoristaDao; // para testar funcionalidades que não estarão no service.
+	private UltimaLocalizacaoMotoristaService ultimaLocalizacaoMotoristaService;
+	private UltimaLocalizacaoMotoristaDao ultimaLocalizacaoMotoristaDao; // para testar funcionalidades que nï¿½o estarï¿½o no service.
 
 	public LocalizacaoMotoristaRest() {
-		localizacaoMotoristaService = Ejb.lookup(LocalizacaoMotoristaService.class);
-		localizacaoMotoristaDao = Ejb.lookup(LocalizacaoMotoristaDao.class);
+		ultimaLocalizacaoMotoristaService = Ejb.lookup(UltimaLocalizacaoMotoristaService.class);
+		ultimaLocalizacaoMotoristaDao = Ejb.lookup(UltimaLocalizacaoMotoristaDao.class);
 	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response salvar(@Context HttpServletRequest httpServletRequest, 
-			LocalizacaoMotorista localizacaoMotorista) throws Exception {
+			UltimaLocalizacaoMotorista ultimaLocalizacaoMotorista) throws Exception {
 		return Response.ok()
 				.entity(
-						localizacaoMotoristaDao
-						.salvar(localizacaoMotorista))
+						ultimaLocalizacaoMotoristaDao
+						.salvar(ultimaLocalizacaoMotorista))
 				.build();
 	}
 
@@ -45,7 +45,7 @@ public class LocalizacaoMotoristaRest {
 	public Response listar()  throws Exception {
 		return Response.ok()
 				.entity(
-						localizacaoMotoristaDao.listar())
+						ultimaLocalizacaoMotoristaDao.listar())
 				.build();
 	}
 	
@@ -55,15 +55,15 @@ public class LocalizacaoMotoristaRest {
 	public Response recuperar(@PathParam("id") Long id) throws Exception{
 		return Response.ok()
 				.entity(
-						localizacaoMotoristaDao.recuperar(id))
+						ultimaLocalizacaoMotoristaDao.recuperar(id))
 				.build();
 	}
 
 	@DELETE
 	@Path("/{id}")
 	public Response excluir(@PathParam("id") Long id) throws Exception {
-		localizacaoMotoristaDao.excluir(
-				localizacaoMotoristaDao.recuperar(id));
+		ultimaLocalizacaoMotoristaDao.excluir(
+				ultimaLocalizacaoMotoristaDao.recuperar(id));
 		return Response.ok()
 				.build();
 	}

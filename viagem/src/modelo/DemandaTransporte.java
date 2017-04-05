@@ -26,11 +26,13 @@ public class DemandaTransporte {
 	@ManyToOne
 	private Estabelecimento destino;
 
-	private String produto;
+	@ManyToOne
+	private Produto produto;
 
 	private Integer quantidade;
 
-	private String unidadeQuantidade;
+	@ManyToOne
+	private UnidadeQuantidade unidadeQuantidade;
 
 	private StatusDemandaTransporte status;
 
@@ -64,11 +66,11 @@ public class DemandaTransporte {
 		this.destino = destino;
 	}
 
-	public String getProduto() {
+	public Produto getProduto() {
 		return produto;
 	}
 
-	public void setProduto(String produto) {
+	public void setProduto(Produto produto) {
 		this.produto = produto;
 	}
 
@@ -80,11 +82,11 @@ public class DemandaTransporte {
 		this.quantidade = quantidade;
 	}
 
-	public String getUnidadeQuantidade() {
+	public UnidadeQuantidade getUnidadeQuantidade() {
 		return unidadeQuantidade;
 	}
 
-	public void setUnidadeQuantidade(String unidadeQuantidade) {
+	public void setUnidadeQuantidade(UnidadeQuantidade unidadeQuantidade) {
 		this.unidadeQuantidade = unidadeQuantidade;
 	}
 
