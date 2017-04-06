@@ -50,14 +50,14 @@ public class VeiculoMb implements Serializable {
 	public void salvar() {
 		try {
 			veiculoService.salvar(veiculoEdicao);
-			JsfUtil.addMsgSucesso("Informações salvas com sucesso");
+			JsfUtil.addMsgSucesso("Informaï¿½ï¿½es salvas com sucesso");
 			if (estaEmModoCriacao()) {
 				prepararNovo();
 			} else {
 				listar();
 			}
 		} catch (Exception e) {
-			JsfUtil.addMsgErro("Erro ao salvar informações: " + e.getMessage());
+			JsfUtil.addMsgErro("Erro ao salvar informaï¿½ï¿½es: " + e.getMessage());
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class VeiculoMb implements Serializable {
 	public List<Veiculo> autocomplete(String query) {
 		List<Veiculo> result = new ArrayList<Veiculo>();
 		try {
-			result = veiculoService.listarPelaIdentificacao(query, 10);
+			result = veiculoService.listarPelaPlaca(query, 10);
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}

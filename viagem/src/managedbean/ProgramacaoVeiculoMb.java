@@ -78,13 +78,13 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	}
 	
 	/**
-	* Trata o evento de quando o usuário informa a identificação do veículo.
+	* Trata o evento de quando o usuï¿½rio informa a identificaï¿½ï¿½o do veï¿½culo.
 	*/
 	public void veiculoInformado(String identificacao) {
 		try {
 			Veiculo veiculo = null;
 			if (identificacao != null) {
-				veiculo = veiculoService.recuperarPelaIdentificacao(identificacao); 
+				veiculo = veiculoService.recuperarPelaPlaca(identificacao); 
 			}
 			viagemEdicao.setVeiculo(veiculo);
 		} catch (AppException e) {
@@ -93,7 +93,7 @@ public class ProgramacaoVeiculoMb implements Serializable {
 	}
 	
 	/**
-	* Trata o evento de quando o usuário arrasta a demanda para o veículo atender.
+	* Trata o evento de quando o usuï¿½rio arrasta a demanda para o veï¿½culo atender.
 	*/
 	public void demandaSelecionada(DragDropEvent ddEvent) {
         DemandaTransporte demanda = ((DemandaTransporte)ddEvent.getData());
@@ -104,7 +104,7 @@ public class ProgramacaoVeiculoMb implements Serializable {
     }
 
 	/**
-	* Trata o evento de quando o usuário retira a demanda que o veículo iria atender.
+	* Trata o evento de quando o usuï¿½rio retira a demanda que o veï¿½culo iria atender.
 	*/
 	public void demandaDescartada(DemandaTransporte demanda) {
 		demandasSelecionadas.remove(demanda);
@@ -128,7 +128,7 @@ public class ProgramacaoVeiculoMb implements Serializable {
 		entrega.setOrigem(demanda.getOrigem());
 		entrega.setDestino(demanda.getDestino());
 		entrega.setProduto(demanda.getProduto());
-		// não inicializa quantidade, o usuário que informa.
+		// nï¿½o inicializa quantidade, o usuï¿½rio que informa.
 		entrega.setUnidadeQuantidade(demanda.getUnidadeQuantidade());
 
 		// Cria etapa.
@@ -143,7 +143,7 @@ public class ProgramacaoVeiculoMb implements Serializable {
 		entrega.setEtapas(new HashSet<EtapaEntrega>());
 		entrega.getEtapas().add(etapa);
 		
-		// Adiciona na lista de entregas que serão realizadas pelo veículo.
+		// Adiciona na lista de entregas que serï¿½o realizadas pelo veï¿½culo.
 		//entregas.add(entrega);
 		
 		viagemEdicao.getEtapas().add(etapa);
@@ -293,10 +293,10 @@ public class ProgramacaoVeiculoMb implements Serializable {
 				viagemEdicao.getPontos().add(ponto);
 			}
 			viagemService.criar(viagemEdicao);
-			JsfUtil.addMsgSucesso("Informações salvas com sucesso");
+			JsfUtil.addMsgSucesso("Informaï¿½ï¿½es salvas com sucesso");
 			prepararNovo();
 		} catch (Exception e) {
-			JsfUtil.addMsgErro("Erro ao salvar informações: " + e.getMessage());
+			JsfUtil.addMsgErro("Erro ao salvar informaï¿½ï¿½es: " + e.getMessage());
 		}
 	}
 

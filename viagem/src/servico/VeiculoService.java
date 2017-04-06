@@ -6,8 +6,10 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import dao.ComponenteVeiculoDao;
 import dao.VeiculoDao;
 import exception.AppException;
+import modelo.ComponenteVeiculo;
 import modelo.Veiculo;
 
 @Stateless
@@ -15,13 +17,10 @@ public class VeiculoService {
 
 	@EJB
 	private VeiculoDao veiculoDao;
+	@EJB
+	private ComponenteVeiculoDao componenteVeiculoDao; 
 	
 	public Veiculo salvar(Veiculo veiculo) throws AppException {
-		// Transforma identificação do veículo em maiúsculas.
-		if (veiculo.getIdentificacao() != null) {
-			veiculo.setIdentificacao(veiculo.getIdentificacao().toUpperCase());
-		}
-		
 		Veiculo result = null;
 		try {
 			List<String> erros = validarVeiculo(veiculo);
@@ -37,13 +36,31 @@ public class VeiculoService {
 
 	private List<String> validarVeiculo(Veiculo veiculo) throws Exception {
 		List<String> erros = new ArrayList<String>();
-		if (veiculo.getIdentificacao() == null || veiculo.getIdentificacao().trim().length() == 0) {
-			erros.add("Identificação do veículo é obrigatório");
+		if (veiculo.getComponentes() == null || veiculo.getComponentes().isEmpty()) {
+			erros.add("O veÃ­culo deve possuir pelo menos um componente");
 		}
-		if (veiculo.getId() != null) {
-			Veiculo outro = veiculoDao.recuperarPelaIdentificacao(veiculo.getIdentificacao());
-			if (!veiculo.getId().equals(outro.getId())) {
-				erros.add("Já existe um veículo cadastrado com esta identificação");
+		if (veiculo.getTipo() == null) {
+			erros.add("O tipo do veÃ­culo deve ser informado");
+		}
+		for (ComponenteVeiculo componente: veiculo.getComponentes()) {
+			if (componente.getPlaca() == null) {
+				erros.add("A placa do veÃ­culo e de todos os seus componentes deve ser informada");
+			}
+			if (componente.getPosicaoNoVeiculo() == 0) {
+				erros.add("A posiÃ§Ã£o do componente no veÃ­culo deve ser informada");
+			}
+			if (componente.getQuantidadeEixos() < 2) {
+				erros.add("A quantidade de eixos do componente do veÃ­culo deve maior ou igual a 2");
+			}
+			if (componente.getTipoCarroceria() == null && 
+					(veiculo.getComponentes().size() > 1 || componente.getPosicaoNoVeiculo() > 1)) {
+				erros.add("O tipo de carroceria deve ser informada para a placa " + componente.getPlaca());
+			}
+			if (componente.getId() != null) {
+				ComponenteVeiculo outro = componenteVeiculoDao.recuperarPelaPlacaSeExistir(componente.getPlaca());
+				if (outro != null && !outro.getId().equals(componente.getId())) {
+					erros.add("JÃ¡ existe um veÃ­culo com a placa " + componente.getPlaca() + " cadastrada");
+				}
 			}
 		}
 		return erros;
@@ -54,7 +71,7 @@ public class VeiculoService {
 		try {
 			result = veiculoDao.listar();
 		} catch(Exception e) {
-			throw new AppException("Erro ao listar veículos: " + e.getMessage(), e);
+			throw new AppException("Erro ao listar veÃ­culos: " + e.getMessage(), e);
 		}
 		return result;
 	}
@@ -64,27 +81,38 @@ public class VeiculoService {
 		try {
 			result = veiculoDao.recuperar(id);
 		} catch(Exception e) {
-			throw new AppException("Erro ao recuperar veículo: " + e.getMessage(), e);
+			throw new AppException("Erro ao recuperar veÃ­culo: " + e.getMessage(), e);
 		}
 		return result;
 	}
 
-	public Veiculo recuperarPelaIdentificacao(String identificacao) throws AppException {
+	public Veiculo recuperarPelaPlaca(String placa) throws AppException {
 		Veiculo result = null;
 		try {
-			result = veiculoDao.recuperarPelaIdentificacao(identificacao);
+			result = veiculoDao.recuperarPelaPlaca(placa);
 		} catch(Exception e) {
-			throw new AppException("Erro ao recuperar veículo: " + e.getMessage(), e);
+			throw new AppException("Erro ao recuperar veÃ­culo pela placa " + placa + ": " + e.getMessage(), e);
 		}
 		return result;
 	}
 
-	public List<Veiculo> listarPelaIdentificacao(String query, int rows) throws AppException {
+	public Veiculo recuperarPelaPlacaSeExistir(String placa) throws AppException {
+		Veiculo result = null;
+		try {
+			result = veiculoDao.recuperarPelaPlacaSeExistir(placa);
+		} catch(Exception e) {
+			throw new AppException("Erro ao recuperar veÃ­culo pela placa " + placa + ": " + e.getMessage(), e);
+		}
+		return result;
+	}
+
+
+	public List<Veiculo> listarPelaPlaca(String query, int rows) throws AppException {
 		List<Veiculo> result = null;
 		try {
-			result = veiculoDao.listarPelaIdentificacao(query, rows);
+			result = veiculoDao.listarPelaPlaca(query, rows);
 		} catch(Exception e) {
-			throw new AppException("Erro ao listar veículos: " + e.getMessage(), e);
+			throw new AppException("Erro ao listar veÃ­culos: " + e.getMessage(), e);
 		}
 		return result;
 	}
