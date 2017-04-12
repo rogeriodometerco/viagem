@@ -5,26 +5,41 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 
-import enums.StatusOperacaoViagem;
+import modelo.Estabelecimento;
 import modelo.OperacaoViagem;
 import util.DataUtil;
 
 @Stateless
 public class OperacaoViagemDao extends GenericDao<OperacaoViagem> {
 
-	public List<OperacaoViagem> listarTodasDoDia(Date data, StatusOperacaoViagem status) throws Exception {
-		Date dataInicial = DataUtil.extrairDataSemHora(new Date());
-		Date dataFinal = DataUtil.somarDias(dataInicial, 1);
+	public List<OperacaoViagem> listarPorDataEEstabelecimento(
+			Date dataReferencia, Estabelecimento estabelecimento) throws Exception {
 		
-		String sql = "SELECT x FROM OperacaoViagem x WHERE" +
-				" x.dataHoraStatus >= :dataInicial"
-				+ " and x.dataHoraStatus < :dataFinal";
-		List<OperacaoViagem> operacoes = getEntityManager()
+		Date diaSeguinte = DataUtil.somarDias(dataReferencia, 1);
+		
+		List<OperacaoViagem> result = null;
+		
+		String sql = "SELECT DISTINCT o FROM PontoViagem p JOIN p.operacoes o "
+				+ " WHERE "
+				+ "	p.estabelecimento = :estabelecimento"
+				+ " AND ("
+				+ "		("
+				+ "			p.dataHoraChegada IS NOT NULL "
+				+ "			AND p.dataHoraChegada < :diaSeguinte "
+				+ "			AND (p.dataHoraSaida >= :dataReferencia OR p.dataHoraSaida IS NULL))"
+				+ " 	OR ("
+				+ "			p.dataHoraPrevistaChegada >= :dataReferencia AND p.dataHoraPrevistaChegada < :diaSeguinte AND p.dataHoraChegada IS NULL)"
+				+ " 	OR ("
+				+ "			p.dataChegadaAcordada = :dataReferencia AND p.dataHoraPrevistaChegada IS NULL AND p.dataHoraChegada IS NULL)"
+				+ "	)";
+				
+		result = getEntityManager()
 				.createQuery(sql, OperacaoViagem.class)
-				.setParameter("dataInicial", dataInicial)
-				.setParameter("dataFinal", dataFinal)
+				.setParameter("estabelecimento", estabelecimento)
+				.setParameter("dataReferencia", dataReferencia)
+				.setParameter("diaSeguinte", diaSeguinte)
 				.getResultList();
 
-		return operacoes;
+		return result;
 	}
 }

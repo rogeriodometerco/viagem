@@ -1,7 +1,7 @@
 Conta - listagem
 {
 	"nome" : "Coamo"
-	"perfis" : ["Tomador de serviço", "Transportador"]
+	"perfis" : ["Tomador de serviï¿½o", "Transportador"]
 }
 
 Conta - cadastro
@@ -14,18 +14,18 @@ Conta - cadastro
 
 Usuaro - listagem
 {
-	"nome" : "Rogério Fernando Dometerco",
+	"nome" : "Rogï¿½rio Fernando Dometerco",
 	"login" : "rogeriodometerco",
 	"ativo" : "true",
 	"contas" : [
-		"Rogério Fernando Dometerco",
+		"Rogï¿½rio Fernando Dometerco",
 		"Coamo"
 	]
 }
 
-Usuario - criação
+Usuario - criaï¿½ï¿½o
 {
-	"nome" : "Rogério Fernando Dometerco",
+	"nome" : "Rogï¿½rio Fernando Dometerco",
 	"login" : "rogeriodometerco",
 	"senha" : "abc",
 	"confirmaSenha" : "abc",
@@ -36,27 +36,27 @@ Usuario - criação
 
 Uf - listagem
 {
-	"nome" : "Paraná",
+	"nome" : "Paranï¿½",
 	"abreviatura" : "PR"
 }
 
 Uf - cadastro
 {
 	"id" : 123,
-	"nome" : "Paraná",
+	"nome" : "Paranï¿½",
 	"abreviatura" : "PR"
 }
 
 Municipio - listagem
 {
-	"nome" : "Campo Mourão",
+	"nome" : "Campo Mourï¿½o",
 	"Uf" : "PR"
 }
 
 Municipio - cadastro
 {
 	"id" : 123,
-	"nome" : "Campo Mourão"
+	"nome" : "Campo Mourï¿½o"
 	"Uf" : {
 		"id" : 123,
 		"abreviatura" : "PR"
@@ -66,18 +66,18 @@ Municipio - cadastro
 Estabelecimento - listagem
 {
 	"id" : 123,
-	"nome" : "Coamo Mamborê",
-	"município": "Mamborê",
+	"nome" : "Coamo Mamborï¿½",
+	"municï¿½pio": "Mamborï¿½",
 	"uf": "PR!
 }
 
 Estabelecimento - cadastro
 {
 	"id" : 123,
-	"nome" : "Coamo Mamborê",
-	"município": {
+	"nome" : "Coamo Mamborï¿½",
+	"municï¿½pio": {
 		"id" : 123,
-		"nome": "Mamborê"
+		"nome": "Mamborï¿½"
 		"uf": "PR"
 	}
 }
@@ -86,13 +86,13 @@ DemandaTransporte - listagem
 {
 	"id" : 123,
 	"origem" : {
-		"nome" : "Coamo Mamborê",
-		"municipio" : "Mamborê",
+		"nome" : "Coamo Mamborï¿½",
+		"municipio" : "Mamborï¿½",
 		"uf" : "PR"
 	},
 	"destino" : {
-		"nome" : "Coamo Pguá",
-		"municipio" : "Paranaguá",
+		"nome" : "Coamo Pguï¿½",
+		"municipio" : "Paranaguï¿½",
 		"uf" : "PR"
 	},
 	"produto" : "soja",
@@ -104,13 +104,13 @@ DemandaTransporte - listagem
 {
 	"id" : 123,
 	"origem" : {
-		"nome" : "Coamo Mamborê",
-		"municipio" : "Mamborê",
+		"nome" : "Coamo Mamborï¿½",
+		"municipio" : "Mamborï¿½",
 		"uf" : "PR"
 	},
 	"destino" : {
-		"nome" : "Coamo Pguá",
-		"municipio" : "Paranaguá",
+		"nome" : "Coamo Pguï¿½",
+		"municipio" : "Paranaguï¿½",
 		"uf" : "PR"
 	},
 	"produto" : "soja",
@@ -128,14 +128,14 @@ DemandaTransporte - cadastro
 	"origem" : {
 		"id" : 54,
 		"nome" : 
-		"Coamo Mamborê",
-		"municipio" : "Mamborê",
+		"Coamo Mamborï¿½",
+		"municipio" : "Mamborï¿½",
 		"uf" : "PR"
 	},
 	"destino" : {
 		"id" : 59,
 		"nome" : "Coamo Pgua",
-		"municipio" : "Paranaguá",
+		"municipio" : "Paranaguï¿½",
 		"uf" : "PR"
 	},
 	"produto" : "Soja",
@@ -162,3 +162,30 @@ DemandaTransporte - adicionar transportador
 DemandaTransporte - inativar transportador
 	[132, 3434, 2343]
 
+
+Viagem - cadastro
+
+{
+	"motorista": {
+		"id": "605"
+	},
+	"veiculo": {
+		"id": "303"
+	},
+	"demandas" : [
+		{
+			"demanda": {
+				"id": "123"
+			},
+			"quantidadeProgramada": "35"
+		}
+	],
+	"pontos": [
+		{
+			"estabelecimento": {
+				"id": "303"
+			},
+			"dataChegadaAcordada": "30/04/2017"
+		}
+	]
+}

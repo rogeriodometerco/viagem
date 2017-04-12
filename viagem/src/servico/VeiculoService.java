@@ -8,6 +8,7 @@ import javax.ejb.Stateless;
 
 import dao.ComponenteVeiculoDao;
 import dao.VeiculoDao;
+import dto.Listagem;
 import exception.AppException;
 import modelo.ComponenteVeiculo;
 import modelo.Veiculo;
@@ -19,7 +20,7 @@ public class VeiculoService {
 	private VeiculoDao veiculoDao;
 	@EJB
 	private ComponenteVeiculoDao componenteVeiculoDao; 
-	
+
 	public Veiculo salvar(Veiculo veiculo) throws AppException {
 		Veiculo result = null;
 		try {
@@ -110,11 +111,59 @@ public class VeiculoService {
 	public List<Veiculo> listarPelaPlaca(String query, int rows) throws AppException {
 		List<Veiculo> result = null;
 		try {
-			result = veiculoDao.listarPelaPlaca(query, rows);
+			result = veiculoDao.listarPorPlacaOrdenadoPorPlaca(1, rows, query);
 		} catch(Exception e) {
 			throw new AppException("Erro ao listar veículos: " + e.getMessage(), e);
 		}
 		return result;
 	}
-	
+
+	public Listagem<Veiculo> listarOrdenadoPorPlaca(int pagina, int tamanhoPagina)	
+			throws AppException { 
+
+		Listagem<Veiculo> listagem = new Listagem<Veiculo>();
+
+		List<Veiculo> lista = new ArrayList<Veiculo>();
+		if (pagina == 0) {
+			pagina = 1;
+		}
+		if (tamanhoPagina == 0) {
+			tamanhoPagina = 10;
+		}
+		try {
+			lista = veiculoDao.listarOrdenadoPorPlaca(pagina, tamanhoPagina);
+			Long count = veiculoDao.contar();
+			listagem.set(pagina, lista, count);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar veículos: " + e.getMessage(), e);
+		}
+		return listagem;
+	}
+
+
+	public Listagem<Veiculo> listarPorPlacaOrdenadoPorPlaca(int pagina, int tamanhoPagina, String placaContendo)	
+			throws AppException { 
+
+		Listagem<Veiculo> listagem = new Listagem<Veiculo>();
+
+		List<Veiculo> lista = new ArrayList<Veiculo>();
+		if (placaContendo == null || placaContendo.trim() == "") {
+			throw new AppException("Parte da placa para pesquisa é obrigatório");
+		}
+		if (pagina == 0) {
+			pagina = 1;
+		}
+		if (tamanhoPagina == 0) {
+			tamanhoPagina = 10;
+		}
+		try {
+			lista = veiculoDao.listarPorPlacaOrdenadoPorPlaca(pagina, tamanhoPagina, placaContendo);
+			Long count = veiculoDao.contarPorPlaca(placaContendo);
+			listagem.set(pagina, lista, count);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar veículos pela placa: " + e.getMessage(), e);
+		}
+		return listagem;
+	}	
+
 }

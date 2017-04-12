@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		var baseURI = "/viagem/rest/viagem";
+		//var baseURI = "http://54.204.114.136:8080/viagem/rest/demandaTransporte";
+		
+		$("#btCriar").click(function() {
+			var obj = JSON.stringify({
+					"motorista": {
+						"id": "89"
+					},
+					"veiculo": {
+						"id": "115"
+					},
+					"demandas" : [
+						{
+							"demanda": {
+								"id": "99"
+							},
+							"quantidadeProgramada": "35"
+						}
+					],
+					"pontos": [
+						{
+							"estabelecimento": {
+								"id": "87"
+							},
+							"dataChegadaAcordada": "10/04/2017",
+							"ordem": "1"
+						},
+						{
+							"estabelecimento": {
+								"id": "95"
+							},
+							"dataChegadaAcordada": "11/04/2017",
+							"ordem": "2"
+						}
+					]
+			});
+			var x = $.ajax({
+				type : 'POST',
+				contentType : 'application/json',
+				dataType : "JSON",
+				url : baseURI,
+				data : obj,
+				success : function(data) {
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+		$("#btListar").click(function() {
+			var x = $.ajax({
+				type : "GET",
+				url : baseURI + "?p=" + $("#pagina").val() + "&t=" + $("#tamanhoPagina").val(),
+				dataType : "JSON",
+				success : function(data) {
+					console.log("OK");
+					console.log(data);
+					$("#retorno").text(x.responseText);
+				},
+				error : function(data) {
+					console.log("Erro");
+					console.log(data);
+					$("#retorno").html(x.responseText);
+				}
+			});
+		});
+
+	});
+</script>
+</head>
+<body>
+	<p>
+		<input type="button" id="btCriar" value="Criar" /> <input
+			type="button" id="btRecuperar" value="Recuperar pelo id" /> <label
+			for="pagina">Página</label> <input type="text" id="pagina" value="1" />
+		<label for="tamanhoPagina">Tamanho página</label> <input type="text"
+			id="tamanhoPagina" value="5" /> <input type="button" id="btListar"
+			value="Listar" /> <input type="button"
+			id="btRecuperarTransportadores" value="Listar transportadores" />
+
+	</p>
+	<label for="id">Id (nulo para inclusão)</label>
+	<br />
+	<input type="text" id="id" />
+	<br />
+	<label for="nome">Origem (ID)</label>
+	<br />
+	<input type="text" id="origem" value="87" />
+	<br />
+	<label for="destino">Destino (ID)</label>
+	<br />
+	<input type="text" id="destino" value="95" />
+	<br />
+	<label for="produto">Produto</label>
+	<br />
+	<input type="text" id="produto" value="soja" />
+	<br />
+	<label for="quantidade">Qtde</label>
+	<br />
+	<input type="text" id="quantidade" value="10000" />
+	<label for="novaQuantidade">Nova qtde: </label>
+	<input type="text" id="novaQuantidade" value="" />
+	<input type="button" id="btAlterarQuantidade"
+		value="Alterar quantidade" />
+	<br />
+	<label for="unidadeQuantidade">Unidade</label>
+	<br />
+	<input type="text" id="unidadeQuantidade" value="TN" />
+	<br />
+	<label for="transportador1">Transportador1 (ID)</label>
+	<br />
+	<input type="text" id="transportador1" value="71" />
+	<br />
+	<label for="transportador2">Transportador2 (ID)</label>
+	<br />
+	<input type="text" id="transportador2" value="103" />
+	<br />
+	<input type="button" id="btAdicionarTransportadores"
+		value="Adicionar transportadores" />
+	<br />
+	<label for="transportador1">Transportador autorizado 1 (ID)</label>
+	<br />
+	<input type="text" id="transportadorAutorizado1" value="" />
+	<br />
+	<label for="transportador2">Transportador autorizado 2 (ID)</label>
+	<br />
+	<input type="text" id="transportadorAutorizado2" value="" />
+	<br />
+	<input type="button" id="btInativarTransportadores"
+		value="Inativar transportadores" />
+
+	<p>Retorno:</p>
+	<p id="retorno" />
+</body>
+</html>

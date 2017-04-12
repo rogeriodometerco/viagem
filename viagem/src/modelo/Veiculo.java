@@ -18,8 +18,6 @@ public class Veiculo {
 	@GeneratedValue
 	private Long id;
 	
-	private String identificacao;
-	
 	@ManyToOne
 	private TipoVeiculo tipo;
 
@@ -50,15 +48,5 @@ public class Veiculo {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	public String getIdentificacao() {
-		return identificacao;
-	}
-
-	public void setIdentificacao(String identificacao) {
-		this.identificacao = identificacao;
-	}
-	
-	
 	
 }
