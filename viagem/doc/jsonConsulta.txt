@@ -1,0 +1,88 @@
+analitico [
+   {
+      id: 3,
+      tomador: "Coamo",
+      transportador: "Buturi",
+      veiculo: "ABC3020",
+      motorista: "João da Silva",
+      demandaId: 40302,
+      produto: "soja",
+      dataAcordada: 13/04/2017,
+      dataPrevista: 13/04/2017 15:30,
+      dataChegada: 13/04/2017 14:00,
+      dataOperacao: 13/04/2017 16:10,
+      dataSaida: 13/04/2017 16:20
+   }
+],
+sintese [
+   {
+      nome: total,
+      titulo: "Total",
+      resumo: [
+         {
+            quantidade: 8,
+            ids[1,2,3,4,5,6,7,8]
+         }
+      ]
+   },
+   {
+      nome: transportador,
+      titulo: "Por transportador",
+      resumo: [
+         {
+            nome: ATDL,
+            quantidade: 3,
+            ids: [1, 14, 22]
+         },
+         {
+            nome: Buturi,
+            quantidade: 5,
+            ids: [2, 4, 9, 15]
+         }
+      ]
+   },
+   {
+      nome: operacaoProduto,
+      titulo: "Por operação e produto",
+      resumo: [
+         {
+            operacao: "carga",
+            produto: "soja",
+            quantidade: 3,
+            ids: [1, 14, 22]
+         },
+         {
+            operacao: "descarga",
+            produto: "calcário",
+            quantidade: 2,
+            ids: [5, 19]
+         }
+      ]
+   },
+   {
+      nome: demanda,
+      titulo: "Por demanda",
+      resumo: [
+         {
+            demanda: {
+               id: 1392,
+               origem: "Campo Mourão"
+               destino: "Paranaguá"
+            },
+            quantidade: 4,
+            ids: [3,5,6,9]
+         }
+      ]
+   },
+   {
+      nome: chegando
+      titulo: "Veículos chegando nas próximas horas",
+      resumo: [
+         {
+            horaInicial: 13,
+            horafinal: 14,
+            ids[6,7,12,16]
+         }
+      ]
+   }
+]
