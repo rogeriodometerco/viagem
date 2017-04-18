@@ -8,13 +8,15 @@ angular.module(APP_NAME, [
     'ngSanitize',
     'Geral',
     'Localizacao',
-    'ngCookies'
+    'ngCookies',
+    'uiSwitch'
   ])
   .constant("API_URL", API_URL)
   .config(['$httpProvider', '$stateProvider', '$locationProvider', '$urlRouterProvider', '$ocLazyLoadProvider', 'RestangularProvider', '$qProvider', 'blockUIConfig', 'Generic.HttpDataAdapterProvider',
     function ($httpProvider, $stateProvider, $locationProvider, $urlRouterProvider, $ocLazyLoadProvider, RestangularProvider, $qProvider, blockUIConfig, HttpDataAdapterProvider) {
 
-      HttpDataAdapterProvider.setBaseUrl('http://54.204.114.136:8080/viagem/rest/');
+      HttpDataAdapterProvider.setBaseUrl('http://54.172.8.219:8080/viagem/rest/');
+      //HttpDataAdapterProvider.setBaseUrl('http://10.211.55.42:8080/viagem/rest/');
 
       blockUIConfig.message = "Aguarde...";
       blockUIConfig.autoBlock = false;

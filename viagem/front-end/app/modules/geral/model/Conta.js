@@ -8,6 +8,7 @@ angular.module('Geral')
       fields: [
         {name: "id", field: "id", primaryKey: true},
         {name: "nome", field: "nome"},
+        {name: "ativa", field: "ativa"},
         {name: "perfis", field: "perfis"}
       ],
       resource: {

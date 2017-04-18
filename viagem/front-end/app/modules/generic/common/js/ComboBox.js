@@ -9,8 +9,8 @@ angular.module('Generic')
       }else if(arrayPath.length == 1){
         return attr;
       }else{
-        if(attr[index] !== undefined){
-          return reference(attr, index+1);
+        if(attr[arrayPath[index]] !== undefined){
+          return reference(attr[arrayPath[index]], index+1, arrayPath);
         }
       }
     }
@@ -161,8 +161,10 @@ angular.module('Generic')
               break;
             }
           }
-          if(!has)
+          if(!has) {
             $scope.array.push(model);
+            $scope.manager.add([model]);
+          }
         };
         $scope.setManager = function(manager){
           $scope.array = [];
