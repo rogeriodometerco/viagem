@@ -7,7 +7,24 @@ angular.module('Geral')
     var Class = GenericModel.extend("Geral.Model.Veiculo", {
       fields: [
         {name: "id", field: "id", primaryKey: true},
-        {name: "placa", field: "placa"}
+        {
+          name: "tipo",
+          field: "tipo",
+          association: {
+            model: 'Geral.Model.TipoVeiculo'
+          }
+        },
+        {
+          name: 'componentes',
+          association: {
+            manager: 'Geral.Service.ComponenteVeiculo',
+            getterName: 'componentes',
+            key: [{
+              foreing: 'veiculo.id',
+              field: 'id'
+            }]
+          }
+        }
       ],
       resource: {
         baseUrl: 'veiculo'

@@ -9,7 +9,8 @@ angular.module(APP_NAME, [
     'Geral',
     'Localizacao',
     'ngCookies',
-    'uiSwitch'
+    'uiSwitch',
+    'ui.sortable'
   ])
   .constant("API_URL", API_URL)
   .config(['$httpProvider', '$stateProvider', '$locationProvider', '$urlRouterProvider', '$ocLazyLoadProvider', 'RestangularProvider', '$qProvider', 'blockUIConfig', 'Generic.HttpDataAdapterProvider',
