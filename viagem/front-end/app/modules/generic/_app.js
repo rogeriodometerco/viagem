@@ -171,7 +171,7 @@ angular.module('Generic', [
       if(!angular.isDefined(value))
         return '';
       
-      var value     = value.replace(/[^\d]/g, ''),
+      var value     = value.replace(/[^0-9a-zA-Z]/, ''),
           formatter = new StringMask(mask);
       return formatter.apply(value);
       

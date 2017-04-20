@@ -1,0 +1,77 @@
+<form novalidate name="formDetail" class="inmodal">
+    <div class="modal-header">
+      <i class="fa fa-truck modal-icon"></i>
+      <h4 class="modal-title" ng-init="addTitle = 'Adicionar Veículo'; editTitle = 'Editar Veículo'">{{title}}</h4>
+    </div>
+    <div class="modal-body">
+    
+      <div class="row">
+        <h4>Dados do Veículo</h4>
+        <div class="row">
+          <div class="form-group col-xs-12">
+            <label>Tipo de Veículo</label>
+            <combo-box validator="[required]" class="col-sm-12" ng-model="modelEdit.tipo" ng-controller="Geral.Controller.TipoVeiculo" display-field="nome" search-field="nome" remote-filter="false" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 m-b-n">
+          <h4>Componentes</h4>
+          <p class="text-navy">Informe ou altere os dados dos componentes do veículo</p>
+          <div class="panel panel-default">
+            <div class="panel-heading text-right">
+              <a class="btn btn-primary btn-sm"
+                 ng-click="addComponente()">
+                <i class="fa fa-plus"></i>
+              </a>
+            </div>
+
+            <div class="panel-body">
+              <div class="table-responsive" ng-show="modelEdit.componentes.length > 0">
+                <table class="table table-hover table-align-middle no-margins">
+                  <thead>
+                  <tr>
+                    <th>Posiçao</th>
+                    <th>Placa</th>
+                    <th>Eixos</th>
+                    <th></th>
+                    <th></th>
+                  </thead>
+
+                  <tbody ui-sortable="sortableOptions" ng-model="modelEdit.componentes">
+                    <tr ng-repeat="componente in modelEdit.componentes track by $index" class="draggable">
+                      <td>{{ componente.posicaoNoVeiculo}}</td>
+                      <td>{{ componente.placa | placa}}</td>
+                      <td>{{ componente.quantidadeEixos}}</td>
+                      <td></td>
+                      <td class="text-right">
+                        <a href="" class="btn btn-white btn-w-s btn-sm" ng-click=editComponente(componente)> <i class="fa fa-pencil"></i> Editar </a>
+                        <a href="" class="btn btn-white btn-w-s btn-sm" ng-click=deleteComponente(componente)> <i class="fa fa-trash"></i> Remover </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div ng-hide="modelEdit.componentes.length > 0">
+                <div class="widget p-lg text-center">
+                  <div class=m-b-md>
+                    <h5> Não há componentes no veículo. </h5>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group">
+            <button class="btn btn-primary" ng-click="save()">Salvar</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancelar</button>
+        </div>
+    </div>
+</form>

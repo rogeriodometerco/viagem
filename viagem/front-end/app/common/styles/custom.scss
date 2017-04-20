@@ -26,22 +26,7 @@ nav {
 .no-resize-h {
     resize: horizontal !important;
 }
-/*
-flot-y-axis .flot-tick-label {
-    white-space: nowrap;
-    transform: translate(-9px, 0) rotate(-60deg);
-    text-indent: -100%;
-    transform-origin: top right;
-    text-align: right !important;
-}*/
-/*
-.flot-x-axis .flot-tick-label {
-    white-space: nowrap;
-    transform: translate(-9px, 0) rotate(-60deg);
-    text-indent: -100%;
-    transform-origin: top right;
-    text-align: right !important;
-}*/
+
 
 .block-ui-visible > .block-ui-container {
   position: fixed !important;
@@ -49,4 +34,16 @@ flot-y-axis .flot-tick-label {
 
 .modal .ibox-content {
   border: none;
+}
+
+.draggable {
+  cursor: move; /* fallback: no `url()` support or images disabled */
+  cursor: -webkit-grab; /* Chrome 1-21, Safari 4+ */
+  cursor:    -moz-grab; /* Firefox 1.5-26 */
+  cursor:         grab; /* W3C standards syntax, should come least */
+}
+.draggable:active {
+  cursor: -webkit-grabbing;
+  cursor:    -moz-grabbing;
+  cursor:         grabbing;
 }

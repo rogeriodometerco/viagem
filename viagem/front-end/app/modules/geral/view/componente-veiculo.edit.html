@@ -1,0 +1,32 @@
+<form novalidate name="formDetail" class="inmodal">
+    <div class="modal-header">
+      <i class="fa fa-database modal-icon"></i>
+      <h4 class="modal-title" ng-init="addTitle = 'Adicionar Componente'; editTitle = 'Editar Componente'">{{title}}</h4>
+    </div>
+    <div class="modal-body">
+    
+      <div class="col-12">
+        <h4>Dados do componente</h4>
+        <div class="row">
+          <div class="form-group col-xs-12 col-md-6">
+              <label for="placa">Placa:</label>
+              <input type="text" id="placa" ng-model="modelEdit.placa" validator="[required, placa]" class="form-control" autofocus />
+          </div>
+          <div class="form-group col-xs-12 col-md-6">
+              <label for="eixos">Eixos:</label>
+              <input type="number" id="eixos" ng-model="modelEdit.quantidadeEixos" validator="[required]" min="1" class="form-control" />
+          </div>
+          <div class="form-group col-xs-12">
+            <label>Tipo de Carroceria</label>
+            <combo-box class="col-sm-12" validator="[required]" ng-model="modelEdit.tipoCarroceria" ng-controller="Geral.Controller.TipoCarroceria" display-field="nome" search-field="nome" remote-filter="false" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group">
+            <button class="btn btn-primary" ng-click="save()">Adicionar</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancelar</button>
+        </div>
+    </div>
+</form>

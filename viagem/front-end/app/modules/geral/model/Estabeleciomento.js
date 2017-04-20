@@ -9,10 +9,10 @@ angular.module('Geral')
         {name: "id", field: "id", primaryKey: true},
         {name: "nome", field: "nome"},
         {
-          name: "cidade",
-          field: "municipio",
+          name: "endereco",
+          field: "endereco",
           association: {
-              model: 'Localizacao.Model.Cidade'
+              model: 'Localizacao.Model.Endereco'
           }
         }
       ],

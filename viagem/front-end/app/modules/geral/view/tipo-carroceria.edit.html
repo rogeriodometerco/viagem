@@ -1,0 +1,24 @@
+<form novalidate name="formDetail" class="inmodal">
+    <div class="modal-header">
+      <i class="fa fa-info-circle modal-icon"></i>
+      <h4 class="modal-title" ng-init="addTitle = 'Adicionar Tipo de Carroceria'; editTitle = 'Editar Tipo de Carroceria'">{{title}}</h4>
+    </div>
+    <div class="modal-body">
+    
+      <div class="col-12">
+        <h4>Dados do Tipo de Carroceria</h4>
+        <div class="row">
+          <div class="form-group col-xs-12 col-md-12">
+              <label for="nome">Nome:</label>
+              <input type="text" id="nome" ng-model="modelEdit.nome" validator="[required]" class="form-control" autofocus />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group">
+            <button class="btn btn-primary" ng-click="save()">Salvar</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancelar</button>
+        </div>
+    </div>
+</form>
