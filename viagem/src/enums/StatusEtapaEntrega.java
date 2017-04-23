@@ -2,7 +2,8 @@ package enums;
 
 public enum StatusEtapaEntrega {
 	PENDENTE,
-	INICIADA,
+	CARREGADO,
+	TRANSITO,
 	CONCLUIDA,
 	ABORTADA
 }

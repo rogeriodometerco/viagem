@@ -26,7 +26,7 @@ public class ProcessadorEventoTerminoOperacao extends ProcessadorEvento {
 	@Override
 	public void eventoCriado(Evento evento) throws Exception {
 		if (!(evento instanceof EventoTerminoOperacao)) {
-			throw new Exception("Classe de evento n„o prevista");
+			throw new Exception("Classe de evento n√£o prevista");
 		}
 		EventoTerminoOperacao eventoTerminoOperacao = (EventoTerminoOperacao)evento;
 		OperacaoViagem operacao = eventoTerminoOperacao.getOperacao();
@@ -44,17 +44,18 @@ public class ProcessadorEventoTerminoOperacao extends ProcessadorEvento {
 		EtapaEntrega etapaEntrega = operacao.getEtapaEntrega();
 		Entrega entrega = etapaEntrega.getEntrega();
 		
-		// Se a etapa termina no destino da entrega, finaliza a entrega.
-		if (operacao.getTipo().equals(TipoOperacaoViagem.ENTREGA) 
-				&& etapaEntrega.getDestino().equals(entrega.getDestino())) {
-			if (operacao.getStatus().equals(StatusOperacaoViagem.REALIZADA)) {
-				entrega.setStatus(StatusEntrega.REALIZADA);
+		
+		if (operacao.getStatus().equals(StatusOperacaoViagem.ABORTADA)) {
+			entrega.setStatus(StatusEntrega.ABORTADA);
+		} else {
+			if (operacao.getTipo().equals(TipoOperacaoViagem.COLETA)) {
+				entrega.setStatus(StatusEntrega.CARREGADO);
 			} else {
-				entrega.setStatus(StatusEntrega.ABORTADA);
+				entrega.setStatus(StatusEntrega.REALIZADA);
 			}
-			entrega.setDataHoraStatus(eventoTerminoOperacao.getDataHoraTermino());
-			entregaDao.salvar(entrega);
 		}
+		entrega.setDataHoraStatus(eventoTerminoOperacao.getDataHoraTermino());
+		entregaDao.salvar(entrega);
 	}
 	
 	

@@ -4,18 +4,11 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence 
 	http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
 	version="1.0">
-<!-- 
-	<persistence-unit name="viagemPU" transaction-type="JTA">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
-
-		<properties>
-			<property name="hibernate.show_sql" value="false" />
-			<property name="hibernate.format_sql" value="false" />
-			<property name="hibernate.hbm2ddl.auto" value="update" />
-		</properties>
-	</persistence-unit>
- -->
+	<!-- <persistence-unit name="viagemPU" transaction-type="JTA"> <provider>org.hibernate.ejb.HibernatePersistence</provider> 
+		<jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source> <properties> 
+		<property name="hibernate.show_sql" value="false" /> <property name="hibernate.format_sql" 
+		value="false" /> <property name="hibernate.hbm2ddl.auto" value="update" /> 
+		</properties> </persistence-unit> -->
 
 	<persistence-unit name="viagemPU" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
@@ -25,8 +18,13 @@
 			<property name="hibernate.show_sql" value="true" />
 			<property name="hibernate.format_sql" value="true" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
-			<property name="hibernate.dialect"
-				value="org.hibernate.dialect.PostgreSQLDialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
+
+			<property name="javax.persistence.schema-generation.create-source"
+				value="script" />
+			<property name="javax.persistence.sql-load-script-source"
+				value="META-INF/sql/view.sql" />
+
 		</properties>
 	</persistence-unit>
 

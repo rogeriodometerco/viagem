@@ -24,7 +24,7 @@ public class ProcessadorEventoChegada extends ProcessadorEvento {
 	@Override
 	public void eventoCriado(Evento evento) throws Exception {
 		if (!(evento instanceof EventoChegada)) {
-			throw new Exception("Classe de evento n„o prevista");
+			throw new Exception("Classe de evento n√£o prevista");
 		}
 		EventoChegada eventoChegada = (EventoChegada)evento;
 		PontoViagem pontoViagem = eventoChegada.getPontoViagem();
@@ -32,7 +32,7 @@ public class ProcessadorEventoChegada extends ProcessadorEvento {
 		pontoViagem.setStatus(StatusPontoViagem.NO_LOCAL);
 		pontoViagemDao.salvar(pontoViagem);
 		
-		// Se h· alguma etapa que finaliza neste local, encerra a etapa.
+		// Se h√° alguma etapa que finaliza neste local, encerra a etapa.
 		EtapaEntrega etapaEntrega = null;
 		for (OperacaoViagem operacao: pontoViagem.getOperacoes()) {
 			etapaEntrega = operacao.getEtapaEntrega();
