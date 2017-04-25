@@ -1,0 +1,89 @@
+<form novalidate name="formDetail" class="inmodal">
+    <div class="modal-header">
+      <i class="fa fa-truck modal-icon"></i>
+      <h4 class="modal-title" ng-init="addTitle = 'Adicionar Demanda'; editTitle = 'Editar Demanda'">{{title}}</h4>
+    </div>
+    <div class="modal-body">
+    
+      <div class="row">
+        <h4>Dados da Demanda</h4>
+        <div class="row">
+          <div class="form-group col-xs-12 col-md-6">
+            <label>Origem</label>
+            <combo-box validator="[required]" class="col-sm-12" ng-model="modelEdit.origem" ng-controller="Geral.Controller.Estabelecimento" display-field="nome" />
+          </div>
+          <div class="form-group col-xs-12 col-md-6">
+            <label>Destino</label>
+            <combo-box validator="[required]" class="col-sm-12" ng-model="modelEdit.destino" ng-controller="Geral.Controller.Estabelecimento" display-field="nome" />
+          </div>
+          <div class="form-group col-xs-12 col-md-6">
+            <label>Produto</label>
+            <combo-box validator="[required]" class="col-sm-12" ng-model="modelEdit.produto" ng-controller="Geral.Controller.Produto" display-field="nome" search-field="nome" />
+          </div>
+          <div class="form-group col-xs-6 col-md-3">
+            <label>Quantidade</label>
+            <input type="number" class="form-control" validator="[required]" ng-model="modelEdit.quantidade" />
+          </div>
+          <div class="form-group col-xs-6 col-md-3">
+            <label>&nbsp;</label>
+            <combo-box validator="[required]" select-button="false" class="col-sm-12" ng-model="modelEdit.unidadeQuantidade" ng-controller="Geral.Controller.UnidadeQuantidade" display-field="abreviacao" search-field="abreviacao" />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 m-b-n">
+          <h4>Transportadores</h4>
+          <p class="text-navy">Informe os transportadores da demanda</p>
+          <div class="panel panel-default">
+            <div class="panel-heading text-right">
+              <a class="btn btn-primary btn-sm"
+                 ng-click="addTransportador()">
+                <i class="fa fa-plus"></i>
+              </a>
+            </div>
+
+            <div class="panel-body">
+              <div class="table-responsive" ng-show="modelEdit.transportadores.length > 0">
+                <table class="table table-hover table-align-middle no-margins">
+                  <thead>
+                  <tr>
+                    <th>Transportador</th>
+                    <th></th>
+                    <th></th>
+                  </thead>
+
+                  <tbody>
+                    <tr ng-repeat="transportador in modelEdit.transportadores track by $index">
+                      <td>{{ transportador.transportador.nome}}</td>
+                      <td></td>
+                      <td class="text-right">
+                        <a href="" class="btn btn-white btn-w-s btn-sm" ng-click=editTransportador(componente)> <i class="fa fa-pencil"></i> Editar </a>
+                        <a href="" class="btn btn-white btn-w-s btn-sm" ng-click=deleteTransportador(componente)> <i class="fa fa-trash"></i> Remover </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div ng-hide="modelEdit.transportadores.length > 0">
+                <div class="widget p-lg text-center">
+                  <div class=m-b-md>
+                    <h5> Não há transportadores na demanda. </h5>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group">
+            <button class="btn btn-primary" ng-click="save()">Salvar</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancelar</button>
+        </div>
+    </div>
+</form>

@@ -56,11 +56,12 @@ angular.module("Generic")
 
               if (columns.length > 0) {
                   columns.each(function (k, v) {
-                      var el = $(v), field = el.attr('field'), column = [];
+                      var el = $(v), field = el.attr('field'), column = [], width = el.attr('width');
 
                       gridColumns[field] = {
                           name: field,
-                          template: el.html()
+                          template: el.html(),
+                          width: width
                       };
                   });
               }
@@ -284,9 +285,9 @@ angular.module("Generic")
 
                   $scope.sort = function () {
                       var newSort = ''
-                      if($scope.sortInfo.fields.length > 0){
-                          newSort = $scope.sortInfo.fields[0]+$scope.sortInfo.directions[0];
-                          if(newSort != sort){
+                      if ($scope.sortInfo.fields.length > 0) {
+                          newSort = $scope.sortInfo.fields[0] + $scope.sortInfo.directions[0];
+                          if (newSort != sort) {
                               sort = newSort;
                               $scope.getPagedDataAsync($scope.gridOptions.pagingOptions.pageSize, $scope.gridOptions.pagingOptions.currentPage, null, $scope.remote);
                           }
@@ -381,6 +382,7 @@ angular.module("Generic")
                           return true;
                       }
                   };
+
                   if($scope.rowTemplate){
                       $scope.gridOptions.rowTemplate = $scope.rowTemplate;
                   }
@@ -392,11 +394,11 @@ angular.module("Generic")
                   };
 
                   $scope.remove = function (objs) {
-                      var objs = objs || $scope.selections,
-                        dlg = null;
+                      var objs = objs || $scope.selections, dlg = null, dlgData = null;
 
                       if (objs.length > 0) {
-                          dlg = dialogs.confirm('Remover', 'Deseja realmente remover esta(s) opção(s)?');
+                          dlg = dialogs.create ("/dialogs/remove.html", "confirmDialogCtrl", {header: 'Remover', msg: 'Deseja realmente remover esta(s) opção(s)?'});
+
                           dlg.result.then(function (btn) {
                               $scope.$emit(EVENTS.wait);
 
@@ -432,9 +434,11 @@ angular.module("Generic")
                         $scope.gridOptions.ngGrid
                       );
                   }
+
                   $scope.$on(EVENTS.gridresize, function(){
                       rebuild();
                   });
+
                   $timeout(function(){
                       rebuild();
                   }, 400);
