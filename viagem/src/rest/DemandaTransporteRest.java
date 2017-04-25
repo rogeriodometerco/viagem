@@ -220,6 +220,7 @@ public class DemandaTransporteRest {
 										|| field.getName().equals("unidadeQuantidade")
 										|| field.getName().equals("status")
 										|| field.getName().equals("tomador")
+										|| field.getName().equals("transportadores")
 										)
 								|| field.getDeclaringClass().equals(Estabelecimento.class)
 								&& (

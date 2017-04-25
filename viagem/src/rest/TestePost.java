@@ -59,12 +59,15 @@ public class TestePost {
 		//request.setTransportador(transportador);
 		//request.setMotorista(motorista);
 		request.setStatusOperacaoViagem(StatusOperacaoViagem.REALIZADA);
-		request.cargasPendentes();
+		request.agruparEstabelecimento();
+		request.setAgrupar(true);
+		//request.cargasPendentes();
 		
 		try {
 			
 			return Response.ok()
-					.entity(operacaoViagemLista.listar(request).size())
+					//.entity(operacaoViagemLista.listar(request).size() + " - " + operacaoViagemLista.contar(request))
+					.entity(operacaoViagemLista.agrupado(request).size())
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()

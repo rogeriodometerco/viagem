@@ -1,6 +1,8 @@
 package dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import enums.StatusOperacaoViagem;
 import enums.StatusPontoViagem;
@@ -24,8 +26,15 @@ public class OperacaoViagemRequest {
 	private StatusPontoViagem statusPontoViagem;
 	private Date dataChegadaPrevistaDoVeiculo;
 	
+	private List<String> colunasSelecao;
+	private List<String> colunasAcumulado;
+	private Boolean contar;
+	private Boolean agrupar;
+	
 
 	public OperacaoViagemRequest() {
+		colunasSelecao = new ArrayList<String>();
+		colunasAcumulado = new ArrayList<String>();
 	}
 
 
@@ -117,7 +126,22 @@ public class OperacaoViagemRequest {
 		this.dataChegadaPrevistaDoVeiculo = dataChegadaPrevistaDoVeiculo;
 	}
 	
+	public void agruparEstabelecimento() {
+		this.colunasSelecao.add("PontoViagem.estabelecimento");
+	}
+	
+	public Boolean getAgrupar() {
+		return agrupar;
+	}
 
+	public void setAgrupar(Boolean agrupar) {
+		this.agrupar = agrupar;
+	}
+
+
+	public List<String> getColunasSelecao() {
+		return this.colunasSelecao;
+	}
 
 
 	public void cargasPendentes() {
