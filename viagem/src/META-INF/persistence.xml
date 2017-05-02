@@ -26,6 +26,7 @@
 				value="META-INF/sql/view.sql" />
 
 		</properties>
+		
 	</persistence-unit>
 
 </persistence>

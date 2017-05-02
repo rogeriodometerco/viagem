@@ -127,7 +127,8 @@ public class OperacaoViagemRequest {
 	}
 	
 	public void agruparEstabelecimento() {
-		this.colunasSelecao.add("PontoViagem.estabelecimento");
+		this.colunasSelecao.add("PontoViagem.estabelecimento.id");
+		this.colunasSelecao.add("PontoViagem.estabelecimento.nome");
 	}
 	
 	public Boolean getAgrupar() {

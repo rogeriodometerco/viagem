@@ -11,11 +11,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import dao.DemandaTomadorViewCatalogo;
+import dao.DemandaTransportadorViewCatalogo;
 import dao.OperacaoViagemLista;
+import dto.Filtro;
+import dto.Listagem;
 import dto.OperacaoViagemRequest;
 import enums.StatusOperacaoViagem;
-import enums.TipoOperacaoViagem;
 import modelo.Conta;
+import modelo.DemandaTomadorView;
+import modelo.DemandaTransportadorView;
 import modelo.Estabelecimento;
 import util.Ejb;
 
@@ -35,9 +40,13 @@ public class TestePost {
 	
 
 	private OperacaoViagemLista operacaoViagemLista;
+	private DemandaTomadorViewCatalogo demandaTomadorViewCatalogo;
+	private DemandaTransportadorViewCatalogo demandaTransportadorViewCatalogo;
 
 	public TestePost() {
 		operacaoViagemLista= Ejb.lookup(OperacaoViagemLista.class);
+		demandaTomadorViewCatalogo = Ejb.lookup(DemandaTomadorViewCatalogo.class);
+		demandaTransportadorViewCatalogo = Ejb.lookup(DemandaTransportadorViewCatalogo.class);
 
 	}
 
@@ -64,10 +73,11 @@ public class TestePost {
 		//request.cargasPendentes();
 		
 		try {
-			
+			//operacaoViagemLista.testar();
 			return Response.ok()
 					//.entity(operacaoViagemLista.listar(request).size() + " - " + operacaoViagemLista.contar(request))
-					.entity(operacaoViagemLista.agrupado(request).size())
+					//.entity("ok")
+					.entity(operacaoViagemLista.agrupado(request))
 					.build();
 		} catch (Exception e) {
 			return Response.serverError()
@@ -76,7 +86,43 @@ public class TestePost {
 		}
 	}
 
-
 	
+	@GET
+	@Path("/demandaTomador")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listarDemandasDoTomador()  throws Exception {
+		Filtro filtro = new Filtro();
+		filtro.igual(DemandaTomadorViewCatalogo.CAMPO_TOMADOR_ID, 103l);
+		
+		try {
+			Listagem<DemandaTomadorView> result = demandaTomadorViewCatalogo.listar(filtro);
+			return Response.ok()
+					.entity(result)
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
+
+	@GET
+	@Path("/demandaTransportador")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response listarDemandasDoTransportador()  throws Exception {
+		Filtro filtro = new Filtro();
+		filtro.igual(DemandaTransportadorViewCatalogo.CAMPO_TRANSPORTADOR_ID, 71l);
+		
+		try {
+			Listagem<DemandaTransportadorView> result = demandaTransportadorViewCatalogo.listar(filtro);
+			return Response.ok()
+					.entity(result)
+					.build();
+		} catch (Exception e) {
+			return Response.serverError()
+					.entity(new RespostaErro(e.getMessage()))
+					.build();
+		}
+	}
 
 }

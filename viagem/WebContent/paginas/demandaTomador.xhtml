@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Painel de demandas de transporte</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<h:form id="form1">
+			<h3>
+				<p:outputLabel value="Painel de demandas de transporte - Tomador de serviço" />
+			</h3>
+
+			<p:commandButton value="Listar" actionListener="#{demandaTomadorMb.listar}" update="@all"></p:commandButton>
+			<p:dataTable id="listagem" value="#{demandaTomadorMb.lista}" var="item"
+				emptyMessage="Nenhum registro retornado na consulta">
+				<p:column>
+					<f:facet name="header">Demanda</f:facet>
+					<h:outputText value="#{item.demandaId}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Origem</f:facet>
+					<h:outputText value="#{item.origemNome}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Destino</f:facet>
+					<h:outputText value="#{item.destinoNome}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Produto</f:facet>
+					<h:outputText value="#{item.produtoNome}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Status</f:facet>
+					<h:outputText value="#{item.status}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Status</f:facet>
+					<h:outputText value="#{item.statusDescricao}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Cargas realizadas</f:facet>
+					<h:outputText value="#{item.cargasRealizadas}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Cargas pendentes</f:facet>
+					<h:outputText value="#{item.cargasPendentes}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Cargas em trânsito</f:facet>
+					<h:outputText value="#{item.cargasTransito}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Embarcado</f:facet>
+					<h:outputText value="#{item.quantidadeEmbarcada}" />
+				</p:column>
+			</p:dataTable>
+			<p />
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import dto.OperacaoViagemRequest;
+import enums.StatusOperacaoViagem;
+import modelo.Estabelecimento;
 import modelo.OperacaoViagem;
 import util.DataUtil;
 
@@ -22,21 +25,44 @@ public class OperacaoViagemLista extends GenericDao<OperacaoViagem> {
 
 	public OperacaoViagemLista() {
 	}
-	
-	public List<Object> agrupado(OperacaoViagemRequest request) throws Exception {
-		List<Object> result = null;
+
+	public List<Object[]> agrupado(OperacaoViagemRequest request) throws Exception {
+
+		List<Object[]> result = null;
 
 		inicializarFiltros(request);
 		String sql = montarSql(request, "SELECT");
-		TypedQuery<Object> query = getEntityManager()
-				.createQuery(sql, Object.class);
+		TypedQuery<Object[]> query = getEntityManager()
+				.createQuery(sql, Object[].class);
 		inicializarParametros(query);
 
 		result = query.getResultList();
-		
+
 		System.out.println(sql);
 		return result;
-		
+
+	}
+
+	public void testar() throws Exception {
+		String sql = "SELECT PontoViagem.estabelecimento.id, count(*) "
+				+ "FROM OperacaoViagem OperacaoViagem "
+				+ "JOIN OperacaoViagem.pontoViagem PontoViagem "
+				+ "JOIN PontoViagem.viagem Viagem "
+				+ "WHERE OperacaoViagem.status = :statusOperacaoViagem "
+				+ "GROUP BY PontoViagem.estabelecimento.id";
+
+		TypedQuery<Object[]> query = getEntityManager()
+				.createQuery(sql, Object[].class);
+
+		Query q = getEntityManager().createQuery(sql);
+		q.setParameter("statusOperacaoViagem", StatusOperacaoViagem.PENDENTE);
+		List lista = q.getResultList();
+
+		Estabelecimento estabelecimento = new Estabelecimento();
+		estabelecimento.setId(94l);
+		query.setParameter("statusOperacaoViagem", StatusOperacaoViagem.PENDENTE);
+		List<Object[]> result = query.getResultList();
+		System.out.println(result.size());
 	}
 
 	public List<OperacaoViagem> listar(OperacaoViagemRequest request) throws Exception {
@@ -50,7 +76,7 @@ public class OperacaoViagemLista extends GenericDao<OperacaoViagem> {
 		inicializarParametros(query);
 
 		result = query.getResultList();
-		
+
 		System.out.println(sql);
 		return result;
 	}
@@ -64,7 +90,7 @@ public class OperacaoViagemLista extends GenericDao<OperacaoViagem> {
 
 		return query.getSingleResult();
 	}
-	
+
 
 	private void inicializarParametros(TypedQuery<?> query) {
 		for (String filtro: filtros.keySet()) {
@@ -74,7 +100,7 @@ public class OperacaoViagemLista extends GenericDao<OperacaoViagem> {
 
 	private String montarSql(OperacaoViagemRequest request, String projecao) {
 		StringBuffer sql = new StringBuffer(projecao);
-		
+
 		if (request.getColunasSelecao().isEmpty()) {
 			request.getColunasSelecao().add("OperacaoViagem");
 		}
@@ -86,8 +112,9 @@ public class OperacaoViagemLista extends GenericDao<OperacaoViagem> {
 				sql.append(", ");
 			}
 			sql.append(s);
+			i++;
 		}
-		
+
 		sql.append(" ").append(this.sqlBase);
 		i = 0;
 		for (String condicao: condicoes) {
@@ -99,10 +126,10 @@ public class OperacaoViagemLista extends GenericDao<OperacaoViagem> {
 			sql.append(" ").append(condicao);
 			i++;
 		}
-		
+
 		if (request.getAgrupar()) {
 			sql.append(" GROUP BY");
-			
+
 			i = 0;
 			for (String s: request.getColunasSelecao()) {
 				if (i == 0) {
@@ -111,6 +138,7 @@ public class OperacaoViagemLista extends GenericDao<OperacaoViagem> {
 					sql.append(", ");
 				}
 				sql.append(s);
+				i++;
 			}
 		}
 		return sql.toString();
