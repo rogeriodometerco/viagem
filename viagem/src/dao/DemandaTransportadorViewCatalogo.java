@@ -9,7 +9,7 @@ import modelo.DemandaTransportadorView;
 @Stateless
 public class DemandaTransportadorViewCatalogo extends Catalogo<DemandaTransportadorView> {
 
-	public static final String CAMPO_DEMANDA_ID = "id";
+	public static final String CAMPO_DEMANDA_ID = "demandaId";
 	public static final String CAMPO_ORIGEM_ID = "origemId";
 	public static final String CAMPO_DESTINO_ID = "destinoId";
 	public static final String CAMPO_PRODUTO_ID = "produtoId";
@@ -21,13 +21,13 @@ public class DemandaTransportadorViewCatalogo extends Catalogo<DemandaTransporta
 	@Override
 	protected void inicializarConversaoFiltroParaCampo() {
 		this.conversaoFiltroParaCampo = new HashMap<String, String>();
-		this.conversaoFiltroParaCampo.put(CAMPO_DEMANDA_ID, "demandaId");
-		this.conversaoFiltroParaCampo.put(CAMPO_ORIGEM_ID, "origemId");
-		this.conversaoFiltroParaCampo.put(CAMPO_DESTINO_ID, "destinoId");
-		this.conversaoFiltroParaCampo.put(CAMPO_PRODUTO_ID, "produtoId");
-		this.conversaoFiltroParaCampo.put(CAMPO_STATUS, "status");
-		this.conversaoFiltroParaCampo.put(CAMPO_TOMADOR_ID, "tomadorId");
-		this.conversaoFiltroParaCampo.put(CAMPO_TRANSPORTADOR_ID, "transportadorId");
+		this.conversaoFiltroParaCampo.put("demandaId", CAMPO_DEMANDA_ID);
+		this.conversaoFiltroParaCampo.put("origemId", CAMPO_ORIGEM_ID);
+		this.conversaoFiltroParaCampo.put("destinoId", CAMPO_DESTINO_ID);
+		this.conversaoFiltroParaCampo.put("produtoId", CAMPO_PRODUTO_ID);
+		this.conversaoFiltroParaCampo.put("status", CAMPO_STATUS);
+		this.conversaoFiltroParaCampo.put("tomadorId", CAMPO_TOMADOR_ID);
+		this.conversaoFiltroParaCampo.put("transportadorId", CAMPO_TRANSPORTADOR_ID);
 	}
 
 }

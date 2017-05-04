@@ -39,12 +39,12 @@ import servico.DemandaTransporteService;
 import util.Ejb;
 
 @Path("/demandaTransporte/tomador")
-public class DemandaTransporteTomador {
+public class DemandaTomadorRest {
 
 	private DemandaTransporteService demandaTransporteService;
 	private DemandaTomadorViewCatalogo catalogo;
 	
-	public DemandaTransporteTomador() {
+	public DemandaTomadorRest() {
 		demandaTransporteService = Ejb.lookup(DemandaTransporteService.class);
 		catalogo = Ejb.lookup(DemandaTomadorViewCatalogo.class);
 	}
@@ -72,11 +72,13 @@ public class DemandaTransporteTomador {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	//		String json = "{p:1, t:5, q:[{chave: nome, valor: campo, restricao: '='}, {chave: uf, valor: PR, restricao: '='}], ordenacao: [{chave: nome, ordem: A}]}";
+	//		String json = "{p:1, t:5, q:[{chave: nome, valor: campo, operador: '='}, {chave: uf, valor: PR, operador: '='}], ordenacao: [{chave: nome, ordem: A}]}";
 	public Response listar(@QueryParam("params") String jsonRequest)  throws Exception {
 		try {
 			Filtro filtro = new Filtro();
 			filtro.inicializar(jsonRequest);
+			// TODO Acrescentar filtro pelo tomador.
+			//filtro.igual("tomadorId", conta);
 			
 			return Response.ok()
 					.entity(

@@ -21,45 +21,6 @@
 
 			<h:inputTextarea value="#{pontoOperacaoMb.sql}" style="width: 1000px; height: 200px"></h:inputTextarea>
 			<p:commandButton value="Listar" actionListener="#{pontoOperacaoMb.listar}" update="@all"></p:commandButton>
-			<p:dataTable id="listagem" value="#{pontoOperacaoMb.lista}" var="item"
-				emptyMessage="Nenhum registro retornado na consulta">
-				<p:column>
-					<f:facet name="header">Demanda</f:facet>
-					<h:outputText value="#{item.id}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">Origem</f:facet>
-					<h:outputText value="#{item.origemNome}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">Destino</f:facet>
-					<h:outputText value="#{item.destinoNome}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">Produto</f:facet>
-					<h:outputText value="#{item.produtoNome}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">Status</f:facet>
-					<h:outputText value="#{item.statusDescricao}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">Cargas realizadas</f:facet>
-					<h:outputText value="#{item.cargasRealizadas}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">Cargas pendentes</f:facet>
-					<h:outputText value="#{item.cargasPendentes}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">Cargas em trânsito</f:facet>
-					<h:outputText value="#{item.cargasTransito}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">Embarcado</f:facet>
-					<h:outputText value="#{item.quantidadeEmbarcada}" />
-				</p:column>
-			</p:dataTable>
 			<p />
 		</h:form>
 	</ui:define>

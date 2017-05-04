@@ -35,7 +35,7 @@ public class PontoOperacaoMb implements Serializable {
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
-	}
+ 	}
 	
 	public List<Object[]> getLista() {
 		return lista;

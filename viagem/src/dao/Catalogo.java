@@ -92,7 +92,7 @@ public abstract class Catalogo<T> {
 		for (Restricao r: filtro.getRestricoes()) {
 			String condicao = 
 					conversaoFiltroParaCampo.get(r.getChave())
-					+ " ".concat(r.getRestricao())
+					+ " ".concat(r.getOperador())
 					+ " :".concat(r.getChave());
 			if (i == 0) {
 				sql.append(" WHERE");

@@ -42,7 +42,7 @@ public class Filtro implements Serializable {
 				Restricao r = new Restricao(
 						e.getAsJsonObject().get("chave").getAsString(),
 						e.getAsJsonObject().get("valor").getAsString(),
-						e.getAsJsonObject().get("restricao").getAsString());
+						e.getAsJsonObject().get("operador").getAsString());
 				this.restricoes.add(r);
 			}
 		}
@@ -122,12 +122,12 @@ public class Filtro implements Serializable {
 
 		 private String chave;
 		 private Object valor;
-		 private String restricao;
+		 private String operador;
 
-		 public Restricao(String chave, Object valor, String restricao) {
+		 public Restricao(String chave, Object valor, String operador) {
 			 this.chave = chave;
 			 this.valor = valor;
-			 this.restricao = restricao;
+			 this.operador = operador;
 		 }
 
 		 public String getChave() {
@@ -138,8 +138,8 @@ public class Filtro implements Serializable {
 			 return valor;
 		 }
 
-		 public String getRestricao() {
-			 return restricao;
+		 public String getOperador() {
+			 return operador;
 		 }
 
 	 }
