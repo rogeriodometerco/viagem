@@ -10,14 +10,14 @@ import com.google.gson.JsonObject;
 
 import dto.Filtro;
 import dto.ParametrosListagem;
+import enums.TipoOperacaoViagem;
 
 public class TesteJsonRest {
 
 	
 	public static void main(String[] args) {
 		TesteJsonRest teste = new TesteJsonRest();
-		teste.testar();
-		teste.testar3();
+		teste.testar5();
 	}
 
 	public void testar(){
@@ -66,7 +66,11 @@ public class TesteJsonRest {
 		Filtro f = new Filtro();
 		//f.inicializar(json);
 		System.out.println(f);
-		
+	}
+	
+	public void testar5() {
+		String sql = "select * from OperacaoViagem where tipo = " + TipoOperacaoViagem.COLETA.ordinal();
+		System.out.println(sql);
 	}
 
 }

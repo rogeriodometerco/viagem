@@ -4,7 +4,7 @@ where p.id = o.pontoviagem_id;
 
 
 
-
+--------------------------
 
 -- cargas realizadas
 select * from operacaoviagem where tipo = 0 (COLETA) and status = 1 (REALIZADA) and datahorastatus >= HOJE;
@@ -21,65 +21,7 @@ select * from operacaoviagem where status = 0 (PENDENTE);
 
 
 
-select 
-	d.id,
-	d.origem_id,
-	e1.nome as origem_nome,
-	m1.id as origem_municipio_id,
-	m1.nome as origem_municipio_nome,
-	u1.abreviatura as origem_uf_abreviatura,
-	e2.nome as destino_nome,
-	m2.id as destino_municipio_id,
-	m2.nome as destino_municipio_nome,
-	u2.abreviatura as destino_uf_abreviatura,
-	d.produto_id,
-	p.nome as produto_nome,
-	d.quantidade,
-	d.unidadequantidade_id,
-	u.abreviacao as unidadequantidade_abreviacao,
-	d.status,
-	d.tomador_id,
-	t.nome as tomador_nome,
-	(
-		select count(*) from operacaoviagem o, etapaentrega ee, entrega e
-		where o.etapaentrega_id = ee.id and ee.entrega_id = e.id and e.demanda_id = d.id
-		and o.tipo = 1 and o.status = 1
-	) cargaspendentes,
-	(
-		select count(*) from operacaoviagem o, etapaentrega ee, entrega e
-		where o.etapaentrega_id = ee.id and ee.entrega_id = e.id and e.demanda_id = d.id
-		and o.tipo = 1 and o.status = 2
-	) cargasrealizadas,
-	(
-		select count(*) from entrega e
-		where e.demanda_id = d.id and e.status in (2,3)
-	) cargastransito
-from 
-	demandatransporte d,
-	estabelecimento e1,
-	estabelecimento e2,
-	municipio m1,
-	municipio m2, 
-	produto p,
-	unidadequantidade u,
-	uf u1,
-	uf u2,
-	conta t
-where
-	d.origem_id = e1.id
-	and d.destino_id = e2.id
-	and e1.municipio_id = m1.id
-	and m1.uf_id = u1.id
-	and e2.municipio_id = m2.id
-	and m2.uf_id = u2.id
-	and d.produto_id = p.id
-	and d.tomador_id = t.id
-
------------------------
-	
-	
-	
-	
+-----------------
 	
 	
 	SELECT td.id AS transportador_demanda_id,
@@ -126,3 +68,63 @@ where
     Conta c1,
     Conta c2
   WHERE td.transportador.id = c2.id AND td.demanda.id = d.id AND d.origem.id = e1.id AND d.destino.id = e2.id AND e1.endereco.municipio.id = m1.id AND m1.uf.id = u1.id AND e2.endereco.municipio.id = m2.id AND m2.uf.id = u2.id AND d.produto.id = p.id AND d.unidadeQuantidade.id = uq.id AND d.tomador.id = c1.id
+  
+  
+  ---------------
+  
+  select o, p, v, e, ee
+from OperacaoViagem o, PontoViagem p, Viagem v, Entrega e, EtapaEntrega ee
+where o.pontoViagem = p and p.viagem = v
+and o.etapaEntrega = ee and ee.entrega = e
+and p.estabelecimento.id > 5
+
+
+--------------
+
+
+--select * From operacaoviagem
+SELECT
+	o.id as operacao_id,
+	o.tipo as operacao_tipo,
+	o.status as operacao_status,
+	o.datahorastatus as operacao_datahorastatus,
+	p.estabelecimento_id as ponto_estabelecimento_id,
+	e1.nome as ponto_estabelecimento_nome,
+	e1.municipio_id as ponto_estabelecimento_municipio_id,
+	uf1.id as ponto_uf_id,
+	uf1.abreviatura as ponto_uf_abreviatura,
+	p.status as ponto_status,
+	p.datahorastatus as ponto_datahorastatus,
+	p.datachegadaacordada as ponto_datachegadaacordada,
+	p.datahoraprevistachegada as ponto_datahoraprevistachegada,
+	p.datahorachegada as ponto_datahorachegada,
+	p.datahorasaida as ponto_datahorasaida,
+	v.id as viagem_id,
+	v.status as viagem_status,
+	v.datahorastatus as viagem_datahorastatus,
+	v.motorista_id as viagem_motorista_id,
+	v.transportador_id as viagem_transportador_id,
+	v.veiculo_id as viagem_veiculo_id,
+	e.quantidade as entrega_quantidade,
+	e.status as entrega_status,
+	e.datahorastatus as entrega_datahorastatus,
+	e.demanda_id as entrega_demanda_id,
+	e.produto_id as entrega_produto_id,
+	e.unidadequantidade_id as entrega_unidadequantidade_id
+FROM
+	operacaoviagem o,
+	estabelecimento e1,
+	municipio m1,
+	uf uf1,
+	pontoviagem p,
+	viagem v,
+	entrega e,
+	etapaentrega ee
+WHERE
+	o.pontoviagem_id = p.id
+	and p.viagem_id = v.id
+	and o.etapaentrega_id = ee.id
+	and ee.entrega_id = e.id
+	and p.estabelecimento_id = e1.id
+	and e1.municipio_id = m1.id
+	and m1.uf_id = uf1.id

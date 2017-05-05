@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.ejb.Stateless;
 
@@ -28,6 +29,17 @@ public class DemandaTransportadorViewCatalogo extends Catalogo<DemandaTransporta
 		this.conversaoFiltroParaCampo.put("status", CAMPO_STATUS);
 		this.conversaoFiltroParaCampo.put("tomadorId", CAMPO_TOMADOR_ID);
 		this.conversaoFiltroParaCampo.put("transportadorId", CAMPO_TRANSPORTADOR_ID);
+	}
+	
+	public List<Object[]> listar() throws Exception {
+		List<Object[]> result = null;
+		
+		String sql = "SELECT "
+				+ "	d,"
+				+ " SELECT count(*) FROM Entrega e WHERE e.demanda = d"
+				+ " FROM "
+				+ " DemandaTransporte d";
+		return result;
 	}
 
 }
