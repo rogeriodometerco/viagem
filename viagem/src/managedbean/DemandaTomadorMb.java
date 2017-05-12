@@ -33,8 +33,11 @@ public class DemandaTomadorMb implements Serializable {
 		try {
 			Filtro filtro = new Filtro();
 			//filtro.igual(DemandaTomadorViewCatalogo.CAMPO_ID, 99l);
-			filtro.igual(DemandaTomadorViewCatalogo.CAMPO_STATUS, StatusDemandaTransporte.FINALIZADA.ordinal());
-			this.lista = catalogo.recuperarLista(filtro);
+			//filtro.igual(DemandaTomadorViewCatalogo.CAMPO_STATUS, StatusDemandaTransporte.FINALIZADA.ordinal());
+			Long t1 = System.currentTimeMillis();
+			this.lista = catalogo.listar(filtro).getLista();
+			Long t2 = System.currentTimeMillis();
+			System.out.println(t2-t1);
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}

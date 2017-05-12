@@ -10,18 +10,24 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
 	template="/template/geral.xhtml">
 
-	<ui:define name="titulo">Cadastro de veículo</ui:define>
+	<ui:define name="titulo">Teste sql</ui:define>
 	<ui:define name="conteudo">
 		<p:messages id="mensagens" closable="true" />
 
 		<h:form id="form1">
 			<h3>
-				<p:outputLabel value="Teste da view pontoOperacao" />
+				<p:outputLabel value="Execução de sql para teste" />
 			</h3>
 
-			<h:inputTextarea value="#{pontoOperacaoMb.sql}" style="width: 1000px; height: 200px"></h:inputTextarea>
-			<p:commandButton value="Listar" actionListener="#{pontoOperacaoMb.listar}" update="@all"></p:commandButton>
+			<p:commandButton value="Listar" actionListener="#{testeSqlMb.listar}" update="@all"></p:commandButton>
+			<p:commandButton value="Listar operações" actionListener="#{testeSqlMb.listarOperacoes}" update="@all"></p:commandButton>
+			<h:outputText value="Tempo: #{testeSqlMb.tempo}" />
+			<h:outputText value="Itens: #{testeSqlMb.lista.size()}" rendered="#{testeSqlMb.lista != null}"/>
+			
+			<p/>
+			<h:inputTextarea value="#{testeSqlMb.sql}" style="width: 1200px; height: 200px"></h:inputTextarea>
 			<p />
+			
 		</h:form>
 	</ui:define>
 </ui:composition>

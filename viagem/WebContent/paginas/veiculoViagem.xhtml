@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui" template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Status da frota</ui:define>
+	<ui:define name="conteudo">
+
+		<p:importEnum type="enums.StatusViagem" var="statusViagem"
+			allSuffix="ALL_ENUM_VALUES" />
+
+		<h3>
+			<p:outputLabel value="Status da frota" />
+		</h3>
+
+		<h:panelGrid columns="4">
+			<h:outputText value="Status viagem" />
+			<h:outputText value="Placa" />
+			<h:outputText value="Motorista" />
+			<h:outputText value="" />
+
+			<p:selectOneMenu>
+				<f:selectItem itemLabel="Todos" itemValue="" />
+				<f:selectItems var="item" value="#{statusViagem.ALL_ENUM_VALUES}"
+					itemLabel="#{item.descricao}" itemvalue="#{item}" />
+			</p:selectOneMenu>
+			<p:inputText style="width:90px" />
+			<p:inputText style="width:120px" />
+
+			<p:commandButton value="Listar" />
+		</h:panelGrid>
+
+		<p:dataTable var="item" value="#{veiculoViagemMb.lista}"
+			tableStyle="width: auto">
+			<p:column>
+				<f:facet name="header">Veículo</f:facet>
+				<h:outputText value="#{item.placa}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Motorista</f:facet>
+				<h:outputText value="#{item.motorista}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Viagem</f:facet>
+				<h:outputText value="#{item.viagem}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Status</f:facet>
+				<h:outputText value="#{item.statusViagem}"></h:outputText>
+			</p:column>
+
+		</p:dataTable>
+
+	</ui:define>
+</ui:composition>

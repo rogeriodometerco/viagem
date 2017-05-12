@@ -14,41 +14,46 @@
 	<h:form>
 		<h:outputStylesheet name="geral.css" library="css" />
 
-		<div style="background-color: #eeeeee; padding: 10px">
-		<h:panelGrid columns="5">
-			<p:commandButton id="menuButton" title="Menu" type="button"
-				icon="ui-icon-home" />
-			<p:slideMenu overlay="true" trigger="menuButton" my="left top"
-				at="left bottom" style="width:180px">
-				<p:menuitem outcome="/paginas/conta" value="Conta" />
-				<p:menuitem outcome="/paginas/usuario" value="Usuário" />
-				<p:menuitem outcome="/paginas/uf" value="UF" />
-				<p:menuitem outcome="/paginas/municipio" value="Município" />
-				<p:menuitem outcome="/paginas/veiculo" value="Veículo" />
-				<p:menuitem outcome="/paginas/estabelecimento"
-					value="Estabelecimento" />
-				<p:menuitem outcome="/paginas/demandaTransporte"
-					value="Demanda de transporte" />
-				<p:menuitem outcome="/paginas/programacaoVeiculo"
-					value="Programação de veículo" />
-				<p:menuitem outcome="/paginas/viagemMotorista"
-					value="Viagem do motorista" />
-			</p:slideMenu>
+		<div style="background-color: #aaaaaa; padding: 5px; margin: -8px">
+			<h:panelGrid columns="5">
+				<p:commandButton id="menuButton" title="Menu" type="button"
+					icon="ui-icon-home" />
+				<p:slideMenu overlay="true" trigger="menuButton" my="left top"
+					at="left bottom" style="width:270px">
+					<p:menuitem outcome="/paginas/conta" value="Conta" />
+					<p:menuitem outcome="/paginas/usuario" value="Usuário" />
+					<p:menuitem outcome="/paginas/uf" value="UF" />
+					<p:menuitem outcome="/paginas/municipio" value="Município" />
+					<p:menuitem outcome="/paginas/veiculo" value="Veículo" />
+					<p:menuitem outcome="/paginas/estabelecimento"
+						value="Estabelecimento" />
+					<p:menuitem outcome="/paginas/demandaTransporte"
+						value="Demanda de transporte" />
+					<p:menuitem outcome="/paginas/programacaoVeiculo"
+						value="Programação de veículo" />
+					<p:menuitem outcome="/paginas/viagemMotorista"
+						value="Viagem do motorista" />
 
-			<label style="font-size: 20px">Gestão de transporte de cargas</label>
+					<p:menuitem outcome="/paginas/veiculoViagem"
+						value="Status da frota" />
+					<p:menuitem outcome="/paginas/consultaOperacoes"
+						value="Consulta operações" />
+					<p:menuitem outcome="/paginas/movimentacaoDemanda"
+						value="Cargas por demanda" />
+					<p:menuitem outcome="/paginas/cargasPendentes"
+						value="Cargas pendentes" />
+					<p:menuitem outcome="/paginas/pontualidade"
+						value="Pontualidade do motorista" />
+				</p:slideMenu>
 
-			<p:autoComplete value="#{sessaoMb.conta}"
-				completeMethod="#{contaMb.autocomplete}" var="conta"
-				itemLabel="#{conta.nome}" itemValue="#{conta}"
-				converter="contaConverter" forceSelection="true">
-				<p:ajax event="itemSelect" />
-			</p:autoComplete>
-		</h:panelGrid>
+				<label style="font-size: 18px; color: white">Gestão de transporte de cargas</label>
+			</h:panelGrid>
 
 		</div>
+		
 	</h:form>
 
-
+	<p/>
 	<ui:insert name="conteudo" />
 
 </h:body>

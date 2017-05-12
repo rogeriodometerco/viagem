@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.ejb.Stateless;
 
@@ -26,6 +27,12 @@ public class DemandaTomadorViewCatalogo extends Catalogo<DemandaTomadorView> {
 		this.conversaoFiltroParaCampo.put("produtoId", CAMPO_PRODUTO_ID);
 		this.conversaoFiltroParaCampo.put("status", CAMPO_STATUS);
 		this.conversaoFiltroParaCampo.put("tomadorId", CAMPO_TOMADOR_ID);
+	}
+	
+	public List<DemandaTomadorView> listarDemandas() throws Exception {
+		List<DemandaTomadorView> result = null;
+	
+		return result;
 	}
 
 }

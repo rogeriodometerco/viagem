@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Consulta entregas pendentes</ui:define>
+	<ui:define name="conteudo">
+
+		<script>
+			function exibirMensagem(msg) {
+				$("#numero").val(msg);
+				//$("#carros").hide();
+				PrimeFaces.widgets.cars.hide();
+				$("#buttonOk").click();
+				//cars.close();
+				//alert(msg);
+			}
+		</script>
+
+
+		<h3>
+			<p:outputLabel value="Cargas pendentes" />
+		</h3>
+
+		<h:panelGrid columns="7">
+			<h:outputText value="Transportador" />
+			<h:outputText value="Tomador" />
+			<h:outputText value="Demanda" />
+			<h:outputText value="Origem" />
+			<h:outputText value="Destino" />
+			<h:outputText value="Produto" />
+			<h:outputText value="" />
+
+			<p:inputText />
+			<p:inputText />
+			<p:inputText />
+			<p:inputText />
+			<p:inputText />
+			<p:inputText />
+			<p:commandButton value="Listar" />
+
+		</h:panelGrid>
+
+
+
+		<p:dataTable var="item" value="#{cargasPendentesMb.lista}"
+			>
+			<p:column>
+				<f:facet name="header">Status</f:facet>
+				<h:outputText value="#{item.status}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Demanda</f:facet>
+				<h:outputText value="#{item.demandaId}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Origem</f:facet>
+				<h:outputText value="#{item.origem}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Destino</f:facet>
+				<h:outputText value="#{item.destino}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Produto</f:facet>
+				<h:outputText value="#{item.produto}"></h:outputText>
+			</p:column>
+
+			<p:column style="text-align: center">
+				<f:facet name="header">Qtde</f:facet>
+				<h:outputText value="#{item.quantidade} TN"></h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">Tomador</f:facet>
+				<h:outputText value="#{item.tomador}"></h:outputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">Transportador</f:facet>
+				<h:outputText value="#{item.transportador}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Motorista</f:facet>
+				<h:outputText value="#{item.motorista}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Placa</f:facet>
+				<h:outputText value="#{item.placa}"></h:outputText>
+			</p:column>
+
+
+		</p:dataTable>
+
+	</ui:define>
+</ui:composition>

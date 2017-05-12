@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Pontualidade</ui:define>
+	<ui:define name="conteudo">
+
+		<script>
+			function exibirMensagem(msg) {
+				$("#numero").val(msg);
+				//$("#carros").hide();
+				PrimeFaces.widgets.cars.hide();
+				$("#buttonOk").click();
+				//cars.close();
+				//alert(msg);
+			}
+		</script>
+
+		<h3>
+			<p:outputLabel value="Pontualidade do motorista em relação ao acordado e previsto" />
+		</h3>
+
+
+		<h:panelGrid columns="8">
+			<h:outputText value="Status" />
+			<h:outputText value="Período" />
+			<h:outputText value="" />
+			<h:outputText value="Tomador" />
+			<h:outputText value="Transportador" />
+			<h:outputText value="Veículo" />
+			<h:outputText value="Estabelecimento" />
+			<h:outputText value="" />
+
+			<p:selectOneMenu>
+				<f:selectItem itemLabel="A caminho" itemValue="1" />
+				<f:selectItem itemLabel="Chegou" itemValue="2" />
+			</p:selectOneMenu>
+			<p:inputText />
+			<p:inputText />
+			<p:inputText />
+			<p:inputText />
+			<p:inputText />
+			<p:inputText />
+			<p:commandButton value="Listar" />
+
+		</h:panelGrid>
+
+
+		<p:dataTable var="item" value="#{pontualidadeMb.lista}">
+			<p:column>
+				<f:facet name="header">Veículo</f:facet>
+				<h:outputText value="#{item.placa}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Motorista</f:facet>
+				<h:outputText value="#{item.motorista}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Tomador</f:facet>
+				<h:outputText value="#{item.tomador}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Transportador</f:facet>
+				<h:outputText value="#{item.transportador}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Estabelecimento</f:facet>
+				<h:outputText value="#{item.estabelecimento}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Data acordada</f:facet>
+				<h:outputText value="#{item.dataAcordada}">
+					<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+				</h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Data prevista</f:facet>
+				<h:outputText value="#{item.dataPrevista}">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+				</h:outputText>
+			</p:column>
+			<p:column style="text-align: center">
+				<f:facet name="header">Previsões</f:facet>
+				<h:outputText value="#{item.previsoes}">
+				</h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Data chegada</f:facet>
+				<h:outputText value="#{item.dataChegada}">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+				</h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">Atraso</f:facet>
+				<h:outputText value="#{item.atraso}">
+				</h:outputText>
+			</p:column>
+
+
+		</p:dataTable>
+
+	</ui:define>
+</ui:composition>

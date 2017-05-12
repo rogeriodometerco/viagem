@@ -44,8 +44,8 @@ public abstract class Catalogo<T> {
 		List<T> lista = new ArrayList<T>();
 
 		try {
-			lista = recuperarLista(filtro);
-			Long count = realizarContagem(filtro);
+			lista = recuperarLista("SELECT " + classeEntidade.getSimpleName() + " FROM " + classeEntidade.getName() + " " + classeEntidade.getSimpleName(), filtro);
+			Long count = realizarContagem("SELECT COUNT(" + classeEntidade.getSimpleName() + ") FROM " + classeEntidade.getName() + " " + classeEntidade.getSimpleName(), filtro);
 			listagem.set(filtro.getPagina(), lista, count);
 		} catch(Exception e) {
 			throw new AppException("Erro ao listar " + classeEntidade.getName() + ": " + e.getMessage(), e);
@@ -53,11 +53,11 @@ public abstract class Catalogo<T> {
 		return listagem;
 	}
 
-	public List<T> recuperarLista(Filtro filtro) throws Exception {
+	public List<T> recuperarLista(String select, Filtro filtro) throws Exception {
 		List<T> result = null;
 		try {
 
-			String sql = montarSql("SELECT x FROM " + classeEntidade.getName() + " x", filtro);
+			String sql = montarSql(select, filtro);
 			TypedQuery<T> query = getEntityManager()
 					.createQuery(sql, classeEntidade)
 					.setFirstResult((int)(filtro.getPagina() * filtro.getTamanhoPagina() - filtro.getTamanhoPagina()))
@@ -70,10 +70,10 @@ public abstract class Catalogo<T> {
 		return result;
 	}
 
-	public Long realizarContagem(Filtro filtro) throws Exception {
+	public Long realizarContagem(String select, Filtro filtro) throws Exception {
 		Long count = 0l;
 		try {
-			String sql = montarSql("SELECT COUNT(x) FROM " + classeEntidade.getName() + " x", filtro);
+			String sql = montarSql(select, filtro);
 			TypedQuery<Long> query = getEntityManager()
 					.createQuery(sql, Long.class);
 			inicializarParametros(query, filtro);

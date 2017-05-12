@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	template="/template/geral.xhtml">
+
+	<ui:define name="titulo">Consulta operações</ui:define>
+	<ui:define name="conteudo">
+		<p:messages id="mensagens" closable="true" />
+
+		<h:form id="form1">
+			<h3>
+				<p:outputLabel value="Consulta operações" />
+			</h3>
+
+			<h:panelGrid columns="8">
+				<p:outputLabel value="Demanda" />
+				<p:outputLabel value="Estabelecimento" />
+				<p:outputLabel value="Operação" />
+				<p:outputLabel value="Status" />
+				<p:outputLabel value="Período" />
+				<p:outputLabel value="Produto" />
+				<p:outputLabel value="Origem" />
+				<p:outputLabel value="Destino" />
+
+				<p:inputText value="#{operacaoViagemMb.demandaId}" style="width: 50px"/>
+
+				<p:autoComplete value="#{operacaoViagemMb.estabelecimento}"
+					completeMethod="#{estabelecimentoMb.autocomplete}"
+					var="estabelecimento"
+					itemLabel="#{estabelecimento.nome.concat(' - ').concat(estabelecimento.endereco.municipio.nome)}"
+					itemValue="#{estabelecimento}" converter="estabelecimentoConverter"
+					forceSelection="true" />
+				
+				<p:selectOneMenu style="width:100px">
+					<f:selectItem itemLabel="Todas" itemValue="" />
+					<f:selectItem itemLabel="Coleta" itemValue="COLETA" />
+					<f:selectItem itemLabel="Entrega" itemValue="ENTREGA" />
+				</p:selectOneMenu>
+
+				<p:selectOneMenu style="width:100px">
+					<f:selectItem itemLabel="Todos" itemValue="" />
+					<f:selectItem itemLabel="Pendente" itemValue="COLETA" />
+					<f:selectItem itemLabel="Realizado" itemValue="ENTREGA" />
+				</p:selectOneMenu>
+
+				<h:panelGroup>
+					<p:inputText style="width:75px" pattern="dd/MM/yyyy" />
+					a
+					<p:inputText style="width:75px" pattern="dd/MM/yyyy" />
+				</h:panelGroup>
+				
+				<p:inputText  />
+
+				<p:autoComplete value="#{operacaoViagemMb.origem}"
+					completeMethod="#{estabelecimentoMb.autocomplete}"
+					var="estabelecimento"
+					itemLabel="#{estabelecimento.nome.concat(' - ').concat(estabelecimento.endereco.municipio.nome)}"
+					itemValue="#{estabelecimento}" converter="estabelecimentoConverter"
+					forceSelection="true" />
+
+				<p:autoComplete value="#{operacaoViagemMb.destino}"
+					completeMethod="#{estabelecimentoMb.autocomplete}"
+					var="estabelecimento"
+					itemLabel="#{estabelecimento.nome.concat(' - ').concat(estabelecimento.endereco.municipio.nome)}"
+					itemValue="#{estabelecimento}" converter="estabelecimentoConverter"
+					forceSelection="true" />
+
+
+				<p:commandButton value="Listar"
+					actionListener="#{operacaoViagemMb.listar}" update="listagem "></p:commandButton>
+					<!-- 
+				<h:outputText id="tempo" value="Tempo: #{operacaoViagemMb.tempo}" />
+				
+				 -->
+			</h:panelGrid>
+
+			<p />
+
+			<p:dataTable id="listagem" value="#{operacaoViagemMb.lista}"
+				var="item">
+				<p:column width="55">
+					<f:facet name="header">Demanda</f:facet>
+					<h:outputText value="#{item.demandaId}"></h:outputText>
+				</p:column>
+				<p:column width="180">
+					<f:facet name="header">Estabelecimento</f:facet>
+					<h:outputText
+						value="#{item.estabelecimentoNome} , #{item.estabelecimentoMunicipio} - #{item.estabelecimentoUf}"></h:outputText>
+				</p:column>
+				<p:column width="60">
+					<f:facet name="header">Operacao</f:facet>
+					<h:outputText value="#{item.tipoOperacao.descricao}"></h:outputText>
+				</p:column>
+				<p:column width="90">
+					<f:facet name="header">Produto</f:facet>
+					<h:outputText value="#{item.produtoNome}"></h:outputText>
+				</p:column>
+				<p:column width="60">
+					<f:facet name="header">Qtde</f:facet>
+					<h:outputText
+						value="#{item.quantidadeOperacao} #{item.unidadeQuantidade}"></h:outputText>
+				</p:column>
+				<p:column width="90">
+					<f:facet name="header">Status</f:facet>
+					<h:outputText value="#{item.statusOperacao.descricao}"></h:outputText>
+				</p:column>
+				<!-- 
+				<p:column width="200">
+					<f:facet name="header">De/para</f:facet>
+					<h:outputText value="#{item.origemOuDestino}"/>
+				</p:column>
+				 -->
+				<p:column width="120">
+					<f:facet name="header">Transportador</f:facet>
+					<h:outputText value="#{item.transportadorNome}"></h:outputText>
+				</p:column>
+				<p:column width="60">
+					<f:facet name="header">Placa</f:facet>
+					<h:outputText value="#{item.placa}"></h:outputText>
+				</p:column>
+				<p:column width="90">
+					<f:facet name="header">Motorista</f:facet>
+					<h:outputText value="#{item.motoristaNome}"></h:outputText>
+				</p:column>
+				<!-- 
+				<p:column>
+					<f:facet name="header">Viagem</f:facet>
+					<h:outputText value="#{item.viagemId}"></h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Status viagem</f:facet>
+					<h:outputText value="#{item.statusViagem.descricao}"></h:outputText>
+				</p:column>
+				 -->
+				<p:column>
+					<f:facet name="header">Chegada acordada</f:facet>
+					<h:outputText value="#{item.dataChegadaAcordada}">
+						<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Chegada prevista</f:facet>
+					<h:outputText value="#{item.dataHoraChegadaPrevista}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Chegada</f:facet>
+					<h:outputText value="#{item.dataHoraChegadaPrevista}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Saída</f:facet>
+					<h:outputText value="#{item.dataHoraSaida}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

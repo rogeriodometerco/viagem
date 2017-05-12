@@ -76,7 +76,7 @@ select * from operacaoviagem where status = 0 (PENDENTE);
 from OperacaoViagem o, PontoViagem p, Viagem v, Entrega e, EtapaEntrega ee
 where o.pontoViagem = p and p.viagem = v
 and o.etapaEntrega = ee and ee.entrega = e
-and p.estabelecimento.id > 5
+
 
 
 --------------
@@ -128,3 +128,57 @@ WHERE
 	and p.estabelecimento_id = e1.id
 	and e1.municipio_id = m1.id
 	and m1.uf_id = uf1.id
+	
+	
+	
+	
+	
+	
+	
+	-----------------------
+	
+	SELECT
+	o.id 
+	,o.tipo
+	,o.status
+	,o.dataHoraStatus
+	,p.estabelecimento.id
+	,e1.nome
+	,e1.endereco.municipio.id
+	,uf1.id
+	,uf1.abreviatura
+	,p.status 
+	,p.dataHoraStatus 
+	,p.dataChegadaAcordada 
+	,p.dataHoraPrevistaChegada 
+	,p.dataHoraChegada 
+	,p.dataHoraSaida 
+	,v.id 
+	,v.status 
+	,v.dataHoraStatus 
+	,v.motorista.id 
+	,v.transportador.id 
+	,v.veiculo.id 
+	,e.quantidade 
+	,e.status 
+	,e.dataHoraStatus 
+	,e.demanda.id 
+	,e.produto.id 
+	,e.unidadeQuantidade.id 
+FROM
+	OperacaoViagem o,
+	Estabelecimento e1,
+	Municipio m1,
+	UF uf1,
+	PontoViagem p,
+	Viagem v,
+	Entrega e,
+	EtapaEntrega ee
+WHERE
+	o.pontoViagem.id = p.id
+	and p.viagem.id = v.id
+	and o.etapaEntrega.id = ee.id
+	and ee.entrega.id = e.id
+	and p.estabelecimento.id = e1.id
+	and e1.endereco.municipio.id = m1.id
+	and m1.uf.id = uf1.id
