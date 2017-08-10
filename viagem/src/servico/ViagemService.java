@@ -18,10 +18,12 @@ import enums.TipoTerminoOperacao;
 import exception.AppException;
 import modelo.Conta;
 import modelo.EtapaEntrega;
+import modelo.EventoAceiteViagem;
 import modelo.EventoChegada;
 import modelo.EventoCriacaoViagem;
 import modelo.EventoInicioViagem;
 import modelo.EventoPrevisaoChegada;
+import modelo.EventoRecusaViagem;
 import modelo.EventoSaida;
 import modelo.EventoTerminoOperacao;
 import modelo.EventoTerminoViagem;
@@ -77,17 +79,17 @@ public class ViagemService {
 		// TODO
 
 		if (viagem.getVeiculo() == null) {
-			erros.add("VeÌculo da viagem È obrigatÛrio");
+			erros.add("Ve√≠culo da viagem √© obrigat√≥rio");
 		}
 		if (viagem.getMotorista() == null) {
-			erros.add("Motorista da viagem È obrigatÛrio");
+			erros.add("Motorista da viagem √© obrigat√≥rio");
 		}
 		if (viagem.getEtapas() == null || viagem.getEtapas().isEmpty()) {
 			erros.add("Deve ser acrescentada ao menos uma demanda para a viagem");
 		} else {
 			for (EtapaEntrega etapa: viagem.getEtapas()) {
 				if (etapa.getEntrega().getQuantidade() == null || etapa.getEntrega().getQuantidade() <= 0) {
-					// TODO Retirar coment·rio abaixo para ativar validaÁ„o.
+					// TODO Retirar coment√°rio abaixo para ativar valica√ß√£o.
 					//erros.add("Quantidade de produto deve ser informada");
 					break;
 				}
@@ -95,7 +97,7 @@ public class ViagemService {
 		}
 		for (PontoViagem ponto: viagem.getPontos()) {
 			if (ponto.getDataChegadaAcordada() == null) {
-				// TODO Retirar coment·rio abaixo para ativar validaÁ„o.
+				// TODO Retirar coment√°rio abaixo para ativar valica√ß√£o.
 				erros.add("Data prevista de chegada em " + ponto.getEstabelecimento().getNome() + " deve ser informada");
 			}
 		}
@@ -123,23 +125,10 @@ public class ViagemService {
 		return result;
 	}
 
-	public Viagem obterViagemEmFocoDoMotoristaLogado() throws AppException {
-		// TODO Recuperar motorista logado e passar como par‚metro.
-		Viagem viagemEmFoco = null;
-		try {
-			viagemEmFoco = viagemDao.recuperarViagensNaoEncerradas()
-					.get(0);
-		} catch (Exception e) {
-			throw new AppException("Erro ao recuperar viagem para o motorista: " + e.getMessage());
-		}
-		return viagemEmFoco;
-	}
-
 	public Viagem obterViagemEmFocoDoMotorista(Conta motorista) throws AppException {
-		// TODO Recuperar motorista logado e passar como par‚metro.
 		Viagem viagemEmFoco = null;
 		try {
-			List<Viagem> viagens = viagemDao.recuperarViagensNaoEncerradas(motorista);
+			List<Viagem> viagens = viagemDao.recuperarViagensNaoFinalizadas(motorista);
 
 			// Da lista retornada, escolhe a viagem mais antiga.
 			for (Viagem viagem: viagens) {
@@ -165,7 +154,31 @@ public class ViagemService {
 		eventoService.registrarEvento(evento);
 	}
 
-	public void iniciarViagem(Viagem viagem) throws AppException {
+	public void registrarAceiteViagem(Viagem viagem) throws AppException {
+		try {
+			EventoAceiteViagem evento = new EventoAceiteViagem();
+			evento.setViagem(viagem);
+			evento.setDataHoraRegistro(new Date());
+			evento.setDataHoraAceite(new Date());
+			eventoService.registrarEvento(evento);
+		} catch (Exception e) {
+			throw new AppException("Erro ao registrar aceite da viagem: " + e.getMessage());
+		}
+	}
+
+	public void registrarRecusaViagem(Viagem viagem) throws AppException {
+		try {
+			EventoRecusaViagem evento = new EventoRecusaViagem();
+			evento.setViagem(viagem);
+			evento.setDataHoraRegistro(new Date());
+			evento.setDataHoraRecusa(new Date());
+			eventoService.registrarEvento(evento);
+		} catch (Exception e) {
+			throw new AppException("Erro ao registrar recusa da viagem: " + e.getMessage());
+		}
+	}
+
+	public void registrarInicioViagem(Viagem viagem) throws AppException {
 		try {
 			EventoInicioViagem evento = new EventoInicioViagem();
 			evento.setViagem(viagem);
@@ -173,7 +186,7 @@ public class ViagemService {
 			evento.setDataHoraRegistro(new Date());
 			eventoService.registrarEvento(evento);
 		} catch (Exception e) {
-			throw new AppException("Erro ao iniciar viagem: " + e.getMessage());
+			throw new AppException("Erro ao registrar in√≠cio da viagem: " + e.getMessage());
 		}
 	}
 
@@ -185,7 +198,7 @@ public class ViagemService {
 			evento.setDataHoraRegistro(new Date());
 			eventoService.registrarEvento(evento);
 		} catch (Exception e) {
-			throw new AppException("Erro ao registrar previs„o de chegada: " + e.getMessage());
+			throw new AppException("Erro ao registrar previs√£o de chegada: " + e.getMessage());
 		}
 	}
 
@@ -209,16 +222,16 @@ public class ViagemService {
 			evento.setDataHoraRegistro(new Date());
 			eventoService.registrarEvento(evento);
 		} catch (Exception e) {
-			throw new AppException("Erro ao registrar saÌda: " + e.getMessage());
+			throw new AppException("Erro ao registrar sa√≠da: " + e.getMessage());
 		}
 	}
 
-	public void registrarTerminoOperacoes(PontoViagem pontoViagem) throws AppException {
+	public void registrarTerminoOperacoes(PontoViagem pontoViagem, Date dataHoraTermino) throws AppException {
 		try {
 			for (OperacaoViagem operacao: pontoViagem.getOperacoes()) {
 				EventoTerminoOperacao evento = new EventoTerminoOperacao();
 				evento.setOperacao(operacao);
-				evento.setDataHoraTermino(new Date());
+				evento.setDataHoraTermino(dataHoraTermino);
 				if (operacao.getStatus().equals(StatusOperacaoViagem.ABORTADA)) {
 					evento.setTipoTermino(TipoTerminoOperacao.ABORTADA);
 				} else {
@@ -228,15 +241,15 @@ public class ViagemService {
 				eventoService.registrarEvento(evento);
 			}
 		} catch (Exception e) {
-			throw new AppException("Erro ao registrar tÈrmino das operaÁıes: " + e.getMessage());
+			throw new AppException("Erro ao registrar t√©rmino das opera√ß√µes: " + e.getMessage());
 		}
 	}
 	
-	public void finalizarViagem(Viagem viagem) throws AppException {
+	public void finalizarViagem(Viagem viagem, Date dataEncerramento) throws AppException {
 		try {
 			EventoTerminoViagem evento = new EventoTerminoViagem();
 			evento.setViagem(viagem);
-			evento.setDataHoraTermino(new Date());
+			evento.setDataHoraTermino(dataEncerramento);
 			evento.setDataHoraRegistro(new Date());
 			eventoService.registrarEvento(evento);
 		} catch (Exception e) {
@@ -244,5 +257,48 @@ public class ViagemService {
 		}
 	}
 
+
+
+	
+	public List<Viagem> recuperarViagensDoMotorista(Conta motorista) throws AppException {
+		try {
+			return viagemDao.recuperarViagensDoMotorista(motorista);
+		} catch (Exception e) {
+			throw new AppException("Erro ao recuperar viagens: " + e.getMessage());
+		}
+	}
+
+	public List<Viagem> recuperarViagensAguardandoAceite(Conta motorista) throws AppException {
+		try {
+			return viagemDao.recuperarViagensAguardandoAceite(motorista);
+		} catch (Exception e) {
+			throw new AppException("Erro ao recuperar viagens: " + e.getMessage());
+		}
+	}
+
+	public List<Viagem> recuperarViagensAguardandoInicio(Conta motorista) throws Exception {
+		try {
+			return viagemDao.recuperarViagensAguardandoInicio(motorista);
+		} catch (Exception e) {
+			throw new AppException("Erro ao recuperar viagens: " + e.getMessage());
+		}
+	}
+
+	public List<Viagem> recuperarViagensIniciadas(Conta motorista) throws Exception {
+		try {
+			return viagemDao.recuperarViagensIniciadas(motorista);
+		} catch (Exception e) {
+			throw new AppException("Erro ao recuperar viagens: " + e.getMessage());
+		}
+	}
+
+	public List<Viagem> recuperarViagensFinalizadas(Conta motorista) throws Exception {
+		try {
+			return viagemDao.recuperarViagensFinalizadas(motorista);
+		} catch (Exception e) {
+			throw new AppException("Erro ao recuperar viagens: " + e.getMessage());
+		}
+	}
+	
 }
 

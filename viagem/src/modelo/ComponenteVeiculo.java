@@ -13,9 +13,9 @@ public class ComponenteVeiculo {
 	private Long id;
 	
 	private String placa;
-	
 	private Integer quantidadeEixos;
-	
+
+
 	@ManyToOne
 	private TipoCarroceria tipoCarroceria;
 	
@@ -24,6 +24,12 @@ public class ComponenteVeiculo {
 	
 	private Integer posicaoNoVeiculo;
 
+	@ManyToOne
+	private Municipio municipioPlaca;
+	
+	@ManyToOne
+	private Conta conta;
+	
 	public Long getId() {
 		return id;
 	}
@@ -72,4 +78,19 @@ public class ComponenteVeiculo {
 		this.posicaoNoVeiculo = posicaoNoVeiculo;
 	}
 
+	public Conta getConta() {
+		return conta;
+	}
+
+	public void setConta(Conta conta) {
+		this.conta = conta;
+	}
+
+	public Municipio getMunicipioPlaca() {
+		return municipioPlaca;
+	}
+
+	public void setMunicipioPlaca(Municipio municipioPlaca) {
+		this.municipioPlaca = municipioPlaca;
+	}
 }

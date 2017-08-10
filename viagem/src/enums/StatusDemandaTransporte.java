@@ -2,7 +2,7 @@ package enums;
 
 public enum StatusDemandaTransporte {
 	PENDENTE("Pendente"),
-	FINALIZADA("Finalizada");
+	FINALIZADA("Finalizado");
 	
 	private String descricao;
 	

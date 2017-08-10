@@ -76,4 +76,12 @@ public class OperacaoViagem {
 	public void setTipo(TipoOperacaoViagem tipo) {
 		this.tipo = tipo;
 	}
+	
+	public Boolean pendente() {
+		return status.equals(StatusOperacaoViagem.PENDENTE);
+	}
+
+	public Boolean realizada() {
+		return status.equals(StatusOperacaoViagem.REALIZADA);
+	}
 }

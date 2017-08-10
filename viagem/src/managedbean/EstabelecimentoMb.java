@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import enums.EstadoView;
+import modelo.Endereco;
 import modelo.Estabelecimento;
 import servico.EstabelecimentoService;
 import util.JsfUtil;
@@ -34,6 +35,7 @@ public class EstabelecimentoMb implements Serializable {
 
 	public void prepararNovo() {
 		this.estabelecimentoEdicao = new Estabelecimento();
+		this.estabelecimentoEdicao.setEndereco(new Endereco());
 		this.estadoView = EstadoView.INCLUSAO;
 	}
 
@@ -49,14 +51,14 @@ public class EstabelecimentoMb implements Serializable {
 	public void salvar() {
 		try {
 			estabelecimentoService.salvar(estabelecimentoEdicao);
-			JsfUtil.addMsgSucesso("Informações salvas com sucesso");
+			JsfUtil.addMsgSucesso("Informaï¿½ï¿½es salvas com sucesso");
 			if (estaEmModoCriacao()) {
 				prepararNovo();
 			} else {
 				listar();
 			}
 		} catch (Exception e) {
-			JsfUtil.addMsgErro("Erro ao salvar informações: " + e.getMessage());
+			JsfUtil.addMsgErro("Erro ao salvar informaï¿½ï¿½es: " + e.getMessage());
 		}
 	}
 	

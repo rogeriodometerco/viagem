@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 
+import modelo.Conta;
 import modelo.Veiculo;
 
 @Stateless
@@ -90,4 +91,16 @@ public class VeiculoDao extends GenericDao<Veiculo> {
 				.getSingleResult();
 	}
 
+	public List<Veiculo> listarPorConta(Conta conta) throws Exception {
+
+		List<Veiculo> result = null;
+		 String sql = "SELECT x FROM Veiculo x WHERE conta = :conta";
+		 result = getEntityManager()
+				 .createQuery(sql, Veiculo.class)
+				 .setParameter("conta", conta)
+				 .getResultList();
+		 return result;
+	}
+
+	
 }

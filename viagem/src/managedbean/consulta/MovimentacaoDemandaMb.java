@@ -33,7 +33,7 @@ public class MovimentacaoDemandaMb implements Serializable {
 	    item.setOrigem(Arrays.asList("Campo Mourão", "Peabiru", "Araruna", "Farol").get(i%4));
 	    item.setDestino(Arrays.asList("Paranaguá", "Guarapuava", "AGTL", "Cotriguaçu").get(i%4));
 	    item.setProduto(Arrays.asList("Soja", "Milho", "Farelo", "Trigo").get(i%4));
-	    item.setQuantidade("1200" + i%3 * 120 + " TN");
+	    item.setQuantidade(Arrays.asList("1200 TN", "3500 TN", "700 SC", "1280 TN").get(i%4));
 	    item.setCargasHoje(i%4);
 	    item.setAgendadoHoje(i%5);
 	    item.setAgendadoAmanha(i%3);

@@ -1,7 +1,6 @@
 package managedbean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -9,12 +8,20 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
+import dto.DemandaTomadorDto;
+import dto.Filtro;
 import enums.EstadoView;
 import modelo.Conta;
 import modelo.DemandaTransporte;
+import modelo.Entrega;
+import modelo.Estabelecimento;
+import modelo.Produto;
 import modelo.TransportadorDemandaAutorizado;
 import servico.DemandaTransporteService;
+import servico.EntregaService;
+import servico.SessaoService;
 import util.JsfUtil;
 
 @ManagedBean
@@ -25,46 +32,65 @@ public class DemandaTransporteMb implements Serializable {
 
 	@EJB
 	private DemandaTransporteService demandaTransporteService;
-	private List<DemandaTransporte> lista;
+	@EJB
+	private SessaoService sessaoService;
+	@EJB
+	private EntregaService entregaService;
+	private List<DemandaTomadorDto> lista;
 	private DemandaTransporte demandaTransporteEdicao;
-	private DemandaTransporte demandaTransporteSelecionado;
-	private List<Conta> transportadoresEdicao;
+	private DemandaTomadorDto demandaTomadorDtoSelecionada;
+	private Entrega entregaSelecionada;
 	private EstadoView estadoView;
+	private Conta transportadorInformado;
+	private Integer tabIndex;
 
+	private Long filtroDemandaId;
+	private Estabelecimento filtroOrigem;
+	private Estabelecimento filtroDestino;
+	private Produto filtroProduto;
+	private Boolean ehParaExibirExtratoEntregas;
+
+	private List<Entrega> extratoEntregas;
+	
 	@PostConstruct
 	private void inicializar() {
+		//sessaoService = Ejb.lookup(SessaoService.class);
 		listar();
+		this.ehParaExibirExtratoEntregas = false;
 	}
 
 	public void prepararNovo() {
 		this.demandaTransporteEdicao = new DemandaTransporte();
 		this.demandaTransporteEdicao.setTransportadores(new HashSet<TransportadorDemandaAutorizado>());
-		this.transportadoresEdicao = new ArrayList<Conta>();
 		this.estadoView = EstadoView.INCLUSAO;
+		this.tabIndex = 0;
 	}
 
 	public void prepararEdicao() {
 		try {
-			this.demandaTransporteEdicao = demandaTransporteService.recuperar(demandaTransporteSelecionado.getId());
+			this.demandaTransporteEdicao = demandaTransporteService.recuperar(
+					demandaTomadorDtoSelecionada.getDemandaTransporte().getId());
 
-			this.transportadoresEdicao = new ArrayList<Conta>();
 			if (demandaTransporteEdicao.getTransportadores() == null) {
 				this.demandaTransporteEdicao.setTransportadores(new HashSet<TransportadorDemandaAutorizado>());
 			}
-			for (TransportadorDemandaAutorizado transportador: demandaTransporteEdicao.getTransportadores()) {
-				transportadoresEdicao.add(transportador.getTransportador());
-			}
-
 			this.estadoView = EstadoView.ALTERACAO;
+			this.tabIndex = 0;
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
 	}
 
+	public void cancelarEdicao() {
+		this.demandaTransporteEdicao = null;
+		this.demandaTomadorDtoSelecionada = null;
+		this.estadoView = EstadoView.LISTAGEM;
+	}
+
 	public void salvar() {
 		try {
-			sincronizarDadosEdicaoParaSalvar();
 			if (estaEmModoCriacao()) {
+				demandaTransporteEdicao.setTomador(sessaoService.getConta());
 				demandaTransporteService.criar(demandaTransporteEdicao);
 			} else {
 				demandaTransporteService.alterar(demandaTransporteEdicao);
@@ -80,42 +106,24 @@ public class DemandaTransporteMb implements Serializable {
 		}
 	}
 
-	private void sincronizarDadosEdicaoParaSalvar() {
-		if (transportadoresEdicao == null) {
-			transportadoresEdicao = new ArrayList<Conta>();
-		}
-
-		// Remove transportadores que n�o est�o mais na lista.
-		List<TransportadorDemandaAutorizado> transportadoresARemover = new ArrayList<TransportadorDemandaAutorizado>();
-		for (TransportadorDemandaAutorizado transportador: demandaTransporteEdicao.getTransportadores()) {
-			if (!transportadoresEdicao.contains(transportador.getTransportador())) {
-				transportadoresARemover.add(transportador);
-			}
-		}
-		demandaTransporteEdicao.getTransportadores().removeAll(transportadoresARemover);
-
-		// Adiciona os novos transportadores.
-		for (Conta transportador: transportadoresEdicao) {
-			boolean contem = false;
-			for (TransportadorDemandaAutorizado tda: demandaTransporteEdicao.getTransportadores()) {
-				if (transportador.equals(tda.getTransportador())) {
-					contem = true;
-					break;
-				}
-			}
-			if (!contem) {
-				TransportadorDemandaAutorizado tda = new TransportadorDemandaAutorizado();
-				tda.setDemanda(demandaTransporteEdicao);
-				tda.setTransportador(transportador);
-				demandaTransporteEdicao.getTransportadores().add(tda);
-			}
-		}
-	}	
-
 	public void listar() {
 		try {
-			this.lista = demandaTransporteService.listar();
 			this.estadoView = EstadoView.LISTAGEM;
+			Filtro filtro = new Filtro();
+			if (filtroDemandaId != null && filtroDemandaId > 0) {
+				filtro.igual("demandaId", filtroDemandaId);
+			}
+			if (filtroOrigem != null) {
+				filtro.igual("origemId", filtroOrigem.getId());
+			}
+			if (filtroDestino != null) {
+				filtro.igual("destinoId", filtroDestino.getId());
+			}
+			if (filtroProduto != null) {
+				filtro.igual("produtoId", filtroProduto.getId());
+			}
+			filtro.orderDesc("demandaId");
+			this.lista = demandaTransporteService.listarDemandasTomador(sessaoService.getConta(), filtro);
 		} catch (Exception e) {
 			JsfUtil.addMsgErro(e.getMessage());
 		}
@@ -129,11 +137,46 @@ public class DemandaTransporteMb implements Serializable {
 		return estadoView.equals(EstadoView.ALTERACAO);
 	}
 
-	public boolean estaEmModoListagem() {
-		return estadoView.equals(EstadoView.LISTAGEM);
+	public void listarEntregasDaDemanda()  {
+		try {
+			this.ehParaExibirExtratoEntregas = true;
+			
+			this.extratoEntregas = entregaService.listarPorDemanda(demandaTomadorDtoSelecionada.getDemandaTransporte());
+		} catch (Exception e) {
+			JsfUtil.addMsgErro("Erro listar as cargas do lote: " + e.getMessage());
+		}
 	}
+	
+	public void exibirExtratoEntregas() {
+		try {
+			this.ehParaExibirExtratoEntregas = true;
+			FacesContext.getCurrentInstance()
+			.getExternalContext().getSessionMap().put("demandaId", demandaTomadorDtoSelecionada.getDemandaTransporte().getId());
 
-	public List<DemandaTransporte> getLista() {
+			this.extratoEntregas = entregaService.listarPorDemanda(demandaTomadorDtoSelecionada.getDemandaTransporte());
+		} catch (Exception e) {
+			JsfUtil.addMsgErro("Erro ao listar cargas do lote: " + e.getMessage());
+		}
+	}
+	
+	public void ocultarExtratoEntregas() {
+		this.ehParaExibirExtratoEntregas = false;
+	}
+	
+	public Boolean ehParaExibirAreaListagem() {
+		return estadoView.equals(EstadoView.LISTAGEM) && !ehParaExibirExtratoEntregas;
+	}
+	
+	public Boolean ehParaExibirAreaEdicao() {
+		return (estadoView.equals(EstadoView.INCLUSAO) || estadoView.equals(EstadoView.ALTERACAO))
+				&& !ehParaExibirExtratoEntregas;
+	}
+	
+	public Boolean ehParaExibirAreaExtratoEntregas() {
+		return ehParaExibirExtratoEntregas;
+	}
+	
+	public List<DemandaTomadorDto> getLista() {
 		return lista;
 	}
 
@@ -145,20 +188,79 @@ public class DemandaTransporteMb implements Serializable {
 		this.demandaTransporteEdicao = demandaTransporte;
 	}
 
-	public DemandaTransporte getDemandaTransporteSelecionado() {
-		return demandaTransporteSelecionado;
+	public DemandaTomadorDto getDemandaTomadorDtoSelecionada() {
+		return demandaTomadorDtoSelecionada;
 	}
 
-	public void setDemandaTransporteSelecionado(DemandaTransporte demandaTransporteSelecionado) {
-		this.demandaTransporteSelecionado = demandaTransporteSelecionado;
+	public void setDemandaTomadorDtoSelecionada(DemandaTomadorDto demandaTomadorDtoSelecionada) {
+		this.demandaTomadorDtoSelecionada = demandaTomadorDtoSelecionada;
 	}
 
-	public List<Conta> getTransportadoresEdicao() {
-		return transportadoresEdicao;
+	public Estabelecimento getFiltroOrigem() {
+		return filtroOrigem;
 	}
 
-	public void setTransportadoresEdicao(List<Conta> transportadoresEdicao) {
-		this.transportadoresEdicao = transportadoresEdicao;
+	public void setFiltroOrigem(Estabelecimento filtroOrigem) {
+		this.filtroOrigem = filtroOrigem;
 	}
 
+	public Estabelecimento getFiltroDestino() {
+		return filtroDestino;
+	}
+
+	public void setFiltroDestino(Estabelecimento filtroDestino) {
+		this.filtroDestino = filtroDestino;
+	}
+
+	public Produto getFiltroProduto() {
+		return filtroProduto;
+	}
+
+	public void setFiltroProduto(Produto filtroProduto) {
+		this.filtroProduto = filtroProduto;
+	}
+
+	public Long getFiltroDemandaId() {
+		return filtroDemandaId;
+	}
+
+	public void setFiltroDemandaId(Long filtroDemandaId) {
+		this.filtroDemandaId = filtroDemandaId;
+	}
+
+	public Conta getTransportadorInformado() {
+		return transportadorInformado;
+	}
+
+	public void setTransportadorInformado(Conta transportadorInformado) {
+		this.transportadorInformado = transportadorInformado;
+	}
+
+	public void transportadorInformado() {
+		adicionarTransportador(transportadorInformado);
+		this.transportadorInformado = null;
+	}
+	
+	private void adicionarTransportador(Conta transportador) {
+		TransportadorDemandaAutorizado novo = new TransportadorDemandaAutorizado();
+		novo.setTransportador(transportadorInformado);
+		novo.setDemanda(demandaTransporteEdicao);
+		demandaTransporteEdicao.getTransportadores().add(novo);
+	}
+
+	public Integer getTabIndex() {
+		return tabIndex;
+	}
+
+	public void setTabIndex(Integer tabIndex) {
+		this.tabIndex = tabIndex;
+	}
+
+	public Boolean getEhParaExibirExtratoEntregas() {
+		return ehParaExibirExtratoEntregas;
+	}
+
+	public List<Entrega> getExtratoEntregas() {
+		return extratoEntregas;
+	}
 }

@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import enums.StatusViagem;
 
@@ -33,6 +34,7 @@ public class Viagem {
 	private Set<EtapaEntrega> etapas;
 	
 	@OneToMany(mappedBy="viagem", fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@OrderBy("ordem ASC")
 	private Set<PontoViagem> pontos;
 
 	private StatusViagem status;
@@ -102,6 +104,55 @@ public class Viagem {
 	public void setDataHoraStatus(Date dataHoraStatus) {
 		this.dataHoraStatus = dataHoraStatus;
 	}
+
+	public String toStringMunicipiosOrigem() {
+		StringBuffer sb = new StringBuffer();
+		for (EtapaEntrega etapa: etapas) {
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+			sb.append(etapa.getOrigem().getEndereco().getMunicipio().getNome() 
+					+ "-" + etapa.getOrigem().getEndereco().getMunicipio().getUf().getAbreviatura());
+		}
+		return sb.toString();
+	}
+
+	public String toStringMunicipiosDestino() {
+		StringBuffer sb = new StringBuffer();
+		for (EtapaEntrega etapa: etapas) {
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+			sb.append(etapa.getDestino().getEndereco().getMunicipio().getNome() 
+					+ "-" + etapa.getDestino().getEndereco().getMunicipio().getUf().getAbreviatura());
+		}
+		return sb.toString();
+	}
+
+	public String toStringProdutos() {
+		StringBuffer sb = new StringBuffer();
+		for (EtapaEntrega etapa: etapas) {
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+			sb.append(etapa.getEntrega().getProduto().getNome());
+		}
+		return sb.toString();
+	}
 	
+	public Boolean pendente() {
+		return status.equals(StatusViagem.PENDENTE);
+	}
+
+	public Boolean recusada() {
+		return status.equals(StatusViagem.RECUSADA);
+	}
 	
+	public Boolean aceita() {
+		return status.equals(StatusViagem.ACEITA);
+	}
+
+	public Boolean iniciada() {
+		return status.equals(StatusViagem.INICIADA);
+	}
 }

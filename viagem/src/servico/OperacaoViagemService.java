@@ -8,19 +8,20 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 import dao.OperacaoViagemDao;
+import dto.Filtro;
 import exception.AppException;
 import modelo.Estabelecimento;
 import modelo.OperacaoViagem;
 
 @Stateless
 public class OperacaoViagemService {
-	
+
 	@EJB
 	private OperacaoViagemDao operacaoViagemDao;
 
 	public List<OperacaoViagem> listarPorDataEEstabelecimento(
 			Date data, Estabelecimento estabelecimento) throws AppException {
-		
+
 		List<OperacaoViagem> result = new ArrayList<OperacaoViagem>();
 		try {
 			result = operacaoViagemDao.listarPorDataEEstabelecimento(data, estabelecimento);
@@ -30,4 +31,17 @@ public class OperacaoViagemService {
 		}
 		return result;
 	}
+
+	/*
+	public List<OperacaoViagem> listar(Filtro filtro ) throws AppException {
+
+		List<OperacaoViagem> result = new ArrayList<OperacaoViagem>();
+		try {
+			result = operacaoViagemDao.listarOperacoes(new Date(), filtro);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar operações: " + e.getMessage(), e);
+		}
+		return result;
+	}
+	*/
 }

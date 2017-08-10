@@ -260,6 +260,7 @@ public class DeserializacaoEvento {
 				System.out.println(ev.getDataHoraRegistro());
 				System.out.println(ev.getLocalizacao().getDataHora());
 				System.out.println(ev.getLocalizacao().getLatitude());
+				System.out.println(ev.toString());
 
 			}
 

@@ -9,7 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
+import dto.StatusEntregaDecorator;
 import enums.StatusEntrega;
 
 @Entity
@@ -42,6 +44,9 @@ public class Entrega {
 	private StatusEntrega status;
 	
 	private Date dataHoraStatus;
+
+	@Transient
+	private StatusEntregaDecorator statusDecorator;
 	
 	public Long getId() {
 		return id;
@@ -122,5 +127,33 @@ public class Entrega {
 	public void setDataHoraStatus(Date dataHoraStatus) {
 		this.dataHoraStatus = dataHoraStatus;
 	}
-
+	
+	// Por enquanto, apenas uma etapa por entrega.
+	// Método criado para simplificar a obtenção da etapa da entrega.
+	public EtapaEntrega getEtapa() {
+		return etapas.iterator().next();
+	}
+	
+	public StatusEntregaDecorator getStatusDecorator() {
+		if (this.statusDecorator == null) {
+			this.statusDecorator = new StatusEntregaDecorator(this);
+		}
+		return statusDecorator;
+	}
+	
+	public Date getDataHoraColeta() {
+		Date dataHora = null;
+		if (getEtapa().getOperacaoColeta().realizada()) {
+			dataHora = getEtapa().getOperacaoColeta().getDataHoraStatus();
+		}
+		return dataHora;
+	}
+	
+	public Date getDataHoraEntrega() {
+		Date dataHora = null;
+		if (getEtapa().getOperacaoEntrega().realizada()) {
+			dataHora = getEtapa().getOperacaoEntrega().getDataHoraStatus();
+		}
+		return dataHora;
+	}
 }

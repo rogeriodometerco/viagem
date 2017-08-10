@@ -1,7 +1,6 @@
 package servico;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +9,9 @@ import javax.ejb.Stateless;
 
 import dao.ContaDao;
 import dao.DemandaTransporteDao;
+import dto.DemandaTomadorDto;
+import dto.DemandaTransportadorDto;
+import dto.Filtro;
 import dto.Listagem;
 import exception.AppException;
 import modelo.Conta;
@@ -21,15 +23,18 @@ public class DemandaTransporteService {
 
 	private static final String INCLUSAO = "INCLUSAO";
 	private static final String ALTERACAO = "ALTERACAO";
-	
+
 	@EJB
 	private DemandaTransporteDao demandaTransporteDao;
 	@EJB
 	private ContaDao contaDao;
-	
+	@EJB
+	private SessaoService sessaoService;
+
 	public DemandaTransporte criar(DemandaTransporte demandaTransporte) throws AppException {
 		DemandaTransporte result = null;
 		try {
+			//demandaTransporte.setTomador(sessaoService.getConta());
 			List<String> erros = validarDemandaTransporte(INCLUSAO, demandaTransporte);
 			if (erros.size() > 0) {
 				throw new AppException(erros.toString());
@@ -108,10 +113,10 @@ public class DemandaTransporteService {
 			demanda = demandaTransporteDao.recuperar(demandaId);
 
 			for (Conta contaTransportador: transportadores) {
-				
+
 				demanda.adicionarTransportador(contaTransportador);
 			}
-			
+
 			List<String> erros = validarDemandaTransporte(ALTERACAO, demanda);
 			if (erros.size() > 0) {
 				throw new AppException(erros.toString());
@@ -147,6 +152,9 @@ public class DemandaTransporteService {
 
 		if (operacao.equals(INCLUSAO) && demandaTransporte.getId() != null) {
 			erros.add("ID da demanda de transporte deve ser nula para inclusão");
+		}
+		if (demandaTransporte.getTomador() == null) {
+			erros.add("Tomador da demanda de transporte é obrigatório");
 		}
 		if (demandaTransporte.getOrigem() == null) {
 			erros.add("Origem da demanda de transporte deve ser informada");
@@ -192,5 +200,31 @@ public class DemandaTransporteService {
 		return listagem;
 	}
 
+	public List<DemandaTomadorDto> listarDemandasTomador(Conta tomador, Filtro filtro) throws AppException {
+		if (tomador == null) {
+			throw new AppException("Tomador é obrigatório para pesquisa");
+		}
+		List<DemandaTomadorDto> result = null;
+		try {
+			filtro.igual("tomadorId", tomador.getId());
+			result = demandaTransporteDao.listarTomador(filtro);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar demandas de transporte: " + e.getMessage(), e);
+		}
+		return result;
+	}
 
+	public List<DemandaTransportadorDto> listarDemandasTransportador(Conta transportador, Filtro filtro) throws AppException {
+		if (transportador == null) {
+			throw new AppException("Transportador é obrigatório para pesquisa");
+		}
+		List<DemandaTransportadorDto> result = null;
+		try {
+			filtro.igual("transportadorId", transportador.getId());
+			result = demandaTransporteDao.listarTransportador(filtro);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar demandas de transporte: " + e.getMessage(), e);
+		}
+		return result;
+	}
 }

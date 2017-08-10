@@ -1,8 +1,8 @@
 package enums;
 
 public enum TipoOperacaoViagem {
-	COLETA("Coleta"),
-	ENTREGA("Entrega");
+	COLETA("Carga"),
+	ENTREGA("Descarga");
 	
 	private String descricao;
 	

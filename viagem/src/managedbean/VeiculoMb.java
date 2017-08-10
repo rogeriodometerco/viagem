@@ -2,6 +2,7 @@ package managedbean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -10,7 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import enums.EstadoView;
-import modelo.Conta;
+import modelo.ComponenteVeiculo;
 import modelo.Veiculo;
 import servico.VeiculoService;
 import util.JsfUtil;
@@ -35,6 +36,11 @@ public class VeiculoMb implements Serializable {
 
 	public void prepararNovo() {
 		this.veiculoEdicao = new Veiculo();
+		this.veiculoEdicao.setComponentes(new LinkedHashSet<ComponenteVeiculo>());
+		ComponenteVeiculo componente = new ComponenteVeiculo();
+		componente.setVeiculo(veiculoEdicao);
+		componente.setPosicaoNoVeiculo(1);
+		veiculoEdicao.getComponentes().add(componente);
 		this.estadoView = EstadoView.INCLUSAO;
 	}
 
@@ -49,15 +55,16 @@ public class VeiculoMb implements Serializable {
 
 	public void salvar() {
 		try {
+			this.veiculoEdicao.getComponentes().iterator().next().setPlaca(veiculoEdicao.getPlaca());
 			veiculoService.salvar(veiculoEdicao);
-			JsfUtil.addMsgSucesso("Informa��es salvas com sucesso");
+			JsfUtil.addMsgSucesso("Informações salvas com sucesso");
 			if (estaEmModoCriacao()) {
 				prepararNovo();
 			} else {
 				listar();
 			}
 		} catch (Exception e) {
-			JsfUtil.addMsgErro("Erro ao salvar informa��es: " + e.getMessage());
+			JsfUtil.addMsgErro("Erro ao salvar informações: " + e.getMessage());
 		}
 	}
 	

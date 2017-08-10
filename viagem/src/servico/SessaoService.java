@@ -1,6 +1,8 @@
 package servico;
 
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
+import javax.ejb.PrePassivate;
 import javax.ejb.Stateful;
 
 import dao.ContaDao;
@@ -17,7 +19,7 @@ public class SessaoService {
 	@EJB
 	private UsuarioDao usuarioDao;
 	
-	private Conta conta;
+	private static Conta conta;
 	private Usuario usuario;
 	
 	public Conta getConta() throws AppException {
@@ -47,4 +49,15 @@ public class SessaoService {
 	public void setConta(Conta conta) {
 		this.conta = conta;
 	}
+	
+	@PrePassivate
+	public void prePassivate() {
+		System.out.println("prePassivate() " + this);
+	}
+	
+	@PreDestroy
+	public void preDestroy() {
+		System.out.println("preDestroy() " + this);
+	}
+	
 }

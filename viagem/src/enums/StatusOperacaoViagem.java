@@ -1,9 +1,9 @@
 package enums;
 
 public enum StatusOperacaoViagem {
-	PENDENTE("Programada"), 
-	REALIZADA("Realizada"), 
-	ABORTADA("Abortada");
+	PENDENTE("Programado"), 
+	REALIZADA("Realizado"), 
+	ABORTADA("Abortado");
 	
 	private String descricao;
 	

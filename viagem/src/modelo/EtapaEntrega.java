@@ -1,14 +1,17 @@
 package modelo;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import enums.StatusEtapaEntrega;
+import enums.TipoOperacaoViagem;
 
 @Entity
 public class EtapaEntrega {
@@ -28,7 +31,7 @@ public class EtapaEntrega {
 	
 	@ManyToOne
 	private Viagem viagem;
-	
+
 	private StatusEtapaEntrega status;
 	
 	private Date dataHoraStatus;
@@ -89,4 +92,29 @@ public class EtapaEntrega {
 		this.dataHoraStatus = dataHoraStatus;
 	}
 
+	public OperacaoViagem getOperacaoColeta() {
+		for (PontoViagem pontoViagem: viagem.getPontos()) {
+			for (OperacaoViagem operacao: pontoViagem.getOperacoes()) {
+				if (operacao.getTipo().equals(TipoOperacaoViagem.COLETA) 
+						&& operacao.getEtapaEntrega().getId().equals(this.getId())) {
+					return operacao;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public OperacaoViagem getOperacaoEntrega() {
+		for (PontoViagem pontoViagem: viagem.getPontos()) {
+			for (OperacaoViagem operacao: pontoViagem.getOperacoes()) {
+				if (operacao.getTipo().equals(TipoOperacaoViagem.ENTREGA) 
+						&& operacao.getEtapaEntrega().getId().equals(this.getId())) {
+					return operacao;
+				}
+			}
+		}
+		return null;
+	}
+	
+	
 }

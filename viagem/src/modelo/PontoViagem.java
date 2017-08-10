@@ -10,8 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import enums.StatusPontoViagem;
+import util.DataUtil;
+import util.JsfUtil;
 
 @Entity
 public class PontoViagem {
@@ -131,4 +134,60 @@ public class PontoViagem {
 		this.dataHoraStatus = dataHoraStatus;
 	}
 
+	public Boolean veiculoACaminho() {
+		return status.equals(StatusPontoViagem.PENDENTE);
+	}
+
+	public Boolean veiculoChegou() {
+		return status.equals(StatusPontoViagem.NO_LOCAL) 
+				|| status.equals(StatusPontoViagem.CONCLUIDO);
+	}
+
+	public Boolean veiculoNoLocal() {
+		return status.equals(StatusPontoViagem.NO_LOCAL);
+	}
+	
+	public Boolean veiculoSaiu() {
+		return status.equals(StatusPontoViagem.CONCLUIDO);
+	}
+
+	public Boolean possuiOperacaoPendente() {
+		for (OperacaoViagem operacao: operacoes) {
+			if (operacao.pendente()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Boolean finalizado() {
+		return status.equals(StatusPontoViagem.CONCLUIDO);
+	}
+	
+	public Boolean veiculoChegouComAtraso() {
+		Date dataReferencia = dataHoraChegada;
+		if (dataHoraChegada == null) {
+			dataReferencia = new Date();
+		}
+		return dataReferencia.after(dataChegadaAcordada);
+	}
+
+	public Boolean veiculoChegouHoje() {
+		if (dataHoraChegada == null) {
+			return false;
+		}
+		Date hoje = DataUtil.extrairDataSemHora(new Date());
+
+		return DataUtil.extrairDataSemHora(dataHoraChegada).equals(hoje);
+	}
+
+	public Boolean veiculoChegouOntem() {
+		if (dataHoraChegada == null) {
+			return false;
+		}
+		Date hoje = DataUtil.extrairDataSemHora(new Date());
+		Date ontem = DataUtil.somarDias(hoje, -1);
+
+		return DataUtil.extrairDataSemHora(dataHoraChegada).equals(ontem);
+	}
 }

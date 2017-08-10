@@ -82,5 +82,27 @@ public class UnidadeQuantidadeService {
 		}
 		return listagem;
 	}
+	
+	public List<UnidadeQuantidade> listar() throws AppException {
+		List<UnidadeQuantidade> result = new ArrayList<UnidadeQuantidade>();
+		try {
+			result = unidadeQuantidadeDao.listar();
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar unidades de quantidade: " + e.getMessage(), e);
+		}
+		return result;
+	}
+
+	public List<UnidadeQuantidade> listarPorNomeOuAbreviacaoOrdenadoPorAbreviacao(
+			int pagina, int tamanhoPagina, String chave) throws AppException {
+
+		List<UnidadeQuantidade> result = new ArrayList<UnidadeQuantidade>();
+		try {
+			result = unidadeQuantidadeDao.listarPorNomeOuAbreviacaoOrdenadoPorAbreviacao(pagina, tamanhoPagina, chave);
+		} catch(Exception e) {
+			throw new AppException("Erro ao listar unidades de quantidade: " + e.getMessage(), e);
+		}
+		return result;
+	}
 }
  

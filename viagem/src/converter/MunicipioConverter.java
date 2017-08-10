@@ -20,9 +20,9 @@ public class MunicipioConverter implements Converter {
 				MunicipioDao municipioDao = Ejb.lookup(MunicipioDao.class);
 				result = municipioDao.recuperar(Long.parseLong(value));
 			} catch(NumberFormatException e) {
-				JsfUtil.addMsgErro("Erro ao converter identificador de município: " + e.getMessage());
+				JsfUtil.addMsgErro("Erro ao converter identificador de municÃ­pio: " + e.getMessage());
 			} catch (Exception e) {
-				JsfUtil.addMsgErro("Erro ao recuperar município: " + e.getMessage());
+				JsfUtil.addMsgErro("Erro ao recuperar municÃ­pio: " + e.getMessage());
 			}
 		}
 		return result;	

@@ -111,12 +111,20 @@ public class Matriz implements Serializable {
 		    label = label + celula.getRepresentacao();
 		}
 		if (celula.getColuna().getAcumulada()) {
-		    valor = (Number)celula.getDado();
+		    valor = valor.doubleValue() + ((Number)celula.getDado()).doubleValue();
 		}
 	    }
 	    pieModel.set(label, valor);
 	}
 
+	String titulo = getTitulo();
+	//pieModel.setTitle(titulo);
+	
+	//pieModel.setLegendPosition("E");
+	//pieModel.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+    }	
+
+    public String getTitulo() {
 	String titulo = "";
 	for (Coluna coluna: colunas) {
 	    if (coluna.getAgrupada()) {
@@ -126,12 +134,12 @@ public class Matriz implements Serializable {
 		titulo = titulo + coluna.getTitulo();
 	    }
 	}
-	pieModel.setTitle(titulo);
-	pieModel.setLegendPosition("E");
-	//pieModel.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-    }	
-
+	return titulo;
+    }
+    
+    
     public PieChartModel getPieModel() {
+    		createPieModel();
 	return pieModel;
     }
 }

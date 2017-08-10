@@ -102,7 +102,7 @@ public class TipoCarroceriaService {
 			Long count = tipoCarroceriaDao.contarPorNome(iniciandoPor);
 			listagem.set(pagina, lista, count);
 		} catch(Exception e) {
-			throw new AppException("Erro ao listar tipos de veículo por nome: " + e.getMessage(), e);
+			throw new AppException("Erro ao listar tipos de carroceria por nome: " + e.getMessage(), e);
 		}
 		return listagem;
 	}

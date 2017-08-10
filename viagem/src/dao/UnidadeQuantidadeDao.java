@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 
 import modelo.UnidadeQuantidade;
+import modelo.UnidadeQuantidade;
 
 @Stateless
 public class UnidadeQuantidadeDao extends GenericDao<UnidadeQuantidade> {
@@ -44,5 +45,24 @@ public class UnidadeQuantidadeDao extends GenericDao<UnidadeQuantidade> {
 				.createQuery(sql, Long.class)
 				.getSingleResult();
 	}
+
+	
+	public List<UnidadeQuantidade> listarPorNomeOuAbreviacaoOrdenadoPorAbreviacao(
+			int pagina, int tamanhoPagina, String chave) throws Exception {
+
+		List<UnidadeQuantidade> result = null;
+		String sql = "SELECT x FROM UnidadeQuantidade x WHERE" +
+				" UPPER(x.nome) LIKE :chave"
+				+ " OR UPPER(x.abreviacao) LIKE :chave" +
+				" ORDER BY x.abreviacao";
+		result = getEntityManager()
+				.createQuery(sql, UnidadeQuantidade.class)
+				.setParameter("chave", chave.toUpperCase().concat("%"))
+				.setFirstResult(pagina * tamanhoPagina - tamanhoPagina)
+				.setMaxResults(tamanhoPagina)
+				.getResultList();
+		return result;
+	}
+
 
 }
