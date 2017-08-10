@@ -28,7 +28,7 @@
 
 		<div class="ui-fluid">
 
-			<div class="ui-grid-col-1">
+<!-- 			<div class="ui-grid-col-1">
 
 				<h:outputText value="Transportador" />
 				<p:chart id="grafico" type="pie"
@@ -46,7 +46,7 @@
 					responsive="true" style="height: 130px" />
 
 			</div>
-
+ -->
 			<div class="ui-grid-col-11">
 
 				<h:panelGrid columns="8">
@@ -66,8 +66,9 @@
 					<p:inputText />
 					<p:inputText />
 					<p:commandButton value="Listar" />
-					<p:commandButton value="Sintetizado"
-						onclick="PF('acumuladoDlg').show()" />
+<!--  					<p:commandButton value="Sintetizado"
+ 						onclick="PF('acumuladoDlg').show()" />
+ -->					<p:link value="Sintetizado" outcome="cargasPendentesAgrupadoForm" />
 
 				</h:panelGrid>
 
@@ -126,7 +127,7 @@
 
 
 		<p:dialog widgetVar="acumuladoDlg">
-			<div style="width: 800px">
+			<div style="margin: auto">
 				<ui:include src="cargasPendentesAgrupado.xhtml"></ui:include>
 			</div>
 		</p:dialog>

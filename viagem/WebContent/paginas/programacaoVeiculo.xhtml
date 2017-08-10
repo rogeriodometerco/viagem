@@ -42,7 +42,7 @@
 					<p:outputLabel value="Veículo" />
 				<p:autoComplete
 					completeMethod="#{veiculoMb.autocomplete}" var="veiculo"
-					itemValue="#{veiculo}" itemLabel="#{veiculo.identificacao}"
+					itemValue="#{veiculo}" itemLabel="#{veiculo.placa}"
 					value="#{programacaoVeiculoMb.viagemEdicao.veiculo}" 
 					converter="veiculoConverter"></p:autoComplete>
 				<p:outputLabel value="Motorista" />

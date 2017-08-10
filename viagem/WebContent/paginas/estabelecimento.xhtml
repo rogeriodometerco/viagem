@@ -10,7 +10,7 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
 	template="/template/geral.xhtml">
 
-	<ui:define name="titulo">Cadastro de município</ui:define>
+	<ui:define name="titulo">Cadastro de estabelecimento</ui:define>
 	<ui:define name="conteudo">
 		<p:messages id="mensagens" closable="true" />
 
@@ -37,8 +37,16 @@
 					#{estabelecimento.nome}
 				</p:column>
 				<p:column>
+					<f:facet name="header">Logradouro</f:facet>
+					#{estabelecimento.endereco.logradouro}
+				</p:column>
+				<p:column>
+					<f:facet name="header">Bairro</f:facet>
+					#{estabelecimento.endereco.bairro}
+				</p:column>
+				<p:column>
 					<f:facet name="header">Município</f:facet>
-					#{estabelecimento.municipio.nome.concat(' - ').concat(estabelecimento.municipio.uf.abreviatura)}
+					#{estabelecimento.endereco.municipio.nome.concat(' - ').concat(estabelecimento.endereco.municipio.uf.abreviatura)}
 				</p:column>
 				<p:ajax event="rowSelect" update=":form1:panel" />
 				<p:ajax event="rowUnselect" update=":form1:panel" />
@@ -58,8 +66,12 @@
 			<h:panelGrid columns="1">
 				<p:outputLabel value="Nome" />
 				<p:inputText value="#{estabelecimentoMb.estabelecimentoEdicao.nome}" />
+				<p:outputLabel value="Logradouro" />
+				<p:inputText value="#{estabelecimentoMb.estabelecimentoEdicao.endereco.logradouro}" />
+				<p:outputLabel value="Bairro" />
+				<p:inputText value="#{estabelecimentoMb.estabelecimentoEdicao.endereco.bairro}" />
 				<p:outputLabel value="Município" />
-				<p:autoComplete value="#{estabelecimentoMb.estabelecimentoEdicao.municipio}"
+				<p:autoComplete value="#{estabelecimentoMb.estabelecimentoEdicao.endereco.municipio}"
 					completeMethod="#{municipioMb.autocomplete}" var="municipio"
 					itemLabel="#{municipio.nome.concat(' - ').concat(municipio.uf.abreviatura)}"
 					itemValue="#{municipio}" converter="municipioConverter"

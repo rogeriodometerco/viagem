@@ -17,95 +17,27 @@
 
 		<div class="ui-fluid">
 
-			<!-- 
-			<div class="ui-grid-col-12">
-
-				<p:dataTable id="tabelaAnalitica" var="linha"
-					value="#{cargasPendentesMb.matriz.linhas}" style="margin-left:5px"
-					reflow="true" paginator="true" rows="10">
-
-					<p:columns value="#{cargasPendentesMb.matriz.colunas}" var="coluna"
-						columnIndexVar="colIndex">
-						<f:facet name="header">
-							<h:outputText value="#{coluna.titulo}" />
-						</f:facet>
-						<h:outputText value="#{linha.celulas[colIndex].representacao}">
-						</h:outputText>
-					</p:columns>
-
-				</p:dataTable>
-
-			</div>
-		 -->
-
 			<div class="ui-grid-col-3">
 
 					<p:dataTable value="#{cargasPendentesMb.matriz.colunas}"
 						var="coluna" reflow="true" style="margin:5px"
 						tableStyle="width: auto">
-						<p:column>
+						<p:column rendered="#{!coluna.acumulada || coluna.titulo.equals('Status')}">
 							<f:facet name="header">
-								<h:outputText value="Coluna" />
-							</f:facet>
-							<h:outputText value="#{coluna.titulo}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Agrupada" />
+								<h:outputText value="" />
 							</f:facet>
 							<p:selectBooleanCheckbox value="#{coluna.agrupada}">
 								<p:ajax listener="#{cargasPendentesMb.agrupar}"
 									update=":form:agrupamento" />
 							</p:selectBooleanCheckbox>
 						</p:column>
-						<p:column>
+						<p:column rendered="#{!coluna.acumulada || coluna.titulo.equals('Status')}">
 							<f:facet name="header">
-								<h:outputText value="Acumulada" />
-							</f:facet>
-							<p:selectBooleanCheckbox value="#{coluna.acumulada}">
-								<p:ajax listener="#{cargasPendentesMb.agrupar}"
-									update=":form:agrupamento" />
-							</p:selectBooleanCheckbox>
-						</p:column>
-					</p:dataTable>
-				<p:commandButton id="opcoes" value="..." title="Menu"
-					type="button" />
-
-				<p:overlayPanel for="opcoes">
-
-					<p:dataTable value="#{cargasPendentesMb.matriz.colunas}"
-						var="coluna" reflow="true" style="margin:5px"
-						tableStyle="width: auto">
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Coluna" />
+								<h:outputText value="Agrupar" />
 							</f:facet>
 							<h:outputText value="#{coluna.titulo}" />
 						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Agrupada" />
-							</f:facet>
-							<p:selectBooleanCheckbox value="#{coluna.agrupada}">
-								<p:ajax listener="#{cargasPendentesMb.agrupar}"
-									update=":form:agrupamento" />
-							</p:selectBooleanCheckbox>
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Acumulada" />
-							</f:facet>
-							<p:selectBooleanCheckbox value="#{coluna.acumulada}">
-								<p:ajax listener="#{cargasPendentesMb.agrupar}"
-									update=":form:agrupamento" />
-							</p:selectBooleanCheckbox>
-						</p:column>
 					</p:dataTable>
-
-
-				</p:overlayPanel>
-
-
 			</div>
 
 
@@ -135,11 +67,11 @@
 						<p:dataExporter type="csv" target="tabela" fileName="dados"></p:dataExporter>
 						</h:commandLink>
 					</p>
-
+<!-- 
 					<p:chart id="grafico" type="pie"
 						model="#{cargasPendentesMb.porTransportador.pieModel}"
 						responsive="true" style="border:0px" />
-
+ -->
 				</p:outputPanel>
 			</div>
 

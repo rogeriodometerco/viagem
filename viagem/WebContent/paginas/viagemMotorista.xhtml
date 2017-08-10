@@ -10,149 +10,53 @@
 	xmlns:c="http://java.sun.com/jstl/core"
 	template="/template/geral.xhtml">
 
-	<ui:define name="titulo">Viagem do motorista</ui:define>
+	<ui:define name="titulo">Viagens do motorista</ui:define>
 	<ui:define name="conteudo">
 		<p:messages id="mensagens" closable="true" />
 
+		<p:importEnum type="enums.StatusViagem" var="statusViagem"
+			allSuffix="ALL_ENUM_VALUES" />
+
+
 		<h:form id="form1">
 			<h3>
-				<p:outputLabel value="Viagem do motorista" />
+				<p:outputLabel value="Minhas viagens" />
 			</h3>
-
-			<p:autoComplete completeMethod="#{motoristaMb.autocomplete}"
-				var="motorista" itemValue="#{motorista}"
-				itemLabel="#{motorista.nome}" value="#{viagemMotoristaMb.motorista}"
-				converter="contaConverter">
-				<p:ajax event="itemSelect" process="@this"
-					listener="#{viagemMotoristaMb.motoristaSelecionado}" update="@all" />
-			</p:autoComplete>
-
-			<p />
-			<p:outputPanel id="viagem"
-				rendered="#{viagemMotoristaMb.viagem != null}">
-				<p:outputPanel id="novaViagem">
-					<!-- rendered="#{viagemMotoristaMb.viagem.status.equals(viagemMotoristaMb.statusViagemPendente)}" -->
-
-					<p:panel header="Sua viagem - #{viagemMotoristaMb.viagem.id}">
-						<c:forEach items="#{viagemMotoristaMb.viagem.etapas}" var="etapa">
-							<h:panelGrid columns="5">
-								<h:outputText value="#{etapa.origem.nome}" />
-								<h:outputText value=" X #{etapa.destino.nome}" />
-								<h:outputText value=" X #{etapa.entrega.produto}" />
-								<h:outputText value="#{etapa.entrega.quantidade}" />
-								<h:outputText value="#{etapa.entrega.unidadeQuantidade}" />
-							</h:panelGrid>
-						</c:forEach>
-						<p:commandButton value="Iniciar viagem"
-							actionListener="#{viagemMotoristaMb.iniciarViagem}"
-							process="@this" update="viagem" />
-					</p:panel>
-				</p:outputPanel>
+			
+			<p:outputPanel id="listagem" rendered="#{viagemMotoristaMb.estaEmModoListagem()}">
 
 
-				<p:outputPanel id="pontosDaViagem">
-					<!-- 
-					rendered="#{viagemMotoristaMb.viagem.status != viagemMotoristaMb.statusViagemPendente
-					 	and viagemMotoristaMb.pontoViagem == null}">
-					 	 -->
-					<p:panel header="Seus pontos">
-						<c:forEach items="#{viagemMotoristaMb.viagem.pontos}" var="ponto"
-							rendered="#{viagemMotoristaMb.viagem != null}">
-							<p:panel>
-								<p:commandButton value="#{ponto.estabelecimento.nome}"
-									actionListener="#{viagemMotoristaMb.selecionarPonto(ponto)}"
-									process="@this" update="viagem" />
-							</p:panel>
-						</c:forEach>
-					</p:panel>
-				</p:outputPanel>
+				<p:dataTable value="#{viagemMotoristaMb.viagens}" var="viagem"
+					tableStyle="width: auto; min-width: 100%">
+					
+					<p:column>
+						<f:facet name="header">Id</f:facet>
+						<p:commandLink value="#{viagem.id}" action="#{statusViagemMotoristaMb.irParaDetalhesViagem(viagem)}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Status</f:facet>
+						<h:outputText value="#{viagem.status.descricao}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Transportador</f:facet>
+						<h:outputText value="#{viagem.transportador.nome}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Origem</f:facet>
+						<h:outputText value="#{viagem.toStringMunicipiosOrigem()}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Destino</f:facet>
+						<h:outputText value="#{viagem.toStringMunicipiosDestino()}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Produto</f:facet>
+						<h:outputText value="#{viagem.toStringProdutos()}" />
+					</p:column>
 
-				<p:outputPanel id="eventos">
-					<!-- 
-					rendered="#{viagemMotoristaMb.pontoViagem != null}"> -->
-					<p:panel
-						header="#{viagemMotoristaMb.pontoViagem.estabelecimento.municipio.nome.concat(' - ')
-							.concat(viagemMotoristaMb.pontoViagem.estabelecimento.nome)}">
-
-						<p:panelGrid>
-							<h:panelGrid
-								rendered="#{viagemMotoristaMb.pontoViagem.dataHoraPrevistaChegada != null}">
-								<h:outputText value="A sua última previsão de chegada foi:" />
-								<h:outputText
-									value="#{viagemMotoristaMb.pontoViagem.dataHoraPrevistaChegada}" />
-								<h:outputText
-									value="Informe nova previsão de chegada se você acha que mudou:" />
-							</h:panelGrid>
-							<h:panelGrid>
-								<h:outputText value="Informe a previsão de chegada"
-									rendered="#{viagemMotoristaMb.pontoViagem.dataHoraPrevistaChegada == null}" />
-								<p:calendar pattern="dd/MM/yyyy HH:mm"
-									value="#{viagemMotoristaMb.pontoViagem.dataHoraPrevistaChegada}">
-								</p:calendar>
-								<p:commandButton value="Registrar previsão"
-									actionListener="#{viagemMotoristaMb.registrarPrevisaoChegada}"
-									update="viagem" />
-							</h:panelGrid>
-							<p />
-							<hr />
-							<p />
-						</p:panelGrid>
-						<h:outputText
-							value="Horário de chegada: #{viagemMotoristaMb.pontoViagem.dataHoraChegada}"
-							rendered="#{viagemMotoristaMb.pontoViagem.dataHoraChegada != null}" />
-						<p:commandButton value="Registrar chegada"
-							actionListener="#{viagemMotoristaMb.registrarChegada}"
-							update="eventos" />
-
-						<hr />
-						<p />
-
-						<p:panel header="Operações">
-							<p:dataGrid columns="1"
-								value="#{viagemMotoristaMb.pontoViagem.operacoes}"
-								var="operacao">
-
-								<h:panelGrid columns="5">
-									<h:outputText value="#{operacao.tipo.descricao}" />
-									<h:outputText value="#{operacao.etapaEntrega.entrega.produto}" />
-									<h:outputText
-										value="#{operacao.etapaEntrega.entrega.quantidade}" />
-									<h:outputText
-										value="#{operacao.etapaEntrega.entrega.unidadeQuantidade}" />
-								</h:panelGrid>
-								<p />
-								<p:selectOneRadio columns="1" value="#{operacao.status}">
-									<f:selectItem itemLabel="Realizada"
-										itemValue="#{viagemMotoristaMb.statusOperacaoViagemRealizada}" />
-									<f:selectItem itemLabel="Abortada"
-										itemValue="#{viagemMotoristaMb.statusOperacaoViagemAbortada}" />
-								</p:selectOneRadio>
-							</p:dataGrid>
-							<p />
-							<p:commandButton value="Finalizar operações"
-								actionListener="#{viagemMotoristaMb.registrarTerminoOperacoes}"
-								update="eventos" />
-						</p:panel>
-						<hr />
-						<p />
-
-						<p:commandButton value="Registrar saída"
-							actionListener="#{viagemMotoristaMb.registrarSaida}"
-							update="eventos" />
-
-						<hr />
-						<p />
-
-						<p:commandButton value="Finalizar viagem"
-							actionListener="#{viagemMotoristaMb.finalizarViagem}"
-							update="eventos" />
-
-						<hr />
-						<p />
-
-					</p:panel>
-				</p:outputPanel>
+				</p:dataTable>
 			</p:outputPanel>
+
 		</h:form>
 	</ui:define>
 </ui:composition>

@@ -6,206 +6,313 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:comp="http://java.sun.com/jsf/composite/comp"
 	template="/template/geral.xhtml">
 
-	<ui:define name="titulo">Demanda de transporte</ui:define>
+	<ui:define name="titulo">Painel de lotes de embarque</ui:define>
 	<ui:define name="conteudo">
-		<p:messages id="mensagens" closable="true" />
 
-		<h:form id="form1"
-			rendered="#{demandaTransporteMb.estaEmModoListagem()}">
-			<h3>
-				<p:outputLabel value="Demanda de transporte" />
-			</h3>
-			<p:outputPanel id="panel">
-				<p:commandButton value="Nova demanda"
-					action="#{demandaTransporteMb.prepararNovo()}" update="@all" />
-				<p:commandButton value="Detalhes"
-					action="#{demandaTransporteMb.prepararEdicao()}" update="@all"
-					disabled="#{demandaTransporteMb.demandaTransporteSelecionado == null}" />
-			</p:outputPanel>
-			<p />
+		<h:form id="corpo" prependId="false">
+			<p:messages id="mensagens" closable="true" />
 
-			<p:dataTable id="listagem" value="#{demandaTransporteMb.lista}"
-				var="demandaTransporte" selectionMode="single"
-				selection="#{demandaTransporteMb.demandaTransporteSelecionado}"
-				rowKey="#{demandaTransporte.id}"
-				emptyMessage="Nenhum registro retornado na consulta" reflow="true">
-				<p:column filterBy="#{demandaTransporte.id}"
-					filterMatchMode="startsWith">
-					<f:facet name="header">Id</f:facet>
-					#{demandaTransporte.id}
-				</p:column>
-				<p:column filterBy="#{demandaTransporte.tomador.nome}"
-					filterMatchMode="contains">
-					<f:facet name="header">Tomador</f:facet>
-					#{demandaTransporte.tomador.nome}
-				</p:column>
-				<p:column filterBy="#{demandaTransporte.origem.nome}"
-					filterMatchMode="contains">
-					<f:facet name="header">Origem</f:facet>
-					#{demandaTransporte.origem.nome}
-				</p:column>
-				<p:column
-					filterBy="#{demandaTransporte.origem.municipio.nome.concat(' - ').concat(demandaTransporte.origem.municipio.uf.abreviatura)}"
-					filterMatchMode="contains">
-					<f:facet name="header">Município</f:facet>
-					#{demandaTransporte.origem.municipio.nome.concat(' - ').concat(demandaTransporte.origem.municipio.uf.abreviatura)}
-				</p:column>
-				<p:column filterBy="#{demandaTransporte.destino.nome}"
-					filterMatchMode="contains">
-					<f:facet name="header">Destino</f:facet>
-					#{demandaTransporte.destino.nome}
-				</p:column>
-				<p:column
-					filterBy="#{demandaTransporte.destino.municipio.nome.concat(' - ').concat(demandaTransporte.destino.municipio.uf.abreviatura)}"
-					filterMatchMode="contains">
-					<f:facet name="header">Município</f:facet>
-					#{demandaTransporte.destino.municipio.nome.concat(' - ').concat(demandaTransporte.destino.municipio.uf.abreviatura)}
-				</p:column>
-				<p:column filterBy="#{demandaTransporte.produto}"
-					filterMatchMode="contains">
-					<f:facet name="header">Produto</f:facet>
-					#{demandaTransporte.produto}
-				</p:column>
-				<p:column
-					filterBy="#{demandaTransporte.quantidade} #{demandaTransporte.unidadeQuantidade}"
-					filterMatchMode="contains">
-					<f:facet name="header">Qtde</f:facet>
-					#{demandaTransporte.quantidade} #{demandaTransporte.unidadeQuantidade}
-				</p:column>
-				<p:column filterBy="184" filterMatchMode="equals">
-					<f:facet name="header">Saldo</f:facet>
-					184 #{demandaTransporte.unidadeQuantidade}
-				</p:column>
-				<p:column>
-					<f:facet name="header">Ontem</f:facet>
-					19 veículos
-				</p:column>
-				<p:column>
-					<f:facet name="header">Hoje</f:facet>
-					4 veículos
-				</p:column>
-				<p:column>
-					<f:facet name="header">Pendente</f:facet>
-					7 veículos
-				</p:column>
-				<p:ajax event="rowSelect" update=":form1:panel" />
-				<p:ajax event="rowUnselect" update=":form1:panel" />
-			</p:dataTable>
-			<p />
-		</h:form>
+			<p:outputPanel id="areaListagem"
+				rendered="#{demandaTransporteMb.ehParaExibirAreaListagem()}">
+				<h2>
+					<p:outputLabel value="Painel de lotes de embarque" />
+				</h2>
+				<p:outputPanel id="panel">
+					<h:panelGrid columns="8">
 
-		<h:form id="form2"
-			rendered="#{demandaTransporteMb.estaEmModoCriacao()}">
-			<h3>
-				<p:outputLabel value="Nova demanda de transporte" />
-			</h3>
+						<h:outputLabel value="" />
+						<h:outputLabel value="" />
+						<h:outputLabel value="" />
+						<h:outputLabel value="Lote" />
+						<h:outputLabel value="Origem" />
+						<h:outputLabel value="Destino" />
+						<h:outputLabel value="Produto" />
+						<h:outputLabel value="" />
 
-			<h:panelGrid columns="2">
-				<p:outputLabel value="Tomador" />
-				<p:autoComplete completeMethod="#{contaMb.autocomplete}"
-					var="tomador" itemValue="#{tomador}" itemLabel="#{tomador.nome}"
-					value="#{demandaTransporteMb.demandaTransporteEdicao.tomador}"
-					converter="contaConverter"></p:autoComplete>
-				<p:outputLabel value="Origem" />
-				<p:autoComplete
-					value="#{demandaTransporteMb.demandaTransporteEdicao.origem}"
-					completeMethod="#{estabelecimentoMb.autocomplete}"
-					var="estabelecimento"
-					itemLabel="#{estabelecimento.nome.concat(' - ').concat(estabelecimento.municipio.nome)}"
-					itemValue="#{estabelecimento}" converter="estabelecimentoConverter"
-					forceSelection="true" />
-				<p:outputLabel value="Destino" />
-				<p:autoComplete
-					value="#{demandaTransporteMb.demandaTransporteEdicao.destino}"
-					completeMethod="#{estabelecimentoMb.autocomplete}"
-					var="estabelecimento"
-					itemLabel="#{estabelecimento.nome.concat(' - ').concat(estabelecimento.municipio.nome)}"
-					itemValue="#{estabelecimento}" converter="estabelecimentoConverter"
-					forceSelection="true" />
-				<p:outputLabel value="Produto" />
-				<p:inputText
-					value="#{demandaTransporteMb.demandaTransporteEdicao.produto}" />
-				<p:outputLabel value="Quantidade" />
-				<p:inputText
-					value="#{demandaTransporteMb.demandaTransporteEdicao.quantidade}" />
-				<p:outputLabel value="Unidade" />
-				<p:inputText
-					value="#{demandaTransporteMb.demandaTransporteEdicao.unidadeQuantidade}" />
-				<p:outputLabel value="Transportadores autorizados" />
-				<p:autoComplete multiple="true"
-					completeMethod="#{transportadorMb.autocomplete}"
-					var="transportador" itemValue="#{transportador}"
-					itemLabel="#{transportador.nome}"
-					value="#{demandaTransporteMb.transportadoresEdicao}"
-					converter="contaConverter"></p:autoComplete>
-			</h:panelGrid>
-			<br />
-			<p:commandButton value="Salvar"
-				action="#{demandaTransporteMb.salvar()}" update="@all" />
-			<p:commandButton value="Voltar"
-				action="#{demandaTransporteMb.listar()}" update="@all" />
-		</h:form>
+						<p:commandButton value="Novo"
+							actionListener="#{demandaTransporteMb.prepararNovo()}"
+							update="corpo" />
+						<p:commandButton value="Editar"
+							actionListener="#{demandaTransporteMb.prepararEdicao()}"
+							update="corpo"
+							disabled="#{demandaTransporteMb.demandaTomadorDtoSelecionada == null}" />
 
-		<h:form id="form3"
-			rendered="#{demandaTransporteMb.estaEmModoEdicao()}">
-			<h3>
-				<p:outputLabel value="Detalhes da demanda de transporte"
-					rendered="#{demandaTransporteMb.estaEmModoEdicao()}" />
-			</h3>
+						<p:commandLink value="Visualizar cargas"
+							actionListener="#{demandaTransporteMb.exibirExtratoEntregas()}"
+							update="corpo"
+							disabled="#{demandaTransporteMb.demandaTomadorDtoSelecionada == null}" />
 
-			<p:panelGrid columns="2">
-				<p:outputLabel value="Tomador" />
-				<h:outputText
-					value="#{demandaTransporteMb.demandaTransporteEdicao.tomador.nome}" />
+						<p:inputText value="#{demandaTransporteMb.filtroDemandaId}"
+							style="width: 80px" />
 
-				<p:outputLabel value="Origem" />
-				<h:outputText
-					value="#{demandaTransporteMb.demandaTransporteEdicao.origem.nome}" />
-				<p:outputLabel value="Destino" />
-				<h:outputText
-					value="#{demandaTransporteMb.demandaTransporteEdicao.destino.nome}" />
-				<p:outputLabel value="Produto" />
-				<h:outputText
-					value="#{demandaTransporteMb.demandaTransporteEdicao.produto}" />
-				<h:outputLabel value="Quantidade" />
-				<h:panelGroup>
-					<h:outputText
-						value="#{demandaTransporteMb.demandaTransporteEdicao.quantidade}" />
-					<p:spacer width="5px"></p:spacer>
-					<p:inplace label="Alterar" editor="true">
-						<p:inputText
-							value="#{demandaTransporteMb.demandaTransporteEdicao.quantidade}" />
-					</p:inplace>
-				</h:panelGroup>
-				<p:outputLabel value="Unidade" />
-				<h:outputText
-					value="#{demandaTransporteMb.demandaTransporteEdicao.unidadeQuantidade}" />
-				<p:outputLabel value="Transportadores autorizados" />
-				<h:panelGroup>
-					<c:forEach
-						items="#{demandaTransporteMb.demandaTransporteEdicao.transportadores}"
-						var="transportadorDemanda">
-						<h:outputText value="#{transportadorDemanda.transportador.nome}, " />
-					</c:forEach>
-					<p/>
-					<p:inplace editor="true" label="Alterar">
-						<p:dataTable value="#{demandaTransporteMb.transportadoresEdicao}"
-							var="transportador">
+						<p:autoComplete value="#{demandaTransporteMb.filtroOrigem}"
+							completeMethod="#{estabelecimentoMb.autocomplete}"
+							var="estabelecimento" itemLabel="#{estabelecimento.nome}"
+							itemValue="#{estabelecimento}"
+							converter="estabelecimentoConverter" forceSelection="true">
+
 							<p:column>
-								<p:inputText value="#{transportador.nome}" />
+								<h:outputText value="#{estabelecimento.nome}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{estabelecimento.endereco.municipio.nome}" />
+							</p:column>
+							<p:column>
+								<h:outputText
+									value="#{estabelecimento.endereco.municipio.uf.abreviatura}" />
+							</p:column>
+
+						</p:autoComplete>
+						<p:autoComplete value="#{demandaTransporteMb.filtroDestino}"
+							completeMethod="#{estabelecimentoMb.autocomplete}"
+							var="estabelecimento" itemLabel="#{estabelecimento.nome}"
+							itemValue="#{estabelecimento}"
+							converter="estabelecimentoConverter" forceSelection="true">
+
+							<p:column>
+								<h:outputText value="#{estabelecimento.nome}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{estabelecimento.endereco.municipio.nome}" />
+							</p:column>
+							<p:column>
+								<h:outputText
+									value="#{estabelecimento.endereco.municipio.uf.abreviatura}" />
+							</p:column>
+
+						</p:autoComplete>
+						<p:autoComplete value="#{demandaTransporteMb.filtroProduto}"
+							completeMethod="#{produtoMb.autocomplete}" var="produto"
+							itemLabel="#{produto.nome}" itemValue="#{produto}"
+							converter="produtoConverter" forceSelection="true" />
+						<p:commandButton value="Listar"
+							actionListener="#{demandaTransporteMb.listar()}"
+							update="corpo mensagens" />
+					</h:panelGrid>
+
+				</p:outputPanel>
+				<p />
+
+				<p:dataTable id="listagem" value="#{demandaTransporteMb.lista}"
+					var="linha" selectionMode="single"
+					selection="#{demandaTransporteMb.demandaTomadorDtoSelecionada}"
+					rowKey="#{linha.demandaTransporte.id}"
+					emptyMessage="Nenhum registro retornado na consulta"
+					tableStyle="width: auto; min-width: 100%">
+					<p:column>
+						<f:facet name="header">Lote</f:facet>
+						<h:outputText value="#{linha.demandaTransporte.id}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Origem</f:facet>
+						<h:outputText value="#{linha.demandaTransporte.origem.nome}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Município</f:facet>
+						<h:outputText
+							value="#{linha.demandaTransporte.origem.endereco.municipio.nome.concat(' - ').concat(linha.demandaTransporte.origem.endereco.municipio.uf.abreviatura)}"></h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">Destino</f:facet>
+						<h:outputText value="#{linha.demandaTransporte.destino.nome}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Município</f:facet>
+						<h:outputText
+							value="#{linha.demandaTransporte.destino.endereco.municipio.nome.concat(' - ').concat(linha.demandaTransporte.destino.endereco.municipio.uf.abreviatura)}"></h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">Produto</f:facet>
+						<h:outputText value="#{linha.demandaTransporte.produto.nome}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Qtde</f:facet>
+						<h:outputText value="#{linha.demandaTransporte.quantidade}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Und</f:facet>
+						<h:outputText
+							value="#{linha.demandaTransporte.unidadeQuantidade.abreviacao}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Embarcado</f:facet>
+						<h:outputText value="#{linha.totalEmbarcado}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Saldo</f:facet>
+						<h:outputText value="#{linha.saldo}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Cargas programadas</f:facet>
+						<h:outputText value="#{linha.quantidadeCargaPendente}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Cargas trânsito</f:facet>
+						<h:outputText value="#{linha.quantidadeCargaCarregada}" />
+					</p:column>
+					<p:ajax event="rowSelect" update="panel" />
+					<p:ajax event="rowUnselect" update="panel" />
+
+				</p:dataTable>
+				<p />
+			</p:outputPanel>
+
+			<p:outputPanel id="areaEdicao"
+				rendered="#{demandaTransporteMb.ehParaExibirAreaEdicao()}">
+				<h4>
+					<p:outputLabel value="Cadastro de lote de embarque - novo"
+						rendered="#{demandaTransporteMb.estaEmModoCriacao()}" />
+					<p:outputLabel value="Cadastro de lote de embarque - editar"
+						rendered="#{demandaTransporteMb.estaEmModoEdicao()}" />
+				</h4>
+
+
+				<p:tabView id="tabView"
+					activeIndex="#{demandaTransporteMb.tabIndex}">
+					<p:tab title="Dados gerais">
+						<h:panelGrid columns="1">
+							<h:outputText value="Id"
+								rendered="#{demandaTransporteMb.estaEmModoEdicao()}" />
+							<p:inputText
+								value="#{demandaTransporteMb.demandaTransporteEdicao.id}"
+								rendered="#{demandaTransporteMb.estaEmModoEdicao()}"
+								disabled="true" />
+							<p:outputLabel value="Origem" />
+							<h:panelGroup>
+								<p:autoComplete
+									value="#{demandaTransporteMb.demandaTransporteEdicao.origem}"
+									completeMethod="#{estabelecimentoMb.autocomplete}"
+									var="estabelecimento" itemLabel="#{estabelecimento.nome}"
+									itemValue="#{estabelecimento}"
+									converter="estabelecimentoConverter" forceSelection="true">
+
+									<p:column>
+										<h:outputText value="#{estabelecimento.nome}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{estabelecimento.endereco.municipio.nome}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{estabelecimento.endereco.municipio.uf.abreviatura}" />
+									</p:column>
+
+									<p:ajax update="municipioOrigem ufOrigem" />
+								</p:autoComplete>
+								<p:inputText id="municipioOrigem" readonly="true"
+									value="#{demandaTransporteMb.demandaTransporteEdicao.origem.endereco.municipio.nome}" />
+								<p:inputText id="ufOrigem" readonly="true"
+									value="#{demandaTransporteMb.demandaTransporteEdicao.origem.endereco.municipio.uf.abreviatura}"
+									size="2" />
+							</h:panelGroup>
+							<p:outputLabel value="Destino" />
+							<h:panelGroup>
+								<p:autoComplete
+									value="#{demandaTransporteMb.demandaTransporteEdicao.destino}"
+									completeMethod="#{estabelecimentoMb.autocomplete}"
+									var="estabelecimento" itemLabel="#{estabelecimento.nome}"
+									itemValue="#{estabelecimento}"
+									converter="estabelecimentoConverter" forceSelection="true">
+
+									<p:column>
+										<h:outputText value="#{estabelecimento.nome}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{estabelecimento.endereco.municipio.nome}" />
+									</p:column>
+									<p:column>
+										<h:outputText
+											value="#{estabelecimento.endereco.municipio.uf.abreviatura}" />
+									</p:column>
+
+									<p:ajax update="municipioDestino ufDestino" />
+								</p:autoComplete>
+								<p:inputText id="municipioDestino" readonly="true"
+									value="#{demandaTransporteMb.demandaTransporteEdicao.destino.endereco.municipio.nome}" />
+								<p:inputText id="ufDestino" readonly="true"
+									value="#{demandaTransporteMb.demandaTransporteEdicao.destino.endereco.municipio.uf.abreviatura}"
+									size="2" />
+							</h:panelGroup>
+							<p:outputLabel value="Produto" />
+							<p:autoComplete
+								value="#{demandaTransporteMb.demandaTransporteEdicao.produto}"
+								completeMethod="#{produtoMb.autocomplete}" var="produto"
+								itemLabel="#{produto.nome}" itemValue="#{produto}"
+								converter="produtoConverter" forceSelection="true" />
+							<p:outputLabel value="Quantidade" />
+							<p:inputText
+								value="#{demandaTransporteMb.demandaTransporteEdicao.quantidade}" />
+							<p:outputLabel value="Unidade de medida" />
+ 							<p:autoComplete
+								value="#{demandaTransporteMb.demandaTransporteEdicao.unidadeQuantidade}"
+								completeMethod="#{unidadeQuantidadeMb.autocomplete}"
+								var="unidadeQuantidade"
+								itemLabel="#{unidadeQuantidade.abreviacao.concat(' - ').concat(unidadeQuantidade.nome)}"
+								itemValue="#{unidadeQuantidade}"
+								converter="unidadeQuantidadeConverter" forceSelection="true" />
+ 						</h:panelGrid>
+					</p:tab>
+
+					<p:tab title="Transportadores habilitados">
+						<h:panelGrid>
+							<h:outputLabel value="Adicionar transportador" />
+							<p:autoComplete
+								value="#{demandaTransporteMb.transportadorInformado}"
+								completeMethod="#{transportadorMb.autocomplete}"
+								var="transportador" itemLabel="#{transportador.nome}"
+								itemValue="#{transportador}" forceSelection="true"
+								converter="contaConverter">
+								<p:ajax event="itemSelect"
+									listener="#{demandaTransporteMb.transportadorInformado}"
+									update="@this transportadoresDemanda" />
+							</p:autoComplete>
+						</h:panelGrid>
+						<p />
+						<p:dataTable id="transportadoresDemanda"
+							value="#{demandaTransporteMb.demandaTransporteEdicao.transportadores}"
+							var="item">
+							<p:column>
+								<f:facet name="header">Nome do transportador</f:facet>
+								<h:outputText value="#{item.transportador.nome}"></h:outputText>
+							</p:column>
+
+							<p:column width="40">
+								<f:facet name="header"></f:facet>
+								<p:commandButton value="X"
+									actionListener="#{demandaTransporteMb.demandaTransporteEdicao.transportadores.remove(item)}"
+									update="transportadoresDemanda" />
 							</p:column>
 						</p:dataTable>
-					</p:inplace>
-				</h:panelGroup>
-			</p:panelGrid>
-			<br />
-			<p:commandButton value="Voltar"
-				action="#{demandaTransporteMb.listar()}" update="@all" />
-		</h:form>
+					</p:tab>
 
+				</p:tabView>
+
+				<p />
+				<p:commandButton value="Salvar"
+					action="#{demandaTransporteMb.salvar()}" update="corpo" />
+				<p:commandButton value="Voltar"
+					action="#{demandaTransporteMb.cancelarEdicao()}" immediate="true"
+					update="corpo" />
+
+			</p:outputPanel>
+			
+			<p:outputPanel id="areaExtratoEntregas" rendered="#{demandaTransporteMb.ehParaExibirAreaExtratoEntregas()}">
+				
+				<ui:include src="/paginas/include/entregaDemanda.xhtml">
+				</ui:include>				
+
+				<p />
+				<p:commandLink value="Voltar para painel de lotes"
+					actionListener="#{demandaTransporteMb.ocultarExtratoEntregas()}"
+					update="corpo" />
+
+			</p:outputPanel>
+		</h:form>
 	</ui:define>
 </ui:composition>
